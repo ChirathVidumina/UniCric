@@ -10,4 +10,4 @@ services:
       - key: DATABASE_URL
         value: postgresql://unicric_db_user:CbvArPPcXTKtUA9ahsPzMTeR1bKRtfma@dpg-d9ucis15efls739nsgmg-a/unicric_db
       - key: PYTHON_VERSION
-        value: 3.11.0
+        value: 3.11.9

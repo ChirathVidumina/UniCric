@@ -83,7 +83,11 @@ class PlayerStatModel(Base):
     is_out = Column(Boolean, default=False)
 
 def init_db():
-    Base.metadata.create_all(bind=engine)
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("[DB Success] Database tables initialized successfully.")
+    except Exception as e:
+        print(f"[DB Warning] Could not initialize database schema immediately: {e}")
 
 def get_db():
     db = SessionLocal()
