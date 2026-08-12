@@ -1,0 +1,223 @@
+:root {
+  --cric-navy-bg: #0b1329;
+  --cric-card-bg: #132036;
+  --cric-card-hover: #1c2d4a;
+  --cric-border: rgba(255, 255, 255, 0.1);
+  --cric-border-strong: rgba(220, 38, 38, 0.4);
+
+  --uom-red: #dc2626;
+  --uom-red-glow: rgba(220, 38, 38, 0.25);
+  
+  --cric-green: #10b981;
+  --cric-gold: #f59e0b;
+  --cric-blue: #3b82f6;
+  --cric-purple: #8b5cf6;
+  
+  --cric-text-main: #ffffff;
+  --cric-text-sub: #94a3b8;
+  --cric-text-muted: #64748b;
+
+  --cric-font-heading: 'Outfit', sans-serif;
+  --cric-font-body: 'Plus Jakarta Sans', sans-serif;
+}
+
+.cricviz-scout-container {
+  min-height: 100vh;
+  background-color: var(--cric-navy-bg);
+  color: var(--cric-text-main);
+  font-family: var(--cric-font-body);
+}
+
+.scout-header-banner {
+  background: linear-gradient(135deg, #180808 0%, #132036 60%, #0b1329 100%);
+  border-bottom: 2px solid var(--uom-red);
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.scout-banner-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.uom-badge-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(220, 38, 38, 0.15);
+  color: var(--uom-red);
+  border: 1px solid var(--uom-red-glow);
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.scout-title-text {
+  font-size: 2.25rem;
+  font-weight: 800;
+  font-family: var(--cric-font-heading);
+  letter-spacing: -0.02em;
+}
+
+.opponent-select-dropdown {
+  background: #0f172a;
+  border: 2px solid var(--uom-red);
+  color: var(--cric-text-main);
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+  transition: all 0.2s ease;
+}
+
+.opponent-select-dropdown:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+/* CricViz KPI Cards */
+.cricviz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.cricviz-card {
+  background: var(--cric-card-bg);
+  border: 1px solid var(--cric-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.cricviz-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.cricviz-card.threat-critical {
+  border-left: 5px solid var(--uom-red);
+}
+
+.cricviz-card.threat-high {
+  border-left: 5px solid var(--cric-gold);
+}
+
+.cricviz-card.threat-moderate {
+  border-left: 5px solid var(--cric-blue);
+}
+
+/* Pitch & Toss Visualizer */
+.pitch-bar-container {
+  display: flex;
+  height: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 1rem 0;
+  border: 1px solid var(--cric-border);
+}
+
+.pitch-bar-bat {
+  background: linear-gradient(90deg, #10b981, #059669);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: white;
+}
+
+.pitch-bar-bowl {
+  background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: white;
+}
+
+/* Matchup Matrix Table */
+.matchup-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.matchup-table th {
+  background: rgba(15, 23, 42, 0.6);
+  color: var(--cric-text-sub);
+  padding: 0.85rem 1rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--cric-border);
+  text-align: left;
+}
+
+.matchup-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--cric-border);
+  font-size: 0.9rem;
+}
+
+.matchup-table tr:hover td {
+  background: var(--cric-card-hover);
+}
+
+.verdict-badge {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  display: inline-block;
+}
+
+.verdict-uom-win {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--cric-green);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.verdict-opp-win {
+  background: rgba(220, 38, 38, 0.15);
+  color: var(--uom-red);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+.cric-btn-danger {
+  background: linear-gradient(135deg, var(--uom-red), #b91c1c);
+  color: white;
+  font-family: var(--cric-font-heading);
+  font-weight: 700;
+  padding: 0.65rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.4);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cric-btn-danger:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
