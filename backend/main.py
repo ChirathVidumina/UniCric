@@ -29,52 +29,70 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DATA_FILE = os.path.join(os.path.dirname(__file__), "..", "src", "data", "sl_universities_2026.json")
 
-def load_dataset():
-    if os.path.exists(DATA_FILE):
-        with open(DATA_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return {}
 
 @app.get("/api/health")
 def health_check():
     return {"status": "ok", "service": "Unicric Stats FastAPI Backend"}
 
 @app.get("/api/schedule")
-def get_schedule():
-    data = load_dataset()
-    schedule = data.get("tournament", {}).get("schedule", [])
+def get_schedule(db: Session = Depends(get_db)):
+    matches = db.query(MatchModel).all()
+    schedule = []
+    for m in matches:
+        schedule.append({
+            "id": m.id,
+            "dateLabel": m.date_label,
+            "opponentName": m.title,
+            "venue": m.venue,
+            "status": m.status,
+            "result": m.result,
+            "scoreSummary": m.score_summary,
+            "isHome": False
+        })
     return {"schedule": schedule}
 
 @app.get("/api/venues")
-def get_venues():
-    data = load_dataset()
-    venues = data.get("venues", [])
+def get_venues(db: Session = Depends(get_db)):
+    matches = db.query(MatchModel).all()
+    venues = []
+    seen = set()
+    for m in matches:
+        if m.venue and m.venue not in seen:
+            seen.add(m.venue)
+            venues.append({
+                "id": m.venue.lower().replace(" ", "_"),
+                "name": m.venue,
+                "city": "Unknown",
+                "pitchType": "Unknown"
+            })
     return {"venues": venues}
 
 @app.get("/api/venues/{venue_id}")
-def get_venue_by_id(venue_id: str):
-    data = load_dataset()
-    venues = data.get("venues", [])
-    for v in venues:
-        if v.get("id") == venue_id:
-            return {"venue": v}
+def get_venue_by_id(venue_id: str, db: Session = Depends(get_db)):
+    matches = db.query(MatchModel).all()
+    for m in matches:
+        if m.venue and m.venue.lower().replace(" ", "_") == venue_id:
+            return {"venue": {
+                "id": venue_id,
+                "name": m.venue,
+                "city": "Unknown",
+                "pitchType": "Unknown"
+            }}
     raise HTTPException(status_code=404, detail="Venue not found")
 
 @app.get("/api/opponents")
-def get_opponents():
-    allowed_opponents = [
-        {"id": "UOP", "code": "UOP", "name": "University of Peradeniya", "shortName": "Peradeniya"},
-        {"id": "VAV", "code": "VAV", "name": "Vavuniya University", "shortName": "Vavuniya"},
-        {"id": "UOJ", "code": "UOJ", "name": "Jaffna University", "shortName": "Jaffna"},
-        {"id": "UOC", "code": "UOC", "name": "Colombo University", "shortName": "Colombo"},
-        {"id": "UOK", "code": "UOK", "name": "Kelaniya University", "shortName": "Kelaniya"},
-        {"id": "USJP", "code": "USJP", "name": "Sri Jayawardenapura University", "shortName": "Jayawardenapura"},
-        {"id": "RUH", "code": "RUH", "name": "Ruhunu University", "shortName": "Ruhuna"},
-        {"id": "SAB", "code": "SAB", "name": "Sabaragamuwa University", "shortName": "Sabaragamuwa"}
-    ]
-    return {"opponents": allowed_opponents}
+def get_opponents(db: Session = Depends(get_db)):
+    teams = db.query(TeamModel).filter(TeamModel.code != "UOM").all()
+    opponents = []
+    for t in teams:
+        opponents.append({
+            "id": t.code,
+            "code": t.code,
+            "name": t.name,
+            "shortName": t.short_name or t.name
+        })
+    return {"opponents": opponents}
 
 @app.get("/api/teams")
 def get_teams(db: Session = Depends(get_db)):
@@ -163,12 +181,110 @@ def get_player_form(player_id: str, last_n: int = 3, db: Session = Depends(get_d
     }
 
 @app.get("/api/scorecards/{match_id}")
-def get_scorecard(match_id: str):
-    data = load_dataset()
-    scorecards = data.get("completedMatchScorecards", {})
-    if match_id in scorecards:
-        return {"scorecard": scorecards[match_id]}
-    raise HTTPException(status_code=404, detail="Scorecard not found")
+def get_scorecard(match_id: str, db: Session = Depends(get_db)):
+    match = db.query(MatchModel).filter(MatchModel.id == match_id).first()
+    if not match:
+        raise HTTPException(status_code=404, detail="Scorecard not found")
+        
+    stats = db.query(PlayerStatModel).filter(PlayerStatModel.match_id == match_id).all()
+    batting = []
+    bowling = []
+    for s in stats:
+        if s.runs > 0 or s.balls > 0:
+            batting.append({
+                "batter": s.player_name,
+                "dismissal": s.dismissal,
+                "r": s.runs,
+                "b": s.balls,
+                "fours": s.fours,
+                "sixes": s.sixes,
+                "sr": s.strike_rate
+            })
+        if s.overs > 0:
+            bowling.append({
+                "bowler": s.player_name,
+                "o": s.overs,
+                "m": 0,
+                "r": s.runs_conceded,
+                "w": s.wickets,
+                "econ": s.economy
+            })
+            
+    return {"scorecard": {
+        "innings1": {
+            "team": "Team 1",
+            "score": match.score_summary or "",
+            "batting": batting,
+            "bowling": bowling
+        }
+    }}
+
+@app.get("/api/tournaments")
+def get_tournaments(db: Session = Depends(get_db)):
+    teams = db.query(TeamModel).all()
+    players = db.query(PlayerModel).all()
+    matches = db.query(MatchModel).all()
+    
+    t_list = []
+    for t in teams:
+        t_list.append({
+            "code": t.code,
+            "name": t.name,
+            "played": t.played,
+            "won": t.won,
+            "lost": t.lost,
+            "points": t.points,
+            "nrr": t.nrr
+        })
+        
+    p_list = []
+    for p in players:
+        p_list.append({
+            "name": p.name,
+            "team": p.team_code,
+            "runs": p.total_runs,
+            "wickets": p.total_wickets,
+            "catches": 0,
+            "fours": p.total_fours,
+            "sixes": p.total_sixes,
+            "sr": p.strike_rate,
+            "econ": p.economy_rate,
+            "overs": 0.0
+        })
+        
+    m_list = []
+    completed_scorecards = {}
+    for m in matches:
+        m_list.append({
+            "id": m.id,
+            "dateLabel": m.date_label,
+            "opponentName": m.title,
+            "venue": m.venue,
+            "status": m.status,
+            "result": m.result,
+            "scoreSummary": m.score_summary,
+            "isHome": False
+        })
+        if m.status == "COMPLETED":
+            completed_scorecards[m.id] = {"innings1": {"team": "Data", "score": m.score_summary}}
+            
+    groups = [{
+        "code": "GROUP_C",
+        "name": "Group C",
+        "isOurGroup": True,
+        "teams": sorted(t_list, key=lambda x: x["points"], reverse=True)
+    }]
+    
+    return {
+        "teams": t_list,
+        "players": p_list,
+        "schedule": m_list,
+        "groups": groups,
+        "completedMatchScorecards": completed_scorecards,
+        "tournament": {
+            "completedMatches": len([m for m in m_list if m["status"] == "COMPLETED"])
+        }
+    }
 
 @app.get("/api/analytics")
 def get_analytics(db: Session = Depends(get_db)):
@@ -345,6 +461,7 @@ def extract_cricket_entities(raw_lines: List[str]) -> Dict[str, Any]:
     teams_found = set()
     batting_stats = []
     bowling_stats = []
+    current_section = "unknown"
     
     # Team pattern matcher
     team_regex = re.compile(
@@ -370,52 +487,60 @@ def extract_cricket_entities(raw_lines: List[str]) -> Dict[str, Any]:
         line_str = line.strip()
         if not line_str:
             continue
+            
+        if "Batsmen" in line_str or "Batsman" in line_str:
+            current_section = "batting"
+            continue
+        elif "Bowlers" in line_str or "Bowler" in line_str:
+            current_section = "bowling"
+            continue
 
         # Match teams
         matches = team_regex.findall(line_str)
         for t in matches:
             teams_found.add(t.strip())
 
-        # Match batting pattern
-        b_match1 = batting_regex_1.match(line_str)
-        if b_match1:
-            name, runs, balls, fours, sixes, sr = b_match1.groups()
-            batting_stats.append({
-                "name": name.strip(),
-                "runs": int(runs),
-                "balls": int(balls) if balls else 0,
-                "fours": int(fours),
-                "sixes": int(sixes),
-                "sr": float(sr) if sr else (round(int(runs)/(int(balls) or 1)*100, 2) if balls else 0.0)
-            })
-            continue
-
-        b_match2 = batting_regex_2.search(line_str)
-        if b_match2:
-            name, runs, balls, fours, sixes = b_match2.groups()
-            batting_stats.append({
-                "name": name.strip(),
-                "runs": int(runs),
-                "balls": int(balls),
-                "fours": int(fours),
-                "sixes": int(sixes),
-                "sr": round(int(runs)/(int(balls) or 1)*100, 2)
-            })
-            continue
-
-        # Match bowling pattern
-        bw_match = bowling_regex.match(line_str)
-        if bw_match:
-            name, overs, maidens, runs, wickets, econ = bw_match.groups()
-            bowling_stats.append({
-                "name": name.strip(),
-                "overs": float(overs),
-                "maidens": int(maidens),
-                "runs": int(runs),
-                "wickets": int(wickets),
-                "econ": float(econ) if econ else (round(int(runs)/(float(overs) or 1.0), 2))
-            })
-            continue
+        # Process based on section
+        if current_section == "batting":
+            b_match1 = batting_regex_1.match(line_str)
+            if b_match1:
+                name, runs, balls, fours, sixes, sr = b_match1.groups()
+                batting_stats.append({
+                    "name": name.strip(),
+                    "runs": int(runs),
+                    "balls": int(balls) if balls else 0,
+                    "fours": int(fours),
+                    "sixes": int(sixes),
+                    "sr": float(sr) if sr else (round(int(runs)/(int(balls) or 1)*100, 2) if balls else 0.0)
+                })
+                continue
+                
+            b_match2 = batting_regex_2.search(line_str)
+            if b_match2:
+                name, runs, balls, fours, sixes = b_match2.groups()
+                batting_stats.append({
+                    "name": name.strip(),
+                    "runs": int(runs),
+                    "balls": int(balls),
+                    "fours": int(fours),
+                    "sixes": int(sixes),
+                    "sr": round(int(runs)/(int(balls) or 1)*100, 2)
+                })
+                continue
+                
+        elif current_section == "bowling":
+            bw_match = bowling_regex.match(line_str)
+            if bw_match:
+                name, overs, maidens, runs, wickets, econ = bw_match.groups()
+                bowling_stats.append({
+                    "name": name.strip(),
+                    "overs": float(overs),
+                    "maidens": int(maidens),
+                    "runs": int(runs),
+                    "wickets": int(wickets),
+                    "econ": float(econ) if econ else (round(int(runs)/(float(overs) or 1.0), 2))
+                })
+                continue
 
         # If line does not match any known entity pattern, gracefully skip (STRICT NO-DUMMY-DATA)
 
