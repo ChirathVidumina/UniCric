@@ -6,6 +6,9 @@ from typing import Optional, Dict, Any, List
 from fastapi import FastAPI, HTTPException, Query, UploadFile, File, Form, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from pydantic import BaseModel
+import urllib.request
+from urllib.error import URLError
 try:
     from backend.database import init_db, SessionLocal, get_db, TeamModel, PlayerModel, MatchModel, PlayerStatModel
 except ImportError:
@@ -597,9 +600,36 @@ async def botpress_file_upload(
 async def process_pdf_scorecard(file: UploadFile = File(...), db: Session = Depends(get_db)):
     return await botpress_file_upload(file=file, db=db)
 
+class PDFUrlPayload(BaseModel):
+    pdfUrl: str
 
+@app.post("/api/process-pdf-url")
+async def process_pdf_url(payload: PDFUrlPayload, db: Session = Depends(get_db)):
+    try:
+        req = urllib.request.Request(payload.pdfUrl, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req) as response:
+            content = response.read()
+            size_bytes = len(content)
+            
+            if size_bytes == 0:
+                raise HTTPException(status_code=400, detail="Downloaded file is empty (0 bytes).")
+                
+            filename = "botpress_upload.pdf"
+            parsed_data = parse_pdf_file(content, filename)
+            db_metrics = process_and_save_scorecard_data(parsed_data, filename, db)
 
-
-
-
-
+            return {
+                "status": "success",
+                "message": f"Botpress PDF Scorecard from URL ({size_bytes} bytes) processed and upserted into local database.",
+                "file_type": "PDF",
+                "size_bytes": size_bytes,
+                "records_inserted": db_metrics["records_inserted"],
+                "teams_updated": db_metrics["teams_updated"],
+                "players_updated": db_metrics["players_updated"],
+                "stats_logged": db_metrics["stats_logged"],
+                "details": parsed_data
+            }
+    except URLError as e:
+        raise HTTPException(status_code=400, detail=f"Failed to download PDF from URL: {str(e)}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error processing PDF from URL: {str(e)}")
