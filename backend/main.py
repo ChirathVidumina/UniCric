@@ -540,13 +540,8 @@ def process_and_save_scorecard_data(extracted_data: Dict[str, Any], filename: st
     }
 
 
-@app.post("/api/botpress/upload")
-async def botpress_file_upload(
-    file: UploadFile = File(...),
-    user_id: Optional[str] = Form(None),
-    conversation_id: Optional[str] = Form(None),
-    db: Session = Depends(get_db)
-):
+@app.post("/api/process-pdf-scorecard")
+async def process_pdf_scorecard(file: UploadFile = File(...), db: Session = Depends(get_db)):
     if not file.filename:
         raise HTTPException(status_code=400, detail="Filename missing in upload payload.")
 
@@ -565,7 +560,7 @@ async def botpress_file_upload(
 
         return {
             "status": "success",
-            "message": f"Botpress PDF Scorecard '{filename}' ({size_bytes} bytes) processed and upserted into local database.",
+            "message": f"Official Scorecard '{filename}' processed successfully.",
             "file_name": filename,
             "file_type": "PDF",
             "size_bytes": size_bytes,
@@ -579,7 +574,7 @@ async def botpress_file_upload(
         parsed_data = parse_excel_file(content, filename)
         return {
             "status": "success",
-            "message": f"Botpress Excel Dataset '{filename}' ({size_bytes} bytes) processed successfully into database telemetry.",
+            "message": f"Excel Dataset '{filename}' processed successfully.",
             "file_name": filename,
             "file_type": "Excel",
             "size_bytes": size_bytes,
@@ -589,44 +584,5 @@ async def botpress_file_upload(
     else:
         raise HTTPException(
             status_code=400,
-            detail=f"Unsupported file format '{ext}'. Only PDF (.pdf) and Excel (.xlsx, .xls) files are supported for Botpress ingestion."
+            detail=f"Unsupported file format '{ext}'. Only PDF and Excel files are supported."
         )
-
-
-@app.post("/api/process-pdf-scorecard")
-async def process_pdf_scorecard(file: UploadFile = File(...), db: Session = Depends(get_db)):
-    return await botpress_file_upload(file=file, db=db)
-
-class PDFUrlPayload(BaseModel):
-    pdfUrl: str
-
-@app.post("/api/process-pdf-url")
-async def process_pdf_url(payload: PDFUrlPayload, db: Session = Depends(get_db)):
-    try:
-        req = urllib.request.Request(payload.pdfUrl, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req) as response:
-            content = response.read()
-            size_bytes = len(content)
-            
-            if size_bytes == 0:
-                raise HTTPException(status_code=400, detail="Downloaded file is empty (0 bytes).")
-                
-            filename = "botpress_upload.pdf"
-            parsed_data = parse_pdf_file(content, filename)
-            db_metrics = process_and_save_scorecard_data(parsed_data, filename, db)
-
-            return {
-                "status": "success",
-                "message": f"Botpress PDF Scorecard from URL ({size_bytes} bytes) processed and upserted into local database.",
-                "file_type": "PDF",
-                "size_bytes": size_bytes,
-                "records_inserted": db_metrics["records_inserted"],
-                "teams_updated": db_metrics["teams_updated"],
-                "players_updated": db_metrics["players_updated"],
-                "stats_logged": db_metrics["stats_logged"],
-                "details": parsed_data
-            }
-    except URLError as e:
-        raise HTTPException(status_code=400, detail=f"Failed to download PDF from URL: {str(e)}")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error processing PDF from URL: {str(e)}")
