@@ -68,13 +68,7 @@ export const Navbar = () => {
             <span>Teams & Players</span>
           </NavLink>
 
-          <NavLink 
-            to="/import" 
-            className={({ isActive }) => (isActive ? 'nav-item active' : 'nav-item')}
-          >
-            <Upload className="nav-icon" size={17} color="#10b981" />
-            <span>PDF Upload</span>
-          </NavLink>
+
         </nav>
 
         {/* Right Status Badge */}

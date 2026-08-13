@@ -5,7 +5,6 @@ import Dashboard from './pages/Dashboard';
 import UOMOppositionScout from './pages/UOMOppositionScout';
 import Tournaments from './pages/Tournaments';
 import TeamsPlayers from './pages/TeamsPlayers';
-import DataImport from './pages/DataImport';
 
 function App() {
   return (
@@ -18,7 +17,6 @@ function App() {
             <Route path="/analytics" element={<UOMOppositionScout />} />
             <Route path="/tournaments" element={<Tournaments />} />
             <Route path="/teams-players" element={<TeamsPlayers />} />
-            <Route path="/import" element={<DataImport />} />
             <Route path="*" element={<Dashboard />} />
           </Routes>
         </main>
