@@ -301,7 +301,8 @@ def parse_pdf_file(content: bytes, filename: str) -> Dict[str, Any]:
         "total_pages": pages_count,
         "lines_extracted": len(lines),
         "tables_found": tables_extracted,
-        "raw_text_preview": lines[:5] if lines else []
+        "raw_text_preview": lines[:5] if lines else [],
+        "full_text_lines": lines
     }
 
 def parse_excel_file(content: bytes, filename: str) -> Dict[str, Any]:
@@ -426,7 +427,7 @@ def extract_cricket_entities(raw_lines: List[str]) -> Dict[str, Any]:
 
 
 def process_and_save_scorecard_data(extracted_data: Dict[str, Any], filename: str, db: Session) -> Dict[str, Any]:
-    raw_lines = extracted_data.get("raw_text_preview", [])
+    raw_lines = extracted_data.get("full_text_lines", [])
     extracted_entities = extract_cricket_entities(raw_lines)
 
     teams_updated = 0
