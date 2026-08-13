@@ -6,6 +6,7 @@ from typing import Optional, Dict, Any, List
 from fastapi import FastAPI, HTTPException, Query, UploadFile, File, Form, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from pydantic import BaseModel
 import urllib.request
 from urllib.error import URLError
@@ -76,80 +77,89 @@ def get_opponents():
     return {"opponents": allowed_opponents}
 
 @app.get("/api/teams")
-def get_teams():
-    data = load_dataset()
-    teams = data.get("tournament", {}).get("teams", [])
-    if not teams:
-        teams = [
-            {"code": "UOM", "name": "University of Moratuwa", "shortName": "Moratuwa", "captain": "Kavindu Wickramasinghe", "played": 0, "won": 0, "points": 0, "color": "#dc2626", "group": "Group C"},
-            {"code": "UOP", "name": "University of Peradeniya", "shortName": "Peradeniya", "captain": "Dilshan Sampath", "played": 0, "won": 0, "points": 0, "color": "#fbbf24", "group": "Group C"},
-            {"code": "VAV", "name": "Vavuniya University", "shortName": "Vavuniya", "captain": "T. Kinthusan", "played": 0, "won": 0, "points": 0, "color": "#3b82f6", "group": "Group C"},
-            {"code": "UOJ", "name": "Jaffna University", "shortName": "Jaffna", "captain": "S. Ratnam", "played": 0, "won": 0, "points": 0, "color": "#10b981", "group": "Group C"}
-        ]
-    return {"teams": teams}
+def get_teams(db: Session = Depends(get_db)):
+    teams = db.query(TeamModel).all()
+    result = []
+    for t in teams:
+        result.append({
+            "code": t.code,
+            "name": t.name,
+            "shortName": t.short_name or t.name,
+            "group": t.group_name or "Group C",
+            "played": t.played,
+            "won": t.won,
+            "lost": t.lost,
+            "points": t.points,
+            "nrr": t.nrr
+        })
+    return {"teams": result}
 
 @app.get("/api/players")
-def get_players(team: Optional[str] = Query(None)):
-    data = load_dataset()
-    players = data.get("players", [])
+def get_players(team: Optional[str] = Query(None), db: Session = Depends(get_db)):
+    query = db.query(PlayerModel)
     if team:
-        players = [p for p in players if p.get("team") == team]
-    return {"players": players}
+        query = query.filter(PlayerModel.team_code == team)
+    players = query.all()
+    
+    result = []
+    for p in players:
+        result.append({
+            "id": str(p.id),
+            "name": p.name,
+            "team": p.team_code,
+            "role": p.role,
+            "matches": p.matches,
+            "runs": p.total_runs,
+            "balls": p.total_balls,
+            "fours": p.total_fours,
+            "sixes": p.total_sixes,
+            "wickets": p.total_wickets,
+            "sr": p.strike_rate,
+            "econ": p.economy_rate,
+            "battingStyle": p.batting_style
+        })
+    return {"players": result}
 
 @app.get("/api/players/{player_id}/form")
-def get_player_form(player_id: str, last_n: int = 3):
-    data = load_dataset()
-    players = data.get("players", [])
-    target_player = next((p for p in players if str(p.get("id")) == player_id), None)
+def get_player_form(player_id: str, last_n: int = 3, db: Session = Depends(get_db)):
+    try:
+        pid = int(player_id)
+    except ValueError:
+        return {"player": None, "matchesInWindow": 0, "logsWindow": []}
+        
+    p = db.query(PlayerModel).filter(PlayerModel.id == pid).first()
+    if not p:
+        return {"player": None, "matchesInWindow": 0, "logsWindow": []}
     
-    if not target_player:
-        return {
-            "player": None,
-            "matchesInWindow": 0,
-            "totalRuns": 0,
-            "totalBalls": 0,
-            "strikeRate": 0,
-            "dotBallPct": 0,
-            "boundaryPct": 0,
-            "totalFours": 0,
-            "totalSixes": 0,
-            "primaryWeakness": "No Telemetry Data Logged",
-            "logsWindow": []
-        }
-
-    runs = target_player.get("runs", 0)
-    sr = target_player.get("sr", 0)
-    balls = round(runs / (sr / 100)) if sr > 0 else 0
-
+    stats = db.query(PlayerStatModel).filter(PlayerStatModel.player_name == p.name).order_by(PlayerStatModel.id.desc()).limit(last_n).all()
+    
+    logs = []
+    for s in stats:
+        logs.append({
+            "matchDate": "Scorecard Log",
+            "vs": s.match_id,
+            "runs": s.runs,
+            "balls": s.balls,
+            "fours": s.fours,
+            "sixes": s.sixes,
+            "wickets": s.wickets,
+            "dismissalMode": s.dismissal,
+            "isOut": s.is_out
+        })
+        
     return {
         "player": {
-            "name": target_player.get("name"),
-            "role": target_player.get("role", "Batter"),
-            "icon": target_player.get("icon", "🏏"),
-            "battingStyle": "Right-Hand Batter"
+            "name": p.name,
+            "role": p.role,
+            "battingStyle": p.batting_style
         },
-        "matchesInWindow": min(last_n, target_player.get("matches", 1)),
-        "totalRuns": runs,
-        "totalBalls": balls,
-        "strikeRate": sr,
-        "dotBallPct": target_player.get("dotPct", 0),
-        "boundaryPct": target_player.get("boundaryPct", 0),
-        "totalFours": target_player.get("fours", 0),
-        "totalSixes": target_player.get("sixes", 0),
-        "primaryWeakness": "Strict Pace & Spin Telemetry Control",
-        "logsWindow": [
-            {
-                "matchDate": "2026-08-01",
-                "vs": "SLUSA Championship",
-                "runs": runs,
-                "balls": balls,
-                "fours": target_player.get("fours", 0),
-                "sixes": target_player.get("sixes", 0),
-                "dots": 10,
-                "isOut": True,
-                "dismissalMode": "Verified Scorecard Telemetry"
-            }
-        ]
+        "matchesInWindow": min(last_n, p.matches),
+        "totalRuns": p.total_runs,
+        "totalBalls": p.total_balls,
+        "strikeRate": p.strike_rate,
+        "totalFours": p.total_fours,
+        "totalSixes": p.total_sixes,
+        "logsWindow": logs
     }
 
 @app.get("/api/scorecards/{match_id}")
@@ -161,94 +171,80 @@ def get_scorecard(match_id: str):
     raise HTTPException(status_code=404, detail="Scorecard not found")
 
 @app.get("/api/analytics")
-def get_analytics():
-    data = load_dataset()
-    players = data.get("players", [])
-    top_scorer = max(players, key=lambda p: p.get("runs", 0)) if players else None
-    top_bowler = max(players, key=lambda p: p.get("wickets", 0)) if players else None
-
-    total_fours = sum(p.get("fours", 0) for p in players)
-    total_sixes = sum(p.get("sixes", 0) for p in players)
-    total_runs = sum(p.get("runs", 0) for p in players)
-
+def get_analytics(db: Session = Depends(get_db)):
+    top_scorer = db.query(PlayerModel).order_by(PlayerModel.total_runs.desc()).first()
+    top_bowler = db.query(PlayerModel).order_by(PlayerModel.total_wickets.desc()).first()
+    
+    total_runs = db.query(func.sum(PlayerModel.total_runs)).scalar() or 0
+    total_fours = db.query(func.sum(PlayerModel.total_fours)).scalar() or 0
+    total_sixes = db.query(func.sum(PlayerModel.total_sixes)).scalar() or 0
+    
     return {
         "kpi": {
             "top_scorer": {
-                "name": top_scorer.get("name"),
-                "runs": top_scorer.get("runs", 0),
-                "team": top_scorer.get("team"),
-                "sr": top_scorer.get("sr", 0)
+                "name": top_scorer.name if top_scorer else None,
+                "runs": top_scorer.total_runs if top_scorer else 0,
+                "team": top_scorer.team_code if top_scorer else None,
+                "sr": top_scorer.strike_rate if top_scorer else 0
             } if top_scorer else None,
             "top_bowler": {
-                "name": top_bowler.get("name"),
-                "wickets": top_bowler.get("wickets", 0),
-                "team": top_bowler.get("team"),
-                "econ": top_bowler.get("econ", 0.0)
+                "name": top_bowler.name if top_bowler else None,
+                "wickets": top_bowler.total_wickets if top_bowler else 0,
+                "team": top_bowler.team_code if top_bowler else None,
+                "econ": top_bowler.economy_rate if top_bowler else 0.0
             } if top_bowler else None,
-            "avg_run_rate": f"{(total_runs / 50):.2f}" if total_runs > 0 else "0.00",
-            "total_tournament_runs": total_runs,
+            "avg_run_rate": "0.00",
+            "total_tournament_runs": int(total_runs),
             "total_boundaries": {
-                "fours": total_fours,
-                "sixes": total_sixes
+                "fours": int(total_fours),
+                "sixes": int(total_sixes)
             }
         }
     }
 
 @app.get("/api/standings")
-def get_standings():
-    data = load_dataset()
-    groups = data.get("tournament", {}).get("groups", [])
-    group_c = next((g for g in groups if g.get("code") == "GROUP_C"), None)
-    teams = group_c.get("teams", []) if group_c else []
-    return {"group": "GROUP_C", "teams": teams}
+def get_standings(db: Session = Depends(get_db)):
+    teams = db.query(TeamModel).order_by(TeamModel.points.desc()).all()
+    result = [{"code": t.code, "name": t.name, "played": t.played, "won": t.won, "points": t.points, "nrr": t.nrr} for t in teams]
+    return {"group": "GROUP_C", "teams": result}
 
 @app.get("/api/dashboard")
-def get_dashboard():
-    data = load_dataset()
-    tournament = data.get("tournament", {})
-    schedule = tournament.get("schedule", [])
-    groups = tournament.get("groups", [])
-    players = data.get("players", [])
-
-    group_c = next((g for g in groups if g.get("code") == "GROUP_C"), None)
-    teams = group_c.get("teams", []) if group_c else []
-    uom_team = next((t for t in teams if t.get("code") == "UOM" or t.get("isPrimary")), None) or {
-        "name": "Moratuwa University",
-        "code": "UOM",
-        "played": 0,
-        "won": 0,
-        "points": 0,
-        "nrr": "0.000"
-    }
-
-    uom_completed_match = next((m for m in schedule if m.get("id") == "match_1" and m.get("status") == "COMPLETED"), None)
-    next_target_match = next((m for m in schedule if m.get("status") == "NEXT_TARGET"), schedule[0] if schedule else None)
-    upcoming_match = next((m for m in schedule if m.get("status") == "UPCOMING"), None)
-
+def get_dashboard(db: Session = Depends(get_db)):
+    teams = db.query(TeamModel).all()
+    uom_team = next((t for t in teams if t.code == "UOM"), None)
+    
+    top_batters = db.query(PlayerModel).order_by(PlayerModel.total_runs.desc()).limit(4).all()
+    top_bowler = db.query(PlayerModel).order_by(PlayerModel.total_wickets.desc()).first()
+    
     top_performers = [
         {
-            "name": p.get("name"),
-            "role": p.get("role", "Batter"),
-            "stat": f"{p.get('runs', 0)} Runs",
-            "note": f"Team {p.get('team', '')} • SR {p.get('sr', 0)}",
-            "icon": p.get("icon", "🏏")
-        } for p in sorted(players, key=lambda x: x.get("runs", 0), reverse=True)[:4]
-    ] if players else []
-
-    top_bowler = max(players, key=lambda p: p.get("wickets", 0)) if players else None
-
+            "name": p.name,
+            "role": p.role,
+            "stat": f"{p.total_runs} Runs",
+            "note": f"Team {p.team_code or ''} • SR {p.strike_rate}",
+            "icon": "🏏"
+        } for p in top_batters
+    ]
+    
     return {
-        "uomTeam": uom_team,
-        "schedule": schedule,
-        "uomCompletedMatch": uom_completed_match,
-        "nextTargetMatch": next_target_match,
-        "upcomingMatch": upcoming_match,
-        "groupTeams": teams,
+        "uomTeam": {
+            "name": uom_team.name if uom_team else "Moratuwa University",
+            "code": uom_team.code if uom_team else "UOM",
+            "played": uom_team.played if uom_team else 0,
+            "won": uom_team.won if uom_team else 0,
+            "points": uom_team.points if uom_team else 0,
+            "nrr": uom_team.nrr if uom_team else "0.000"
+        },
+        "schedule": [],
+        "uomCompletedMatch": None,
+        "nextTargetMatch": None,
+        "upcomingMatch": None,
+        "groupTeams": [{"code": t.code, "name": t.name, "points": t.points, "played": t.played} for t in teams],
         "topPerformers": top_performers,
         "topBowler": {
-            "name": top_bowler.get("name"),
-            "wickets": top_bowler.get("wickets", 0),
-            "econ": top_bowler.get("econ", 0.0)
+            "name": top_bowler.name if top_bowler else None,
+            "wickets": top_bowler.total_wickets if top_bowler else 0,
+            "econ": top_bowler.economy_rate if top_bowler else 0.0
         } if top_bowler else None
     }
 
