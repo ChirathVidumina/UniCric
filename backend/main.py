@@ -364,20 +364,6 @@ def get_dashboard(db: Session = Depends(get_db)):
         } if top_bowler else None
     }
 
-@app.get("/api/tournaments")
-def get_tournaments():
-    data = load_dataset()
-    tournament = data.get("tournament", {})
-    players = data.get("players", [])
-    completed_scorecards = data.get("completedMatchScorecards", {})
-    return {
-        "tournament": tournament,
-        "teams": tournament.get("teams", []),
-        "groups": tournament.get("groups", []),
-        "schedule": tournament.get("schedule", []),
-        "players": players,
-        "completedMatchScorecards": completed_scorecards
-    }
 
 def parse_pdf_file(content: bytes, filename: str) -> Dict[str, Any]:
     extracted_text = ""
