@@ -37,29 +37,30 @@ export default function TeamsPlayers() {
           apiPlayers = playersData.players || [];
         }
 
+        // Hardcoded 22 players from PDF to ensure they always show up
         const staticPlayers = [
-          { id: 'p1', name: "Sivakaran Venujan", team: "JAF", role: "Wicket Keeper", battingStyle: "Right-Hand Batter", matches: 1, runs: 11, balls: 47, fours: 1, sixes: 0, sr: 23.4, wickets: 0, econ: 0.00, dotPct: 83, boundaryPct: 2 },
-          { id: 'p2', name: "Shanmuganathan Silaxan", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 26, balls: 28, fours: 4, sixes: 1, sr: 92.86, wickets: 0, econ: 0.00, dotPct: 68, boundaryPct: 18 },
-          { id: 'p3', name: "Ashmika Iddamalgoda", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 79, balls: 81, fours: 13, sixes: 1, sr: 97.53, wickets: 1, econ: 3.50, dotPct: 59, boundaryPct: 17 },
-          { id: 'p4', name: "Sivaruban Sivanujan", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 33, balls: 42, fours: 3, sixes: 2, sr: 78.57, wickets: 0, econ: 9.00, dotPct: 62, boundaryPct: 12 },
-          { id: 'p5', name: "Patkunam Mathushan", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 10, balls: 17, fours: 0, sixes: 0, sr: 58.82, wickets: 1, econ: 3.67, dotPct: 57, boundaryPct: 0 },
-          { id: 'p6', name: "Antony Desvin", team: "JAF", role: "Captain", battingStyle: "Right-Hand Batter", matches: 1, runs: 23, balls: 31, fours: 1, sixes: 2, sr: 74.19, wickets: 3, econ: 1.33, dotPct: 76, boundaryPct: 10 },
-          { id: 'p7', name: "K Siyanujan", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 14, balls: 11, fours: 2, sixes: 1, sr: 127.27, wickets: 0, econ: 10.00, dotPct: 61, boundaryPct: 27 },
-          { id: 'p8', name: "Selvanathan Niroshan", team: "JAF", role: "Bowler", battingStyle: "Right-Hand Batter", matches: 1, runs: 13, balls: 6, fours: 0, sixes: 2, sr: 216.67, wickets: 4, econ: 2.91, dotPct: 74, boundaryPct: 33 },
-          { id: 'p9', name: "V Priyankan", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 20, balls: 15, fours: 0, sixes: 0, sr: 133.33, wickets: 0, econ: 0.00, dotPct: 0, boundaryPct: 0 },
-          { id: 'p10', name: "Chalithya Millangoda", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 2, balls: 5, fours: 0, sixes: 0, sr: 40.0, wickets: 1, econ: 6.67, dotPct: 65, boundaryPct: 0 },
-          { id: 'p11', name: "Ebenezer Johanan", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 16, balls: 17, fours: 0, sixes: 1, sr: 94.12, wickets: 0, econ: 0.00, dotPct: 35, boundaryPct: 6 },
-          { id: 'p12', name: "Janith Dilshan", team: "VAV", role: "Batter", battingStyle: "Left-Hand Batter", matches: 1, runs: 1, balls: 10, fours: 0, sixes: 0, sr: 10.0, wickets: 1, econ: 5.40, dotPct: 64, boundaryPct: 0 },
-          { id: 'p13', name: "Ekjfernando", team: "VAV", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 3, balls: 15, fours: 0, sixes: 0, sr: 20.0, wickets: 0, econ: 0.00, dotPct: 80, boundaryPct: 0 },
-          { id: 'p14', name: "Lahiru Welagedara", team: "VAV", role: "Wicket Keeper", battingStyle: "Left-Hand Batter", matches: 1, runs: 35, balls: 31, fours: 4, sixes: 2, sr: 112.9, wickets: 0, econ: 0.00, dotPct: 58, boundaryPct: 19 },
-          { id: 'p15', name: "Rmid Ranaweera", team: "VAV", role: "Batter", battingStyle: "Left-Hand Batter", matches: 1, runs: 1, balls: 6, fours: 0, sixes: 0, sr: 16.67, wickets: 0, econ: 0.00, dotPct: 83, boundaryPct: 0 },
-          { id: 'p16', name: "Rashan Wijerathna", team: "VAV", role: "Batter", battingStyle: "Left-Hand Batter", matches: 1, runs: 23, balls: 28, fours: 3, sixes: 1, sr: 82.14, wickets: 0, econ: 0.00, dotPct: 68, boundaryPct: 14 },
-          { id: 'p17', name: "Sahan Siriwardana", team: "VAV", role: "Captain", battingStyle: "Left-Hand Batter", matches: 1, runs: 3, balls: 13, fours: 0, sixes: 0, sr: 23.08, wickets: 1, econ: 5.60, dotPct: 68, boundaryPct: 0 },
-          { id: 'p18', name: "Pahan Bimsara", team: "VAV", role: "Bowler", battingStyle: "Right-Hand Batter", matches: 1, runs: 0, balls: 2, fours: 0, sixes: 0, sr: 0.0, wickets: 0, econ: 9.75, dotPct: 50, boundaryPct: 0 },
-          { id: 'p19', name: "Mohammed Riwaqi", team: "VAV", role: "Bowler", battingStyle: "Right-Hand Batter", matches: 1, runs: 11, balls: 9, fours: 2, sixes: 0, sr: 122.22, wickets: 2, econ: 4.75, dotPct: 63, boundaryPct: 22 },
-          { id: 'p20', name: "Sithamparalingam Nharthanan", team: "VAV", role: "Batter", battingStyle: "Left-Hand Batter", matches: 1, runs: 6, balls: 8, fours: 1, sixes: 0, sr: 75.0, wickets: 1, econ: 5.33, dotPct: 77, boundaryPct: 12 },
-          { id: 'p21', name: "Kkirubagaran", team: "VAV", role: "Bowler", battingStyle: "Right-Hand Batter", matches: 1, runs: 1, balls: 14, fours: 0, sixes: 0, sr: 7.14, wickets: 1, econ: 4.71, dotPct: 64, boundaryPct: 0 },
-          { id: 'p22', name: "Ravichandran Ragulan", team: "VAV", role: "Bowler", battingStyle: "Right-Hand Batter", matches: 1, runs: 0, balls: 1, fours: 0, sixes: 0, sr: 0.0, wickets: 1, econ: 3.20, dotPct: 74, boundaryPct: 0 },
+          { id: 'p1', name: "Sivakaran Venujan", team: "JAF", role: "Wicket Keeper", battingStyle: "Right-Hand Batter", matches: 1, runs: 11, balls: 47, fours: 1, sixes: 0, sr: 23.40, wickets: 0, econ: 0.0, dotPct: 61, boundaryPct: 2 },
+          { id: 'p2', name: "Shanmuganathan Silaxan", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 26, balls: 28, fours: 4, sixes: 1, sr: 92.86, wickets: 0, econ: 0.0, dotPct: 50, boundaryPct: 17 },
+          { id: 'p3', name: "Ashmika Iddamalgoda", team: "JAF", role: "All-Rounder", battingStyle: "Right-Hand Batter", matches: 1, runs: 79, balls: 81, fours: 13, sixes: 1, sr: 97.53, wickets: 1, econ: 3.50, dotPct: 40, boundaryPct: 17 },
+          { id: 'p4', name: "Sivaruban Sivanujan", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 33, balls: 42, fours: 3, sixes: 2, sr: 78.57, wickets: 0, econ: 9.00, dotPct: 50, boundaryPct: 11 },
+          { id: 'p5', name: "Patkunam Mathushan", team: "JAF", role: "All-Rounder", battingStyle: "Right-Hand Batter", matches: 1, runs: 10, balls: 17, fours: 0, sixes: 0, sr: 58.82, wickets: 1, econ: 3.67, dotPct: 60, boundaryPct: 0 },
+          { id: 'p6', name: "Antony Desvin", team: "JAF", role: "Captain (All-Rounder)", battingStyle: "Right-Hand Batter", matches: 1, runs: 23, balls: 31, fours: 1, sixes: 2, sr: 74.19, wickets: 3, econ: 1.33, dotPct: 55, boundaryPct: 9 },
+          { id: 'p7', name: "K Siyanujan", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 14, balls: 11, fours: 2, sixes: 1, sr: 127.27, wickets: 0, econ: 10.00, dotPct: 45, boundaryPct: 27 },
+          { id: 'p8', name: "Selvanathan Niroshan", team: "JAF", role: "Bowler", battingStyle: "Right-Hand Batter", matches: 1, runs: 13, balls: 6, fours: 0, sixes: 2, sr: 216.67, wickets: 4, econ: 2.91, dotPct: 33, boundaryPct: 33 },
+          { id: 'p9', name: "V Priyankan", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 20, balls: 15, fours: 0, sixes: 0, sr: 133.33, wickets: 0, econ: 0.0, dotPct: 40, boundaryPct: 0 },
+          { id: 'p10', name: "Chalithya Millangoda", team: "JAF", role: "All-Rounder", battingStyle: "Right-Hand Batter", matches: 1, runs: 2, balls: 5, fours: 0, sixes: 0, sr: 40.00, wickets: 1, econ: 6.67, dotPct: 60, boundaryPct: 0 },
+          { id: 'p11', name: "Ebenezer Johanan", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 16, balls: 17, fours: 0, sixes: 1, sr: 94.12, wickets: 0, econ: 0.0, dotPct: 45, boundaryPct: 5 },
+          { id: 'p12', name: "Janith Dilshan", team: "VAV", role: "Bowler", battingStyle: "Left-Hand Batter", matches: 1, runs: 1, balls: 10, fours: 0, sixes: 0, sr: 10.00, wickets: 1, econ: 5.40, dotPct: 90, boundaryPct: 0 },
+          { id: 'p13', name: "Ekjfernando", team: "VAV", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 3, balls: 15, fours: 0, sixes: 0, sr: 20.00, wickets: 0, econ: 0.0, dotPct: 80, boundaryPct: 0 },
+          { id: 'p14', name: "Lahiru Welagedara", team: "VAV", role: "Wicket Keeper", battingStyle: "Left-Hand Batter", matches: 1, runs: 35, balls: 31, fours: 4, sixes: 2, sr: 112.90, wickets: 0, econ: 0.0, dotPct: 45, boundaryPct: 19 },
+          { id: 'p15', name: "Rmid Ranaweera", team: "VAV", role: "Batter", battingStyle: "Left-Hand Batter", matches: 1, runs: 1, balls: 6, fours: 0, sixes: 0, sr: 16.67, wickets: 0, econ: 0.0, dotPct: 83, boundaryPct: 0 },
+          { id: 'p16', name: "Rashan Wijerathna", team: "VAV", role: "Batter", battingStyle: "Left-Hand Batter", matches: 1, runs: 23, balls: 28, fours: 3, sixes: 1, sr: 82.14, wickets: 0, econ: 0.0, dotPct: 50, boundaryPct: 14 },
+          { id: 'p17', name: "Sahan Siriwardana", team: "VAV", role: "Captain (All-Rounder)", battingStyle: "Left-Hand Batter", matches: 1, runs: 3, balls: 13, fours: 0, sixes: 0, sr: 23.08, wickets: 1, econ: 5.60, dotPct: 76, boundaryPct: 0 },
+          { id: 'p18', name: "Pahan Bimsara", team: "VAV", role: "Bowler", battingStyle: "Right-Hand Batter", matches: 1, runs: 0, balls: 2, fours: 0, sixes: 0, sr: 0.0, wickets: 0, econ: 9.75, dotPct: 100, boundaryPct: 0 },
+          { id: 'p19', name: "Mohammed Riwaqi", team: "VAV", role: "Bowler", battingStyle: "Right-Hand Batter", matches: 1, runs: 11, balls: 9, fours: 2, sixes: 0, sr: 122.22, wickets: 2, econ: 4.75, dotPct: 44, boundaryPct: 22 },
+          { id: 'p20', name: "Sithamparalingam Nharthanan", team: "VAV", role: "All-Rounder", battingStyle: "Left-Hand Batter", matches: 1, runs: 6, balls: 8, fours: 1, sixes: 0, sr: 75.00, wickets: 1, econ: 5.33, dotPct: 62, boundaryPct: 12 },
+          { id: 'p21', name: "Kkirubagaran", team: "VAV", role: "Bowler", battingStyle: "Right-Hand Batter", matches: 1, runs: 1, balls: 14, fours: 0, sixes: 0, sr: 7.14, wickets: 1, econ: 4.71, dotPct: 92, boundaryPct: 0 },
+          { id: 'p22', name: "Ravichandran Ragulan", team: "VAV", role: "Bowler", battingStyle: "Right-Hand Batter", matches: 1, runs: 0, balls: 1, fours: 0, sixes: 0, sr: 0.0, wickets: 1, econ: 3.20, dotPct: 100, boundaryPct: 0 },
         ];
 
         // Merge static players into API players (overwriting inaccurate/missing backend stats)
@@ -100,6 +101,14 @@ export default function TeamsPlayers() {
   const purpleCapLeader = playersList && playersList.length > 0
     ? [...playersList].filter(p => p.wickets).sort((a, b) => (b.wickets || 0) - (a.wickets || 0))[0]
     : null;
+
+  const getPlayerIcon = (role) => {
+    if (!role) return '🏏';
+    if (role.includes('All-Rounder')) return '⚔️';
+    if (role.includes('Bowler')) return '⚾';
+    if (role.includes('Wicket Keeper')) return '🧤';
+    return '🏏'; // Batter or Captain
+  };
 
   return (
     <div className="teams-players-page" style={{ paddingBottom: '4rem' }}>
@@ -186,7 +195,25 @@ export default function TeamsPlayers() {
                 <h2 style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--text-primary)' }}>
                   Participating University Squads ({teams.length})
                 </h2>
-                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Primary Campus: University of Moratuwa (UOM)</span>
+                <select 
+                  value={selectedTeam} 
+                  onChange={(e) => setSelectedTeam(e.target.value)}
+                  style={{
+                    padding: '0.4rem 1rem',
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: 'var(--radius-sm)',
+                    color: 'var(--text-primary)',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    outline: 'none'
+                  }}
+                >
+                  <option value="ALL">All Squads</option>
+                  {teams.map(t => (
+                    <option key={t.code} value={t.code}>{t.name} ({t.shortName || t.name})</option>
+                  ))}
+                </select>
               </div>
 
               <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', marginBottom: '2.5rem' }}>
@@ -252,7 +279,7 @@ export default function TeamsPlayers() {
                 <Search size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '0.8rem', top: '50%', transform: 'translateY(-50%)' }} />
                 <input 
                   type="text"
-                  placeholder="Search player or team..."
+                  placeholder="Search player..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   style={{
@@ -290,7 +317,7 @@ export default function TeamsPlayers() {
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
                     <div>
-                      <span style={{ fontSize: '1.2rem', marginRight: '0.4rem' }}>{p.icon || '🏏'}</span>
+                      <span style={{ fontSize: '1.2rem', marginRight: '0.4rem' }}>{p.icon || getPlayerIcon(p.role)}</span>
                       <h4 style={{ display: 'inline', fontSize: '1.15rem', fontWeight: '800', color: p.team === 'UOM' ? '#dc2626' : 'var(--text-primary)' }}>
                         {p.name}
                       </h4>
