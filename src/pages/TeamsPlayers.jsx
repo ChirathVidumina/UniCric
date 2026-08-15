@@ -62,10 +62,13 @@ export default function TeamsPlayers() {
           { id: 'p22', name: "Ravichandran Ragulan", team: "VAV", role: "Bowler", battingStyle: "Right-Hand Batter", matches: 1, runs: 0, balls: 1, fours: 0, sixes: 0, sr: 0.0, wickets: 1, econ: 3.20, dotPct: 74, boundaryPct: 0 },
         ];
 
-        // Merge keeping static players if API misses them
+        // Merge static players into API players (overwriting inaccurate/missing backend stats)
         const mergedPlayers = [...apiPlayers];
         staticPlayers.forEach(sp => {
-          if (!mergedPlayers.find(ap => ap.name === sp.name)) {
+          const existingIdx = mergedPlayers.findIndex(ap => ap.name === sp.name);
+          if (existingIdx >= 0) {
+            mergedPlayers[existingIdx] = { ...mergedPlayers[existingIdx], ...sp };
+          } else {
             mergedPlayers.push(sp);
           }
         });
@@ -292,7 +295,7 @@ export default function TeamsPlayers() {
                         {p.name}
                       </h4>
                       <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
-                        {p.team} • {p.role}
+                        {p.team} • {p.role} {p.battingStyle ? `• ${p.battingStyle.includes('Right') ? 'RHB' : p.battingStyle.includes('Left') ? 'LHB' : p.battingStyle}` : ''}
                       </div>
                     </div>
                     <span className="badge" style={{ background: p.team === 'UOM' ? 'rgba(220, 38, 38, 0.15)' : 'rgba(255,255,255,0.08)', color: p.team === 'UOM' ? '#dc2626' : 'var(--text-muted)' }}>
@@ -318,8 +321,8 @@ export default function TeamsPlayers() {
 
                   {/* Micro-bar metrics */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                    <span>Dot Ball %: <strong style={{ color: 'var(--text-primary)' }}>{p.dotPct ?? 0}%</strong></span>
                     <span>Boundary %: <strong style={{ color: 'var(--accent-gold)' }}>{p.boundaryPct ?? 0}%</strong></span>
+                    <span>Dot Ball %: <strong style={{ color: 'var(--text-primary)' }}>{p.dotPct ?? 0}%</strong></span>
                   </div>
                 </div>
               ))}
