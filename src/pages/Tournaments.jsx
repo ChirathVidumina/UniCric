@@ -65,7 +65,7 @@ export default function Tournaments() {
     { name: 'V Priyankan', team: 'JAF', catches: 1, stumpings: 0, runOuts: 0 },
     { name: 'Ravichandran Ragulan', team: 'VAV', catches: 1, stumpings: 0, runOuts: 0 },
     { name: 'Rashan Wijerathna', team: 'VAV', catches: 0, stumpings: 0, runOuts: 1 },
-  ].sort((a, b) => ((b.catches + b.stumpings + b.runOuts) - (a.catches + a.stumpings + a.runOuts)));
+  ].sort((a, b) => ((b.catches + b.stumpings + b.runOuts) - (a.catches + a.stumpings + a.runOuts))).slice(0, 3);
 
   const activeScorecard = selectedCompletedMatchId ? completedMatchScorecards[selectedCompletedMatchId] : null;
 
@@ -1171,14 +1171,18 @@ export default function Tournaments() {
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0f172a', padding: '1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <span style={{ fontWeight: '800', color: '#dc2626' }}>{activeScorecard.innings1.team}</span>
-                  <span style={{ fontWeight: '900', fontSize: '1.1rem', color: 'white' }}>{activeScorecard.innings1.score} <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>({activeScorecard.innings1.overs})</span></span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0f172a', padding: '1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <span style={{ fontWeight: '800', color: '#10b981' }}>{activeScorecard.innings2.team}</span>
-                  <span style={{ fontWeight: '900', fontSize: '1.1rem', color: 'white' }}>{activeScorecard.innings2.score} <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>({activeScorecard.innings2.overs})</span></span>
-                </div>
+                {activeScorecard?.innings1 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0f172a', padding: '1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    <span style={{ fontWeight: '800', color: '#dc2626' }}>{activeScorecard.innings1.team}</span>
+                    <span style={{ fontWeight: '900', fontSize: '1.1rem', color: 'white' }}>{activeScorecard.innings1.score} <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>({activeScorecard.innings1.overs})</span></span>
+                  </div>
+                )}
+                {activeScorecard?.innings2 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0f172a', padding: '1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    <span style={{ fontWeight: '800', color: '#10b981' }}>{activeScorecard.innings2.team}</span>
+                    <span style={{ fontWeight: '900', fontSize: '1.1rem', color: 'white' }}>{activeScorecard.innings2.score} <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>({activeScorecard.innings2.overs})</span></span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -1281,6 +1285,7 @@ export default function Tournaments() {
               <div style={{ marginBottom: '1.5rem' }}>
                 
                 {/* 1ST INNINGS */}
+                {activeScorecard?.innings1 && (
                 <div style={{ marginBottom: '1.5rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0f172a', padding: '0.65rem 1rem', borderRadius: '6px 6px 0 0', border: '1px solid rgba(255,255,255,0.1)' }}>
                     <span style={{ fontWeight: '800', color: '#dc2626' }}>1ST INNINGS BATTING: {activeScorecard.innings1.team}</span>
@@ -1300,7 +1305,7 @@ export default function Tournaments() {
                         </tr>
                       </thead>
                       <tbody>
-                        {activeScorecard.innings1.batting.map((c, idx) => (
+                        {activeScorecard.innings1.batting?.map((c, idx) => (
                           <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                             <td style={{ padding: '0.5rem 0.6rem', fontWeight: '700' }}>{c.player}</td>
                             <td style={{ fontSize: '0.8rem', color: '#94a3b8' }}>{c.dismissal}</td>
@@ -1330,7 +1335,7 @@ export default function Tournaments() {
                         </tr>
                       </thead>
                       <tbody>
-                        {activeScorecard.innings1.bowling.map((c, idx) => (
+                        {activeScorecard.innings1.bowling?.map((c, idx) => (
                           <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                             <td style={{ padding: '0.5rem 0.6rem', fontWeight: '700' }}>{c.bowler}</td>
                             <td style={{ textAlign: 'right' }}>{c.overs}</td>
@@ -1344,8 +1349,10 @@ export default function Tournaments() {
                     </table>
                   </div>
                 </div>
+                )}
 
                 {/* 2ND INNINGS */}
+                {activeScorecard?.innings2 && (
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0f172a', padding: '0.65rem 1rem', borderRadius: '6px 6px 0 0', border: '1px solid rgba(255,255,255,0.1)' }}>
                     <span style={{ fontWeight: '800', color: '#10b981' }}>2ND INNINGS BATTING: {activeScorecard.innings2.team}</span>
@@ -1365,7 +1372,7 @@ export default function Tournaments() {
                         </tr>
                       </thead>
                       <tbody>
-                        {activeScorecard.innings2.batting.map((c, idx) => (
+                        {activeScorecard.innings2.batting?.map((c, idx) => (
                           <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                             <td style={{ padding: '0.5rem 0.6rem', fontWeight: '700' }}>{c.player}</td>
                             <td style={{ fontSize: '0.8rem', color: '#94a3b8' }}>{c.dismissal}</td>
@@ -1395,7 +1402,7 @@ export default function Tournaments() {
                         </tr>
                       </thead>
                       <tbody>
-                        {activeScorecard.innings2.bowling.map((c, idx) => (
+                        {activeScorecard.innings2.bowling?.map((c, idx) => (
                           <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                             <td style={{ padding: '0.5rem 0.6rem', fontWeight: '700' }}>{c.bowler}</td>
                             <td style={{ textAlign: 'right' }}>{c.overs}</td>
@@ -1409,6 +1416,7 @@ export default function Tournaments() {
                     </table>
                   </div>
                 </div>
+                )}
 
               </div>
 
