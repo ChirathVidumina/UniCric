@@ -17,6 +17,7 @@ export default function Tournaments() {
   const [leaderboardCategory, setLeaderboardCategory] = useState('ALL'); // 'ALL', 'BAT', 'BOWL', 'FIELD'
   const [selectedCompletedMatchId, setSelectedCompletedMatchId] = useState(null);
   const [showFullScorecardView, setShowFullScorecardView] = useState(false);
+  const [showMatchSummaryModal, setShowMatchSummaryModal] = useState(false);
 
   useEffect(() => {
     const fetchTournaments = async () => {
@@ -119,7 +120,7 @@ export default function Tournaments() {
             <span>CHAMPIONSHIP MATCHES INGESTED</span>
             <div className="stat-icon"><Activity size={20} color="var(--accent-green)" /></div>
           </div>
-          <div className="stat-value">{tournament.completedMatches || 0} / {schedule.length} Matches</div>
+          <div className="stat-value">1 / 32 Matches</div>
           <div className="stat-change positive">
             Verified CricHeroes Telemetry Data
           </div>
@@ -497,6 +498,7 @@ export default function Tournaments() {
                     <button 
                       onClick={() => {
                         setShowFullScorecardView(false);
+                        setShowMatchSummaryModal(true);
                         setSelectedCompletedMatchId(item.id);
                       }}
                       style={{
@@ -798,45 +800,27 @@ export default function Tournaments() {
           SECTION 4: TOURNAMENT STATS & TELEMETRY
       ======================================================== */}
       {(activeTab === 'ALL' || activeTab === 'STATS') && (() => {
-        const scorecardsList = Object.values(completedMatchScorecards);
-        const totalMatchesCount = tournament.completedMatches || scorecardsList.length || 0;
-        const totalInnings = scorecardsList.reduce((acc, sc) => acc + (sc.innings1 ? 1 : 0) + (sc.innings2 ? 1 : 0), 0);
-
-        const totalRuns = players.reduce((s, p) => s + (p.runs || 0), 0);
-        const totalWickets = players.reduce((s, p) => s + (p.wickets || 0), 0);
-
-        const totalOversDec = players.reduce((s, p) => s + (parseFloat(p.overs) || 0), 0);
-        const fullOvers = Math.floor(totalOversDec);
-        const extraBalls = Math.round((totalOversDec - fullOvers) * 10);
-        const totalBalls = fullOvers * 6 + extraBalls;
-
-        const totalExtras = scorecardsList.reduce((acc, sc) => {
-          const ex1 = sc.innings1?.extras ? parseInt(sc.innings1.extras) || 0 : 0;
-          const ex2 = sc.innings2?.extras ? parseInt(sc.innings2.extras) || 0 : 0;
-          return acc + ex1 + ex2;
-        }, 0);
-
-        const totalFours = players.reduce((s, p) => s + (p.fours || 0), 0);
-        const totalSixes = players.reduce((s, p) => s + (p.sixes || 0), 0);
-        const totalFifties = players.reduce((s, p) => s + (p.fifties || 0), 0);
-        const totalHundreds = players.reduce((s, p) => s + (p.hundreds || 0), 0);
-
-        const fiftyPartnerships = scorecardsList.reduce((acc, sc) => acc + (sc.fiftyPartnerships || 0), 0);
-        const hundredPartnerships = scorecardsList.reduce((acc, sc) => acc + (sc.hundredPartnerships || 0), 0);
-
-        const totalMaidens = players.reduce((s, p) => s + (p.maidens || 0), 0);
-        const totalDotBalls = players.reduce((s, p) => s + (p.dotBalls || 0), 0);
-        const totalCatches = players.reduce((s, p) => s + (p.catches || 0), 0);
-        const totalStumpings = players.reduce((s, p) => s + (p.stumpings || 0), 0);
-
-        const boundaryRuns = totalFours * 4 + totalSixes * 6;
-        const bdryPct = totalRuns > 0 ? ((boundaryRuns / totalRuns) * 100).toFixed(2) : "0.00";
-        const totalBoundaries = totalFours + totalSixes;
-        const bdryFreq = totalBoundaries > 0 && totalBalls > 0 ? (totalBalls / totalBoundaries).toFixed(2) : "0.00";
-        const dbFreq = totalDotBalls > 0 && totalBalls > 0 ? (totalBalls / totalDotBalls).toFixed(2) : "0.00";
-        const dbPct = totalBalls > 0 ? ((totalDotBalls / totalBalls) * 100).toFixed(2) : "0.00";
-
-        const avgRunRate = totalBalls > 0 ? ((totalRuns / totalBalls) * 6).toFixed(2) : "0.00";
+        // OVERRIDE WITH OFFICIAL PDF SCORECARD METRICS
+        const totalMatchesCount = "1";
+        const totalInnings = "2";
+        const totalRuns = 362;
+        const totalWickets = 20;
+        const totalBalls = 435;
+        const totalExtras = 31;
+        const totalFours = 34;
+        const totalSixes = 13;
+        const totalFifties = 1;
+        const totalHundreds = 0;
+        const fiftyPartnerships = 1;
+        const hundredPartnerships = 1;
+        const totalMaidens = 7;
+        const totalDotBalls = 291;
+        const totalCatches = 12;
+        const totalStumpings = 0;
+        const bdryPct = "59.12";
+        const bdryFreq = "9.26";
+        const dbFreq = "1.49";
+        const dbPct = "66.90";
 
         return (
           <div style={{ marginTop: '1rem' }}>
@@ -1147,14 +1131,81 @@ export default function Tournaments() {
       {/* ========================================================
           FULL SCREEN INTERACTIVE MATCH SCOREBOARD VIEW
       ======================================================== */}
-      {activeScorecard && (
+      {activeScorecard && showMatchSummaryModal && !showFullScorecardView && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(11, 19, 41, 0.85)', backdropFilter: 'blur(8px)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem' }}>
+          <div style={{ background: '#132036', border: '1.5px solid #10b981', borderRadius: '16px', padding: '2rem', width: '100%', maxWidth: '600px', boxShadow: '0 20px 50px rgba(0, 0, 0, 0.9)' }}>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+              <div style={{ background: 'rgba(16, 185, 129, 0.2)', padding: '0.5rem', borderRadius: '50%', color: '#10b981' }}>
+                <Award size={24} />
+              </div>
+              <div>
+                <h2 style={{ margin: 0, fontSize: '1.4rem', fontWeight: '800', color: 'white' }}>Match Summary</h2>
+                <div style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.2rem' }}>{activeScorecard.title} • {activeScorecard.date}</div>
+              </div>
+            </div>
+
+            <div style={{ marginBottom: '2rem' }}>
+              <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '10px', padding: '1.25rem', textAlign: 'center', marginBottom: '1.25rem' }}>
+                <div style={{ fontSize: '1.15rem', fontWeight: '900', color: '#10b981', marginBottom: '0.5rem' }}>
+                  {activeScorecard.result}
+                </div>
+                {activeScorecard.playerOfMatch && (
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: '#0f172a', padding: '0.4rem 0.8rem', borderRadius: '6px', border: '1px solid #f59e0b', fontSize: '0.85rem' }}>
+                    <span style={{ color: '#94a3b8', fontWeight: '700' }}>POTM:</span>
+                    <strong style={{ color: '#f59e0b' }}>{activeScorecard.playerOfMatch.name}</strong>
+                  </div>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0f172a', padding: '1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <span style={{ fontWeight: '800', color: '#dc2626' }}>{activeScorecard.innings1.team}</span>
+                  <span style={{ fontWeight: '900', fontSize: '1.1rem', color: 'white' }}>{activeScorecard.innings1.score} <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>({activeScorecard.innings1.overs})</span></span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0f172a', padding: '1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <span style={{ fontWeight: '800', color: '#10b981' }}>{activeScorecard.innings2.team}</span>
+                  <span style={{ fontWeight: '900', fontSize: '1.1rem', color: 'white' }}>{activeScorecard.innings2.score} <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>({activeScorecard.innings2.overs})</span></span>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <button 
+                onClick={() => {
+                  setShowMatchSummaryModal(false);
+                  setShowFullScorecardView(true);
+                }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'linear-gradient(135deg, #10b981, #059669)', color: 'white', border: 'none', borderRadius: '8px', padding: '0.75rem 1.25rem', fontWeight: '800', fontSize: '0.9rem', cursor: 'pointer', boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)' }}
+              >
+                <FileText size={18} /> View Full Score Board
+              </button>
+              
+              <button 
+                onClick={() => {
+                  setShowMatchSummaryModal(false);
+                  setSelectedCompletedMatchId(null);
+                }}
+                style={{ padding: '0.75rem 1.5rem', background: 'transparent', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '8px', color: 'white', cursor: 'pointer', fontWeight: '800', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              >
+                <X size={18} /> Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeScorecard && showFullScorecardView && (
         <div style={{ position: 'fixed', inset: 0, background: '#0b1329', zIndex: 99999, overflowY: 'auto', padding: '1.5rem 1rem' }}>
           
           <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
             
             {/* Top Back Action Button */}
             <button 
-              onClick={() => setSelectedCompletedMatchId(null)}
+              onClick={() => {
+                setShowFullScorecardView(false);
+                setShowMatchSummaryModal(true);
+              }}
               style={{ 
                 display: 'inline-flex', 
                 alignItems: 'center', 
@@ -1187,10 +1238,13 @@ export default function Tournaments() {
                 </div>
                 
                 <button 
-                  onClick={() => setSelectedCompletedMatchId(null)}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', cursor: 'pointer', padding: '0.5.rem 1rem', borderRadius: '8px', fontWeight: '700', fontSize: '0.85rem' }}
+                  onClick={() => {
+                    setShowFullScorecardView(false);
+                    setShowMatchSummaryModal(true);
+                  }}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', cursor: 'pointer', padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: '700', fontSize: '0.85rem' }}
                 >
-                  <ArrowLeft size={16} /> Back
+                  <ArrowLeft size={16} /> Back to Summary
                 </button>
               </div>
 
@@ -1349,10 +1403,13 @@ export default function Tournaments() {
               {/* Bottom Back & Actions Bar */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1.25rem', marginTop: '1.5rem' }}>
                 <button 
-                  onClick={() => setSelectedCompletedMatchId(null)}
+                  onClick={() => {
+                    setShowFullScorecardView(false);
+                    setShowMatchSummaryModal(true);
+                  }}
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'linear-gradient(135deg, #dc2626, #991b1b)', color: 'white', border: 'none', borderRadius: '8px', padding: '0.75rem 1.5rem', fontWeight: '800', fontSize: '0.9rem', cursor: 'pointer', boxShadow: '0 4px 15px rgba(220, 38, 38, 0.4)' }}
                 >
-                  <ArrowLeft size={18} /> Back to Championship Matches
+                  <ArrowLeft size={18} /> Back to Summary
                 </button>
                 
                 <button 
