@@ -1145,116 +1145,116 @@ export default function Tournaments() {
       ======================================================== */}
       {activeScorecard && showMatchSummaryModal && !showFullScorecardView && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(11, 19, 41, 0.92)', backdropFilter: 'blur(8px)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', overflowY: 'auto' }}>
-          <div style={{ width: '100%', maxWidth: '750px', fontFamily: '"Arial", sans-serif', boxShadow: '0 25px 60px rgba(0,0,0,0.9)' }}>
+          <div style={{ width: '100%', maxWidth: '750px', fontFamily: '"Arial", sans-serif', boxShadow: '0 25px 60px rgba(0,0,0,0.9)', background: '#132036', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
             
             {/* Header */}
-            <div style={{ background: '#d90479', color: 'white', padding: '0.8rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ background: '#0f172a', color: 'white', padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
               <div>
-                <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '900', letterSpacing: '1.5px' }}>MATCH SUMMARY</h2>
-                <div style={{ fontSize: '0.85rem', fontStyle: 'italic', fontWeight: 'bold', letterSpacing: '0.5px' }}>UNIVERSITY OF JAFFNA, 2026</div>
+                <h2 style={{ margin: 0, fontSize: '1.6rem', fontWeight: '900', letterSpacing: '1px', color: '#10b981' }}>MATCH SUMMARY</h2>
+                <div style={{ fontSize: '0.85rem', fontStyle: 'italic', fontWeight: 'bold', color: '#94a3b8', marginTop: '0.2rem' }}>UNIVERSITY OF JAFFNA, 2026</div>
               </div>
-              <div style={{ background: '#eab308', padding: '0.4rem 1rem', color: 'black', fontWeight: '900', fontSize: '1.2rem', transform: 'skew(-10deg)', borderLeft: '4px solid #16a34a' }}>
-                <div style={{ transform: 'skew(10deg)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <div style={{ background: 'rgba(16, 185, 129, 0.15)', padding: '0.5rem 1.25rem', color: '#10b981', fontWeight: '900', fontSize: '1.2rem', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                   <Trophy size={20} /> UniCric
                 </div>
               </div>
             </div>
 
             {/* Team 1 Banner */}
-            <div style={{ display: 'flex', background: '#d90479', color: 'white', padding: '0', alignItems: 'stretch', justifyContent: 'space-between', marginTop: '0.5rem' }}>
-              <div style={{ fontSize: '1.4rem', fontWeight: '900', textTransform: 'uppercase', padding: '0.4rem 1.5rem', display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', background: 'linear-gradient(90deg, #1e293b, #0f172a)', color: 'white', padding: '0', alignItems: 'stretch', justifyContent: 'space-between', borderTop: '4px solid #dc2626' }}>
+              <div style={{ fontSize: '1.3rem', fontWeight: '900', textTransform: 'uppercase', padding: '0.6rem 1.5rem', display: 'flex', alignItems: 'center', color: '#dc2626' }}>
                 JAFFNA UNIVERSITY
               </div>
               <div style={{ display: 'flex', alignItems: 'stretch' }}>
-                <div style={{ fontSize: '0.9rem', fontWeight: '700', padding: '0 1rem', display: 'flex', alignItems: 'center' }}>OVERS 50.0</div>
-                <div style={{ background: '#032e6b', padding: '0.4rem 1.25rem', fontSize: '1.7rem', fontWeight: '900', color: 'white', borderLeft: '4px solid white', display: 'flex', alignItems: 'center' }}>
+                <div style={{ fontSize: '0.85rem', fontWeight: '700', padding: '0 1rem', display: 'flex', alignItems: 'center', color: '#94a3b8' }}>OVERS 50.0</div>
+                <div style={{ background: '#0f172a', padding: '0.4rem 1.5rem', fontSize: '1.5rem', fontWeight: '900', color: 'white', borderLeft: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center' }}>
                   271-10
                 </div>
               </div>
             </div>
 
             {/* Team 1 Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', background: '#e2e8f0', gap: '2px', padding: '0 2px 2px 2px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', background: 'rgba(255,255,255,0.02)', gap: '1px', padding: '1px' }}>
               {/* Batters */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
                 {[ 
                   { name: 'ASHMIKA', runs: 79, balls: '81' },
                   { name: 'SIVARUBAN', runs: 33, balls: '42' },
                   { name: 'SHANMUGANATHAN', runs: 26, balls: '28' }
                 ].map((p, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0.75rem', background: 'white', color: '#0f172a', fontWeight: '900' }}>
-                    <span style={{ fontStyle: 'italic', fontSize: '1.1rem' }}>{p.name}</span>
-                    <div><span style={{ fontSize: '1.2rem' }}>{p.runs}</span> <span style={{ color: '#475569', fontSize: '0.85rem' }}>({p.balls})</span></div>
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 1rem', background: '#0f172a', color: '#e2e8f0', fontWeight: '800' }}>
+                    <span style={{ fontStyle: 'italic', fontSize: '1.05rem' }}>{p.name}</span>
+                    <div><span style={{ fontSize: '1.1rem', color: '#f59e0b' }}>{p.runs}</span> <span style={{ color: '#64748b', fontSize: '0.85rem' }}>({p.balls})</span></div>
                   </div>
                 ))}
               </div>
               {/* Bowlers (VAV) */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
                 {[ 
                   { name: 'RIWAQI', fig: '2-38', ov: '8.0' },
                   { name: 'NHARTHANAN', fig: '1-32', ov: '6.0' },
                   { name: 'RAGULAN', fig: '1-16', ov: '5.0' }
                 ].map((p, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0.75rem', background: 'white', color: '#0f172a', fontWeight: '900' }}>
-                    <span style={{ fontStyle: 'italic', fontSize: '1.1rem' }}>{p.name}</span>
-                    <div><span style={{ fontSize: '1.2rem' }}>{p.fig}</span> <span style={{ color: '#475569', fontSize: '0.85rem', marginLeft: '2px' }}>{p.ov}</span></div>
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 1rem', background: '#0f172a', color: '#e2e8f0', fontWeight: '800' }}>
+                    <span style={{ fontStyle: 'italic', fontSize: '1.05rem' }}>{p.name}</span>
+                    <div><span style={{ fontSize: '1.1rem', color: '#10b981' }}>{p.fig}</span> <span style={{ color: '#64748b', fontSize: '0.85rem', marginLeft: '4px' }}>{p.ov}</span></div>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Team 2 Banner */}
-            <div style={{ display: 'flex', background: '#d90479', color: 'white', padding: '0', alignItems: 'stretch', justifyContent: 'space-between', marginTop: '0.5rem' }}>
-              <div style={{ fontSize: '1.4rem', fontWeight: '900', textTransform: 'uppercase', padding: '0.4rem 1.5rem', display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', background: 'linear-gradient(90deg, #1e293b, #0f172a)', color: 'white', padding: '0', alignItems: 'stretch', justifyContent: 'space-between', marginTop: '0.2rem', borderTop: '4px solid #10b981' }}>
+              <div style={{ fontSize: '1.3rem', fontWeight: '900', textTransform: 'uppercase', padding: '0.6rem 1.5rem', display: 'flex', alignItems: 'center', color: '#10b981' }}>
                 VAVUNIYA UNIVERSITY
               </div>
               <div style={{ display: 'flex', alignItems: 'stretch' }}>
-                <div style={{ fontSize: '0.9rem', fontWeight: '700', padding: '0 1rem', display: 'flex', alignItems: 'center' }}>OVERS 22.3</div>
-                <div style={{ background: '#032e6b', padding: '0.4rem 1.25rem', fontSize: '1.7rem', fontWeight: '900', color: 'white', borderLeft: '4px solid white', display: 'flex', alignItems: 'center' }}>
+                <div style={{ fontSize: '0.85rem', fontWeight: '700', padding: '0 1rem', display: 'flex', alignItems: 'center', color: '#94a3b8' }}>OVERS 22.3</div>
+                <div style={{ background: '#0f172a', padding: '0.4rem 1.5rem', fontSize: '1.5rem', fontWeight: '900', color: 'white', borderLeft: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center' }}>
                   91-10
                 </div>
               </div>
             </div>
 
             {/* Team 2 Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', background: '#e2e8f0', gap: '2px', padding: '0 2px 2px 2px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', background: 'rgba(255,255,255,0.02)', gap: '1px', padding: '1px' }}>
               {/* Batters */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
                 {[ 
                   { name: 'LAHIRU', runs: 35, balls: '31' },
                   { name: 'RASHAN', runs: 23, balls: '28' },
                   { name: 'RIWAQI', runs: 11, balls: '9' }
                 ].map((p, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0.75rem', background: 'white', color: '#0f172a', fontWeight: '900' }}>
-                    <span style={{ fontStyle: 'italic', fontSize: '1.1rem' }}>{p.name}</span>
-                    <div><span style={{ fontSize: '1.2rem' }}>{p.runs}</span> <span style={{ color: '#475569', fontSize: '0.85rem' }}>({p.balls})</span></div>
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 1rem', background: '#0f172a', color: '#e2e8f0', fontWeight: '800' }}>
+                    <span style={{ fontStyle: 'italic', fontSize: '1.05rem' }}>{p.name}</span>
+                    <div><span style={{ fontSize: '1.1rem', color: '#f59e0b' }}>{p.runs}</span> <span style={{ color: '#64748b', fontSize: '0.85rem' }}>({p.balls})</span></div>
                   </div>
                 ))}
               </div>
               {/* Bowlers (JAF) */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
                 {[ 
                   { name: 'NIROSHAN', fig: '4-16', ov: '5.3' },
                   { name: 'DESVIN', fig: '3-8', ov: '6.0' },
                   { name: 'MATHUSHAN', fig: '1-11', ov: '3.0' }
                 ].map((p, i) => (
-                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0.75rem', background: 'white', color: '#0f172a', fontWeight: '900' }}>
-                    <span style={{ fontStyle: 'italic', fontSize: '1.1rem' }}>{p.name}</span>
-                    <div><span style={{ fontSize: '1.2rem' }}>{p.fig}</span> <span style={{ color: '#475569', fontSize: '0.85rem', marginLeft: '2px' }}>{p.ov}</span></div>
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 1rem', background: '#0f172a', color: '#e2e8f0', fontWeight: '800' }}>
+                    <span style={{ fontStyle: 'italic', fontSize: '1.05rem' }}>{p.name}</span>
+                    <div><span style={{ fontSize: '1.1rem', color: '#10b981' }}>{p.fig}</span> <span style={{ color: '#64748b', fontSize: '0.85rem', marginLeft: '4px' }}>{p.ov}</span></div>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Result Footer */}
-            <div style={{ background: '#032e6b', padding: '0.75rem', textAlign: 'center', marginTop: '0.5rem', borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' }}>
-              <div style={{ fontSize: '1.1rem', fontStyle: 'italic', fontWeight: '900', color: 'white', letterSpacing: '1px', textTransform: 'uppercase' }}>
+            <div style={{ background: 'rgba(16, 185, 129, 0.1)', padding: '1rem', textAlign: 'center', marginTop: '1rem', borderTop: '1px solid rgba(16, 185, 129, 0.2)' }}>
+              <div style={{ fontSize: '1.2rem', fontStyle: 'italic', fontWeight: '900', color: '#10b981', letterSpacing: '1px', textTransform: 'uppercase' }}>
                 JAFFNA UNIVERSITY WON BY 180 RUNS
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', padding: '1.5rem', background: '#0f172a' }}>
               <button 
                 onClick={() => {
                   setShowMatchSummaryModal(false);
