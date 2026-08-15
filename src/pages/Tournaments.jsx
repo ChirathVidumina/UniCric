@@ -53,7 +53,19 @@ export default function Tournaments() {
 
   const topBatters = [...players].filter(p => p.runs !== undefined && p.runs > 0).sort((a, b) => (b.runs || 0) - (a.runs || 0)).slice(0, 10);
   const topBowlers = [...players].filter(p => p.wickets !== undefined && p.wickets > 0).sort((a, b) => b.wickets - a.wickets).slice(0, 10);
-  const topFielders = [...players].filter(p => (p.catches || 0) > 0 || (p.stumpings || 0) > 0 || (p.runOuts || 0) > 0).sort((a, b) => ((b.catches || 0) + (b.stumpings || 0) + (b.runOuts || 0)) - ((a.catches || 0) + (a.stumpings || 0) + (a.runOuts || 0))).slice(0, 10);
+  
+  // OVERRIDE WITH OFFICIAL PDF SCORECARD METRICS FOR SILVER CAP
+  const topFielders = [
+    { name: 'Sivakaran Venujan', team: 'JAF', catches: 2, stumpings: 0, runOuts: 0 },
+    { name: 'Patkunam Mathushan', team: 'JAF', catches: 2, stumpings: 0, runOuts: 0 },
+    { name: 'Sahan Siriwardana', team: 'VAV', catches: 2, stumpings: 0, runOuts: 0 },
+    { name: 'Lahiru Welagedara', team: 'VAV', catches: 1, stumpings: 0, runOuts: 1 },
+    { name: 'Pahan Bimsara', team: 'VAV', catches: 1, stumpings: 0, runOuts: 0 },
+    { name: 'K Siyanujan', team: 'JAF', catches: 1, stumpings: 0, runOuts: 0 },
+    { name: 'V Priyankan', team: 'JAF', catches: 1, stumpings: 0, runOuts: 0 },
+    { name: 'Ravichandran Ragulan', team: 'VAV', catches: 1, stumpings: 0, runOuts: 0 },
+    { name: 'Rashan Wijerathna', team: 'VAV', catches: 0, stumpings: 0, runOuts: 1 },
+  ].sort((a, b) => ((b.catches + b.stumpings + b.runOuts) - (a.catches + a.stumpings + a.runOuts)));
 
   const activeScorecard = selectedCompletedMatchId ? completedMatchScorecards[selectedCompletedMatchId] : null;
 
@@ -989,7 +1001,7 @@ export default function Tournaments() {
                   <div className="stat-icon"><Flame size={20} color="#dc2626" /></div>
                 </div>
                 <div className="stat-value" style={{ fontSize: '1.75rem' }}>
-                  {fiftyPartnerships} 50+ Partnerships
+                  {fiftyPartnerships}
                 </div>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.35rem', margin: 0, fontWeight: '600' }}>
                   Key Half-Century Batting Stands
@@ -1003,7 +1015,7 @@ export default function Tournaments() {
                   <div className="stat-icon"><Flame size={20} color="#dc2626" /></div>
                 </div>
                 <div className="stat-value" style={{ fontSize: '1.75rem' }}>
-                  {hundredPartnerships} 100+ Partnerships
+                  {hundredPartnerships}
                 </div>
                 <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '0.35rem', margin: 0, fontWeight: '600' }}>
                   Century Batting Partnership Stands
