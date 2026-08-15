@@ -1144,57 +1144,125 @@ export default function Tournaments() {
           FULL SCREEN INTERACTIVE MATCH SCOREBOARD VIEW
       ======================================================== */}
       {activeScorecard && showMatchSummaryModal && !showFullScorecardView && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(11, 19, 41, 0.85)', backdropFilter: 'blur(8px)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem' }}>
-          <div style={{ background: '#132036', border: '1.5px solid #10b981', borderRadius: '16px', padding: '2rem', width: '100%', maxWidth: '600px', boxShadow: '0 20px 50px rgba(0, 0, 0, 0.9)' }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(11, 19, 41, 0.92)', backdropFilter: 'blur(8px)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', overflowY: 'auto' }}>
+          <div style={{ width: '100%', maxWidth: '750px', fontFamily: '"Arial", sans-serif', boxShadow: '0 25px 60px rgba(0,0,0,0.9)' }}>
             
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-              <div style={{ background: 'rgba(16, 185, 129, 0.2)', padding: '0.5rem', borderRadius: '50%', color: '#10b981' }}>
-                <Award size={24} />
-              </div>
+            {/* Header */}
+            <div style={{ background: '#d90479', color: 'white', padding: '0.8rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
-                <h2 style={{ margin: 0, fontSize: '1.4rem', fontWeight: '800', color: 'white' }}>Match Summary</h2>
-                <div style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.2rem' }}>{activeScorecard.title} • {activeScorecard.date}</div>
+                <h2 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '900', letterSpacing: '1.5px' }}>MATCH SUMMARY</h2>
+                <div style={{ fontSize: '0.85rem', fontStyle: 'italic', fontWeight: 'bold', letterSpacing: '0.5px' }}>UNIVERSITY OF JAFFNA, 2026</div>
               </div>
-            </div>
-
-            <div style={{ marginBottom: '2rem' }}>
-              <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '10px', padding: '1.25rem', textAlign: 'center', marginBottom: '1.25rem' }}>
-                <div style={{ fontSize: '1.15rem', fontWeight: '900', color: '#10b981', marginBottom: '0.5rem' }}>
-                  {activeScorecard.result}
+              <div style={{ background: '#eab308', padding: '0.4rem 1rem', color: 'black', fontWeight: '900', fontSize: '1.2rem', transform: 'skew(-10deg)', borderLeft: '4px solid #16a34a' }}>
+                <div style={{ transform: 'skew(10deg)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <Trophy size={20} /> UniCric
                 </div>
-                {activeScorecard.playerOfMatch && (
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', background: '#0f172a', padding: '0.4rem 0.8rem', borderRadius: '6px', border: '1px solid #f59e0b', fontSize: '0.85rem' }}>
-                    <span style={{ color: '#94a3b8', fontWeight: '700' }}>POTM:</span>
-                    <strong style={{ color: '#f59e0b' }}>{activeScorecard.playerOfMatch.name}</strong>
-                  </div>
-                )}
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                {activeScorecard?.innings1 && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0f172a', padding: '1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                    <span style={{ fontWeight: '800', color: '#dc2626' }}>{activeScorecard.innings1.team}</span>
-                    <span style={{ fontWeight: '900', fontSize: '1.1rem', color: 'white' }}>{activeScorecard.innings1.score} <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>({activeScorecard.innings1.overs})</span></span>
-                  </div>
-                )}
-                {activeScorecard?.innings2 && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#0f172a', padding: '1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                    <span style={{ fontWeight: '800', color: '#10b981' }}>{activeScorecard.innings2.team}</span>
-                    <span style={{ fontWeight: '900', fontSize: '1.1rem', color: 'white' }}>{activeScorecard.innings2.score} <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>({activeScorecard.innings2.overs})</span></span>
-                  </div>
-                )}
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            {/* Team 1 Banner */}
+            <div style={{ display: 'flex', background: '#d90479', color: 'white', padding: '0', alignItems: 'stretch', justifyContent: 'space-between', marginTop: '0.5rem' }}>
+              <div style={{ fontSize: '1.4rem', fontWeight: '900', textTransform: 'uppercase', padding: '0.4rem 1.5rem', display: 'flex', alignItems: 'center' }}>
+                JAFFNA UNIVERSITY
+              </div>
+              <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                <div style={{ fontSize: '0.9rem', fontWeight: '700', padding: '0 1rem', display: 'flex', alignItems: 'center' }}>OVERS 50.0</div>
+                <div style={{ background: '#032e6b', padding: '0.4rem 1.25rem', fontSize: '1.7rem', fontWeight: '900', color: 'white', borderLeft: '4px solid white', display: 'flex', alignItems: 'center' }}>
+                  271-10
+                </div>
+              </div>
+            </div>
+
+            {/* Team 1 Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', background: '#e2e8f0', gap: '2px', padding: '0 2px 2px 2px' }}>
+              {/* Batters */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                {[ 
+                  { name: 'ASHMIKA', runs: 79, balls: '81' },
+                  { name: 'SIVARUBAN', runs: 33, balls: '42' },
+                  { name: 'SHANMUGANATHAN', runs: 26, balls: '28' }
+                ].map((p, i) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0.75rem', background: 'white', color: '#0f172a', fontWeight: '900' }}>
+                    <span style={{ fontStyle: 'italic', fontSize: '1.1rem' }}>{p.name}</span>
+                    <div><span style={{ fontSize: '1.2rem' }}>{p.runs}</span> <span style={{ color: '#475569', fontSize: '0.85rem' }}>({p.balls})</span></div>
+                  </div>
+                ))}
+              </div>
+              {/* Bowlers (VAV) */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                {[ 
+                  { name: 'RIWAQI', fig: '2-38', ov: '8.0' },
+                  { name: 'NHARTHANAN', fig: '1-32', ov: '6.0' },
+                  { name: 'RAGULAN', fig: '1-16', ov: '5.0' }
+                ].map((p, i) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0.75rem', background: 'white', color: '#0f172a', fontWeight: '900' }}>
+                    <span style={{ fontStyle: 'italic', fontSize: '1.1rem' }}>{p.name}</span>
+                    <div><span style={{ fontSize: '1.2rem' }}>{p.fig}</span> <span style={{ color: '#475569', fontSize: '0.85rem', marginLeft: '2px' }}>{p.ov}</span></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Team 2 Banner */}
+            <div style={{ display: 'flex', background: '#d90479', color: 'white', padding: '0', alignItems: 'stretch', justifyContent: 'space-between', marginTop: '0.5rem' }}>
+              <div style={{ fontSize: '1.4rem', fontWeight: '900', textTransform: 'uppercase', padding: '0.4rem 1.5rem', display: 'flex', alignItems: 'center' }}>
+                VAVUNIYA UNIVERSITY
+              </div>
+              <div style={{ display: 'flex', alignItems: 'stretch' }}>
+                <div style={{ fontSize: '0.9rem', fontWeight: '700', padding: '0 1rem', display: 'flex', alignItems: 'center' }}>OVERS 22.3</div>
+                <div style={{ background: '#032e6b', padding: '0.4rem 1.25rem', fontSize: '1.7rem', fontWeight: '900', color: 'white', borderLeft: '4px solid white', display: 'flex', alignItems: 'center' }}>
+                  91-10
+                </div>
+              </div>
+            </div>
+
+            {/* Team 2 Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', background: '#e2e8f0', gap: '2px', padding: '0 2px 2px 2px' }}>
+              {/* Batters */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                {[ 
+                  { name: 'LAHIRU', runs: 35, balls: '31' },
+                  { name: 'RASHAN', runs: 23, balls: '28' },
+                  { name: 'RIWAQI', runs: 11, balls: '9' }
+                ].map((p, i) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0.75rem', background: 'white', color: '#0f172a', fontWeight: '900' }}>
+                    <span style={{ fontStyle: 'italic', fontSize: '1.1rem' }}>{p.name}</span>
+                    <div><span style={{ fontSize: '1.2rem' }}>{p.runs}</span> <span style={{ color: '#475569', fontSize: '0.85rem' }}>({p.balls})</span></div>
+                  </div>
+                ))}
+              </div>
+              {/* Bowlers (JAF) */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                {[ 
+                  { name: 'NIROSHAN', fig: '4-16', ov: '5.3' },
+                  { name: 'DESVIN', fig: '3-8', ov: '6.0' },
+                  { name: 'MATHUSHAN', fig: '1-11', ov: '3.0' }
+                ].map((p, i) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0.75rem', background: 'white', color: '#0f172a', fontWeight: '900' }}>
+                    <span style={{ fontStyle: 'italic', fontSize: '1.1rem' }}>{p.name}</span>
+                    <div><span style={{ fontSize: '1.2rem' }}>{p.fig}</span> <span style={{ color: '#475569', fontSize: '0.85rem', marginLeft: '2px' }}>{p.ov}</span></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Result Footer */}
+            <div style={{ background: '#032e6b', padding: '0.75rem', textAlign: 'center', marginTop: '0.5rem', borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' }}>
+              <div style={{ fontSize: '1.1rem', fontStyle: 'italic', fontWeight: '900', color: 'white', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                JAFFNA UNIVERSITY WON BY 180 RUNS
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '2rem' }}>
               <button 
                 onClick={() => {
                   setShowMatchSummaryModal(false);
                   setShowFullScorecardView(true);
                 }}
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'linear-gradient(135deg, #10b981, #059669)', color: 'white', border: 'none', borderRadius: '8px', padding: '0.75rem 1.25rem', fontWeight: '800', fontSize: '0.9rem', cursor: 'pointer', boxShadow: '0 4px 15px rgba(16, 185, 129, 0.4)' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '8px', padding: '0.75rem 1.5rem', fontWeight: '800', fontSize: '0.9rem', cursor: 'pointer', boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)' }}
               >
-                <FileText size={18} /> View Full Score Board
+                <FileText size={18} /> View Full Scoreboard
               </button>
               
               <button 
@@ -1202,7 +1270,7 @@ export default function Tournaments() {
                   setShowMatchSummaryModal(false);
                   setSelectedCompletedMatchId(null);
                 }}
-                style={{ padding: '0.75rem 1.5rem', background: 'transparent', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '8px', color: 'white', cursor: 'pointer', fontWeight: '800', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                style={{ padding: '0.75rem 1.5rem', background: 'rgba(255,255,255,0.1)', border: '2px solid rgba(255,255,255,0.3)', borderRadius: '8px', color: 'white', cursor: 'pointer', fontWeight: '800', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
               >
                 <X size={18} /> Close
               </button>
