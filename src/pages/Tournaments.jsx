@@ -1144,11 +1144,11 @@ export default function Tournaments() {
           FULL SCREEN INTERACTIVE MATCH SCOREBOARD VIEW
       ======================================================== */}
       {activeScorecard && showMatchSummaryModal && !showFullScorecardView && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(11, 19, 41, 0.92)', backdropFilter: 'blur(8px)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', overflowY: 'auto' }}>
-          <div style={{ width: '100%', maxWidth: '750px', fontFamily: '"Arial", sans-serif', boxShadow: '0 25px 60px rgba(0,0,0,0.9)', background: '#132036', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(11, 19, 41, 0.65)', backdropFilter: 'blur(16px)', zIndex: 99999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', overflowY: 'auto' }}>
+          <div style={{ width: '100%', maxWidth: '750px', fontFamily: '"Arial", sans-serif', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             
-            {/* Header */}
-            <div style={{ background: '#0f172a', color: 'white', padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            {/* Header Card */}
+            <div style={{ background: '#132036', color: 'white', padding: '1.25rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: '20px', border: '1.5px solid rgba(16, 185, 129, 0.3)', boxShadow: '0 15px 40px rgba(0,0,0,0.4)' }}>
               <div>
                 <h2 style={{ margin: 0, fontSize: '1.6rem', fontWeight: '900', letterSpacing: '1px', color: '#10b981' }}>MATCH SUMMARY</h2>
                 <div style={{ fontSize: '0.85rem', fontStyle: 'italic', fontWeight: 'bold', color: '#94a3b8', marginTop: '0.2rem' }}>UNIVERSITY OF JAFFNA, 2026</div>
@@ -1160,8 +1160,10 @@ export default function Tournaments() {
               </div>
             </div>
 
-            {/* Team 1 Banner */}
-            <div style={{ display: 'flex', background: 'linear-gradient(90deg, #1e293b, #0f172a)', color: 'white', padding: '0', alignItems: 'stretch', justifyContent: 'space-between', borderTop: '4px solid #dc2626' }}>
+            {/* Team 1 Card */}
+            <div style={{ borderRadius: '20px', overflow: 'hidden', border: '1.5px solid rgba(220, 38, 38, 0.3)', boxShadow: '0 15px 40px rgba(0,0,0,0.4)' }}>
+              {/* Team 1 Banner */}
+              <div style={{ display: 'flex', background: 'linear-gradient(90deg, #1e293b, #0f172a)', color: 'white', padding: '0', alignItems: 'stretch', justifyContent: 'space-between', borderLeft: '6px solid #dc2626' }}>
               <div style={{ fontSize: '1.3rem', fontWeight: '900', textTransform: 'uppercase', padding: '0.6rem 1.5rem', display: 'flex', alignItems: 'center', color: '#dc2626' }}>
                 JAFFNA UNIVERSITY
               </div>
@@ -1202,9 +1204,12 @@ export default function Tournaments() {
                 ))}
               </div>
             </div>
+          </div>
 
-            {/* Team 2 Banner */}
-            <div style={{ display: 'flex', background: 'linear-gradient(90deg, #1e293b, #0f172a)', color: 'white', padding: '0', alignItems: 'stretch', justifyContent: 'space-between', marginTop: '0.2rem', borderTop: '4px solid #10b981' }}>
+          {/* Team 2 Card */}
+            <div style={{ borderRadius: '20px', overflow: 'hidden', border: '1.5px solid rgba(16, 185, 129, 0.3)', boxShadow: '0 15px 40px rgba(0,0,0,0.4)' }}>
+              {/* Team 2 Banner */}
+              <div style={{ display: 'flex', background: 'linear-gradient(90deg, #1e293b, #0f172a)', color: 'white', padding: '0', alignItems: 'stretch', justifyContent: 'space-between', borderLeft: '6px solid #10b981' }}>
               <div style={{ fontSize: '1.3rem', fontWeight: '900', textTransform: 'uppercase', padding: '0.6rem 1.5rem', display: 'flex', alignItems: 'center', color: '#10b981' }}>
                 VAVUNIYA UNIVERSITY
               </div>
@@ -1245,19 +1250,22 @@ export default function Tournaments() {
                 ))}
               </div>
             </div>
+          </div>
 
-            {/* Result Footer */}
-            <div style={{ background: 'rgba(16, 185, 129, 0.1)', padding: '1rem', textAlign: 'center', marginTop: '1rem', borderTop: '1px solid rgba(16, 185, 129, 0.2)' }}>
-              <div style={{ fontSize: '1.2rem', fontStyle: 'italic', fontWeight: '900', color: '#10b981', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                JAFFNA UNIVERSITY WON BY 180 RUNS
+          {/* Footer & Actions Card */}
+            <div style={{ background: '#132036', borderRadius: '20px', border: '1.5px solid rgba(16, 185, 129, 0.3)', padding: '1.5rem', boxShadow: '0 15px 40px rgba(0,0,0,0.4)' }}>
+              {/* Result Footer */}
+              <div style={{ background: 'rgba(16, 185, 129, 0.1)', padding: '1rem', textAlign: 'center', borderRadius: '12px', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                <div style={{ fontSize: '1.2rem', fontStyle: 'italic', fontWeight: '900', color: '#10b981', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                  JAFFNA UNIVERSITY WON BY 180 RUNS
+                </div>
               </div>
-            </div>
 
-            {/* Action Buttons */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', padding: '1.5rem', background: '#0f172a' }}>
-              <button 
-                onClick={() => {
-                  setShowMatchSummaryModal(false);
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1.5rem' }}>
+                <button 
+                  onClick={() => {
+                    setShowMatchSummaryModal(false);
                   setShowFullScorecardView(true);
                 }}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '8px', padding: '0.75rem 1.5rem', fontWeight: '800', fontSize: '0.9rem', cursor: 'pointer', boxShadow: '0 4px 15px rgba(59, 130, 246, 0.4)' }}
@@ -1277,6 +1285,7 @@ export default function Tournaments() {
             </div>
           </div>
         </div>
+      </div>
       )}
 
       {activeScorecard && showFullScorecardView && (
