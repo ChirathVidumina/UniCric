@@ -338,6 +338,9 @@ export default function TeamsPlayers() {
                       <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginBottom: '0.15rem' }}>RUNS (AVG)</span>
                       <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-gold)' }}>{p.runs ?? 0} ({p.avg ?? '-'})</strong>
                       
+                      <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: '0.5rem', marginBottom: '0.15rem' }}>STRIKE RATE</span>
+                      <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-green)' }}>{p.sr ?? 0}</strong>
+
                       <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: '0.5rem', marginBottom: '0.15rem' }}>BOUNDARY %</span>
                       <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-gold)' }}>{p.boundaryPct ?? 0}%</strong>
                     </div>
