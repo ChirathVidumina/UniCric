@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Search, ExternalLink, Shield, Zap, Target, Star, Trophy, RefreshCw, AlertCircle } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'https://unicric-backend.onrender.com';
 
 export default function TeamsPlayers() {
   const [teams, setTeams] = useState([]);

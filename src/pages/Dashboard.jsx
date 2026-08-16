@@ -5,7 +5,7 @@ import {
   ArrowRight, CheckCircle2, MapPin, Users, Award, TrendingUp, Zap, ChevronRight, RefreshCw, AlertCircle
 } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'https://unicric-backend.onrender.com';
 
 export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState(null);
@@ -353,7 +353,8 @@ export default function Dashboard() {
                 </div>
 
                 {groupTeams.length > 0 ? (
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
+                  <div className="table-responsive">
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
                     <thead>
                       <tr style={{ borderBottom: '1px solid var(--border-color)', color: '#94a3b8', fontSize: '0.75rem' }}>
                         <th style={{ padding: '0.5rem 0' }}>#</th>
@@ -394,7 +395,8 @@ export default function Dashboard() {
                         );
                       })}
                     </tbody>
-                  </table>
+                    </table>
+                  </div>
                 ) : (
                   <div style={{ padding: '1rem', textAlign: 'center', color: '#94a3b8', fontSize: '0.85rem' }}>
                     No Group C standings logged.

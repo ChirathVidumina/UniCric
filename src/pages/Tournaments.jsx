@@ -5,7 +5,7 @@ import {
   TrendingUp, FileText, X, UserCheck, Check, ArrowLeft, RefreshCw, AlertCircle 
 } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'https://unicric-backend.onrender.com';
 
 export default function Tournaments() {
   const [tournamentData, setTournamentData] = useState(null);
@@ -663,6 +663,7 @@ export default function Tournaments() {
                 </div>
 
                 {topBatters.length > 0 ? (
+                  <div className="table-responsive">
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                     <thead>
                       <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
@@ -689,6 +690,7 @@ export default function Tournaments() {
                       ))}
                     </tbody>
                   </table>
+                  </div>
                 ) : (
                   <div style={{ padding: '2.5rem 1rem', textAlign: 'center', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.01)', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                     <div style={{ background: 'rgba(245, 158, 11, 0.12)', padding: '0.75rem', borderRadius: '50%', marginBottom: '0.75rem', display: 'inline-flex' }}>
@@ -717,6 +719,7 @@ export default function Tournaments() {
                 </div>
 
                 {topBowlers.length > 0 ? (
+                  <div className="table-responsive">
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                     <thead>
                       <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
@@ -743,6 +746,7 @@ export default function Tournaments() {
                       ))}
                     </tbody>
                   </table>
+                  </div>
                 ) : (
                   <div style={{ padding: '2.5rem 1rem', textAlign: 'center', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.01)', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                     <div style={{ background: 'rgba(59, 130, 246, 0.12)', padding: '0.75rem', borderRadius: '50%', marginBottom: '0.75rem', display: 'inline-flex' }}>
@@ -771,6 +775,7 @@ export default function Tournaments() {
                 </div>
 
                 {topFielders.length > 0 ? (
+                  <div className="table-responsive">
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                     <thead>
                       <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
@@ -800,6 +805,7 @@ export default function Tournaments() {
                       })}
                     </tbody>
                   </table>
+                  </div>
                 ) : (
                   <div style={{ padding: '2.5rem 1rem', textAlign: 'center', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.01)', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                     <div style={{ background: 'rgba(16, 185, 129, 0.12)', padding: '0.75rem', borderRadius: '50%', marginBottom: '0.75rem', display: 'inline-flex' }}>
@@ -1390,6 +1396,7 @@ export default function Tournaments() {
                   </div>
                   
                   <div style={{ overflowX: 'auto' }}>
+                    <div className="table-responsive">
                     <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem', background: '#0f172a' }}>
                       <thead>
                         <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8' }}>
@@ -1414,12 +1421,14 @@ export default function Tournaments() {
                         ))}
                       </tbody>
                     </table>
+                    </div>
                   </div>
 
                   <div style={{ background: '#0b1329', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: '800', color: '#3b82f6', borderLeft: '3px solid #3b82f6', marginTop: '0.5rem' }}>
                     1ST INNINGS BOWLING ANALYSIS
                   </div>
                   <div style={{ overflowX: 'auto' }}>
+                    <div className="table-responsive">
                     <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem', background: '#0f172a' }}>
                       <thead>
                         <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8' }}>
@@ -1444,6 +1453,7 @@ export default function Tournaments() {
                         ))}
                       </tbody>
                     </table>
+                    </div>
                   </div>
                 </div>
                 )}
@@ -1457,6 +1467,7 @@ export default function Tournaments() {
                   </div>
 
                   <div style={{ overflowX: 'auto' }}>
+                    <div className="table-responsive">
                     <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem', background: '#0f172a' }}>
                       <thead>
                         <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8' }}>
@@ -1481,12 +1492,14 @@ export default function Tournaments() {
                         ))}
                       </tbody>
                     </table>
+                    </div>
                   </div>
 
                   <div style={{ background: '#0b1329', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: '800', color: '#3b82f6', borderLeft: '3px solid #3b82f6', marginTop: '0.5rem' }}>
                     2ND INNINGS BOWLING ANALYSIS
                   </div>
                   <div style={{ overflowX: 'auto' }}>
+                    <div className="table-responsive">
                     <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem', background: '#0f172a' }}>
                       <thead>
                         <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8' }}>
@@ -1511,6 +1524,7 @@ export default function Tournaments() {
                         ))}
                       </tbody>
                     </table>
+                    </div>
                   </div>
                 </div>
                 )}
