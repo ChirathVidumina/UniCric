@@ -499,6 +499,36 @@ def get_tournaments(db: Session = Depends(get_db)):
         "teams": sorted(t_list, key=lambda x: x["points"], reverse=True)
     }]
     
+    completed_matches = [m for m in matches if m.status == "COMPLETED"]
+    total_matches_count = len(completed_matches)
+    total_innings = total_matches_count * 2
+    
+    all_stats = db.query(PlayerStatModel).all()
+    
+    t_runs = sum(s.runs for s in all_stats)
+    t_wickets = sum(s.wickets for s in all_stats)
+    t_balls = sum(s.balls for s in all_stats)
+    t_fours = sum(s.fours for s in all_stats)
+    t_sixes = sum(s.sixes for s in all_stats)
+    t_overs = sum(s.overs for s in all_stats)
+    
+    t_runs_conceded = sum(s.runs_conceded for s in all_stats)
+    t_extras = max(0, t_runs_conceded - t_runs)
+    
+    t_boundaries = t_fours + t_sixes
+    t_boundary_runs = (t_fours * 4) + (t_sixes * 6)
+    
+    t_catches = sum(1 for s in all_stats if s.is_out and s.dismissal and ("caught" in s.dismissal.lower() or "c " in s.dismissal.lower()))
+    t_stumpings = sum(1 for s in all_stats if s.is_out and s.dismissal and ("stumped" in s.dismissal.lower() or "st " in s.dismissal.lower()))
+    
+    t_non_boundary_runs = max(0, t_runs - t_boundary_runs)
+    t_estimated_dot_balls = max(0, t_balls - t_boundaries - t_non_boundary_runs)
+    
+    bdry_pct = f"{(t_boundary_runs / t_runs * 100):.2f}" if t_runs > 0 else "0.00"
+    bdry_freq = f"{(t_balls / t_boundaries):.2f}" if t_boundaries > 0 else "0.00"
+    db_pct = f"{(t_estimated_dot_balls / t_balls * 100):.2f}" if t_balls > 0 else "0.00"
+    db_freq = f"{(t_balls / t_estimated_dot_balls):.2f}" if t_estimated_dot_balls > 0 else "0.00"
+
     return {
         "teams": t_list,
         "players": p_list,
@@ -506,7 +536,22 @@ def get_tournaments(db: Session = Depends(get_db)):
         "groups": groups,
         "completedMatchScorecards": completed_scorecards,
         "tournament": {
-            "completedMatches": len([m for m in m_list if m["status"] == "COMPLETED"])
+            "completedMatches": total_matches_count,
+            "totalInnings": total_innings,
+            "totalRuns": t_runs,
+            "totalWickets": t_wickets,
+            "totalBalls": t_balls,
+            "totalExtras": t_extras,
+            "totalFours": t_fours,
+            "totalSixes": t_sixes,
+            "totalMaidens": 0,
+            "totalDotBalls": t_estimated_dot_balls,
+            "totalCatches": t_catches,
+            "totalStumpings": t_stumpings,
+            "bdryPct": bdry_pct,
+            "bdryFreq": bdry_freq,
+            "dbPct": db_pct,
+            "dbFreq": db_freq
         }
     }
 

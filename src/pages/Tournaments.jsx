@@ -670,7 +670,7 @@ export default function Tournaments() {
             </div>
           </div>
 
-          <div className={leaderboardCategory === 'ALL' ? "grid grid-cols-1 lg:grid-cols-3 gap-4 w-full" : "w-full"} style={{ marginTop: '1.5rem' }}>
+          <div className={`w-full ${leaderboardCategory === 'ALL' ? 'leaderboard-grid' : ''}`} style={{ marginTop: '1.5rem' }}>
             
             {/* 1. Batting Leaderboard */}
             {(leaderboardCategory === 'ALL' || leaderboardCategory === 'BAT') && (
@@ -687,29 +687,29 @@ export default function Tournaments() {
                   <div className="w-full">
                     <table className="w-full text-xs" style={{ borderCollapse: 'collapse', tableLayout: 'fixed' }}>
                       <thead>
-                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', fontSize: '0.6rem' }}>
-                          <th className="px-2 py-2 text-left w-[40%]">Batter</th>
-                          <th className="px-2 py-2 text-center w-[15%]">Team</th>
-                          <th className="px-2 py-2 text-center whitespace-nowrap">Runs</th>
-                          <th className="px-2 py-2 text-center whitespace-nowrap">HS</th>
-                          <th className="px-2 py-2 text-center whitespace-nowrap">SR</th>
-                          <th className="px-2 py-2 text-center whitespace-nowrap">4s/6s</th>
+                        <tr className="bg-slate-800/60 text-slate-400 text-[11px] uppercase tracking-wider border-b border-slate-800/40">
+                          <th className="px-2 py-2 text-left w-[40%] font-semibold">Batter</th>
+                          <th className="px-2 py-2 text-center w-[15%] font-semibold">Team</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap font-semibold">Runs</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap font-semibold">HS</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap font-semibold">SR</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap font-semibold">4s/6s</th>
                         </tr>
                       </thead>
                       <tbody>
                         {topBatters.map((b, idx) => (
-                          <tr key={idx} className="hover:bg-white/5 transition-colors" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', background: idx % 2 === 0 ? 'rgba(255,255,255,0.015)' : 'transparent' }}>
+                          <tr key={idx} className="hover:bg-slate-800/30 transition-colors border-b border-slate-800/40">
                             <td className="px-2 py-2 font-bold" title={b.name}>
                               <div className="flex items-center">
-                                <span style={{ display: 'inline-block', minWidth: '22px', textAlign: 'center', marginRight: '0.4rem', color: idx === 0 ? '#fbbf24' : idx === 1 ? '#94a3b8' : idx === 2 ? '#d97706' : 'var(--text-muted)', fontWeight: '800', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', fontSize: '0.65rem' }}>{idx + 1}</span> 
+                                <span style={{ display: 'inline-block', minWidth: '22px', textAlign: 'center', marginRight: '0.4rem', color: idx === 0 ? '#fbbf24' : idx === 1 ? '#94a3b8' : idx === 2 ? '#d97706' : '#64748b', fontWeight: '800', background: idx === 0 ? 'rgba(251,191,36,0.1)' : idx === 1 ? 'rgba(148,163,184,0.1)' : idx === 2 ? 'rgba(217,119,6,0.1)' : 'rgba(255,255,255,0.04)', borderRadius: '4px', padding: '1px 0', fontSize: '0.65rem' }}>#{idx + 1}</span> 
                                 <span className="truncate max-w-[90px]">{b.name}</span>
                               </div>
                             </td>
                             <td className="px-2 py-2 text-center"><span className="badge text-[9px] px-1 py-0.5 opacity-80">{b.team}</span></td>
-                            <td className="px-2 py-2 text-center font-extrabold text-[#fbbf24] text-[0.8rem] whitespace-nowrap drop-shadow-md">{b.runs}</td>
-                            <td className="px-2 py-2 text-center font-bold text-gray-300 whitespace-nowrap">{b.hs || b.runs}</td>
-                            <td className="px-2 py-2 text-center font-bold text-gray-300 whitespace-nowrap">{b.sr || '0.0'}</td>
-                            <td className="px-2 py-2 text-center text-gray-500 whitespace-nowrap">{b.fours || 0}/{b.sixes || 0}</td>
+                            <td className="px-2 py-2 text-right font-extrabold text-[#fbbf24] text-[0.8rem] whitespace-nowrap drop-shadow-md">{b.runs}</td>
+                            <td className="px-2 py-2 text-right font-bold text-slate-300 whitespace-nowrap">{b.hs || b.runs}</td>
+                            <td className="px-2 py-2 text-right font-bold text-slate-300 whitespace-nowrap">{b.sr || '0.0'}</td>
+                            <td className="px-2 py-2 text-right text-slate-500 whitespace-nowrap">{b.fours || 0}/{b.sixes || 0}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -746,13 +746,13 @@ export default function Tournaments() {
                   <div className="w-full">
                     <table className="w-full text-xs" style={{ borderCollapse: 'collapse', tableLayout: 'fixed' }}>
                       <thead>
-                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', fontSize: '0.6rem' }}>
-                          <th className="px-2 py-2 text-left w-[40%]">Bowler</th>
-                          <th className="px-2 py-2 text-center w-[15%]">Team</th>
-                          <th className="px-2 py-2 text-center whitespace-nowrap">Wkts</th>
-                          <th className="px-2 py-2 text-center whitespace-nowrap">Best</th>
-                          <th className="px-2 py-2 text-center whitespace-nowrap">Econ</th>
-                          <th className="px-2 py-2 text-center whitespace-nowrap">Overs</th>
+                        <tr className="bg-slate-800/60 text-slate-400 text-[11px] uppercase tracking-wider border-b border-slate-800/40">
+                          <th className="px-2 py-2 text-left w-[40%] font-semibold">Bowler</th>
+                          <th className="px-2 py-2 text-center w-[15%] font-semibold">Team</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap font-semibold">Wkts</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap font-semibold">Best</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap font-semibold">Econ</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap font-semibold">Overs</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -761,18 +761,18 @@ export default function Tournaments() {
                           const calculatedOvers = bw.overs || (bw.balls ? `${Math.floor(bw.balls / 6)}.${bw.balls % 6}` : '0.0');
 
                           return (
-                            <tr key={idx} className="hover:bg-white/5 transition-colors" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', background: idx % 2 === 0 ? 'rgba(255,255,255,0.015)' : 'transparent' }}>
+                            <tr key={idx} className="hover:bg-slate-800/30 transition-colors border-b border-slate-800/40">
                               <td className="px-2 py-2 font-bold" title={bw.name}>
                                 <div className="flex items-center">
-                                  <span style={{ display: 'inline-block', minWidth: '22px', textAlign: 'center', marginRight: '0.4rem', color: idx === 0 ? '#3b82f6' : 'var(--text-muted)', fontWeight: '800', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', fontSize: '0.65rem' }}>{idx + 1}</span>
+                                  <span style={{ display: 'inline-block', minWidth: '22px', textAlign: 'center', marginRight: '0.4rem', color: idx === 0 ? '#3b82f6' : idx === 1 ? '#94a3b8' : idx === 2 ? '#d97706' : '#64748b', fontWeight: '800', background: idx === 0 ? 'rgba(59,130,246,0.1)' : idx === 1 ? 'rgba(148,163,184,0.1)' : idx === 2 ? 'rgba(217,119,6,0.1)' : 'rgba(255,255,255,0.04)', borderRadius: '4px', padding: '1px 0', fontSize: '0.65rem' }}>#{idx + 1}</span>
                                   <span className="truncate max-w-[90px]">{bw.name}</span>
                                 </div>
                               </td>
                               <td className="px-2 py-2 text-center"><span className="badge text-[9px] px-1 py-0.5 opacity-80">{bw.team}</span></td>
-                              <td className="px-2 py-2 text-center font-extrabold text-[#3b82f6] text-[0.8rem] whitespace-nowrap drop-shadow-md">{bw.wickets}</td>
-                              <td className="px-2 py-2 text-center font-bold text-gray-300 whitespace-nowrap">{bestFigure}</td>
-                              <td className="px-2 py-2 text-center font-bold text-[#fbbf24] whitespace-nowrap">{bw.econ || '0.00'}</td>
-                              <td className="px-2 py-2 text-center text-gray-500 whitespace-nowrap">{calculatedOvers}</td>
+                              <td className="px-2 py-2 text-right font-extrabold text-[#3b82f6] text-[0.8rem] whitespace-nowrap drop-shadow-md">{bw.wickets}</td>
+                              <td className="px-2 py-2 text-right font-bold text-slate-300 whitespace-nowrap">{bestFigure}</td>
+                              <td className="px-2 py-2 text-right font-bold text-[#fbbf24] whitespace-nowrap">{bw.econ || '0.00'}</td>
+                              <td className="px-2 py-2 text-right text-slate-500 whitespace-nowrap">{calculatedOvers}</td>
                             </tr>
                           );
                         })}
@@ -810,31 +810,31 @@ export default function Tournaments() {
                   <div className="w-full">
                     <table className="w-full text-xs" style={{ borderCollapse: 'collapse', tableLayout: 'fixed' }}>
                       <thead>
-                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', fontSize: '0.6rem' }}>
-                          <th className="px-2 py-2 text-left w-[40%]">Fielder</th>
-                          <th className="px-2 py-2 text-center w-[15%]">Team</th>
-                          <th className="px-2 py-2 text-center whitespace-nowrap">Ctch</th>
-                          <th className="px-2 py-2 text-center whitespace-nowrap">Stmp</th>
-                          <th className="px-2 py-2 text-center whitespace-nowrap">RO</th>
-                          <th className="px-2 py-2 text-center whitespace-nowrap">Tot</th>
+                        <tr className="bg-slate-800/60 text-slate-400 text-[11px] uppercase tracking-wider border-b border-slate-800/40">
+                          <th className="px-2 py-2 text-left w-[40%] font-semibold">Fielder</th>
+                          <th className="px-2 py-2 text-center w-[15%] font-semibold">Team</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap font-semibold">Ctch</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap font-semibold">Stmp</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap font-semibold">RO</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap font-semibold">Tot</th>
                         </tr>
                       </thead>
                       <tbody>
                         {topFielders.map((fd, idx) => {
                           const totalDismissals = (fd.catches || 0) + (fd.stumpings || 0) + (fd.runOuts || 0);
                           return (
-                            <tr key={idx} className="hover:bg-white/5 transition-colors" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', background: idx % 2 === 0 ? 'rgba(255,255,255,0.015)' : 'transparent' }}>
+                            <tr key={idx} className="hover:bg-slate-800/30 transition-colors border-b border-slate-800/40">
                               <td className="px-2 py-2 font-bold" title={fd.name}>
                                 <div className="flex items-center">
-                                  <span style={{ display: 'inline-block', minWidth: '22px', textAlign: 'center', marginRight: '0.4rem', color: idx === 0 ? '#10b981' : 'var(--text-muted)', fontWeight: '800', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', fontSize: '0.65rem' }}>{idx + 1}</span>
+                                  <span style={{ display: 'inline-block', minWidth: '22px', textAlign: 'center', marginRight: '0.4rem', color: idx === 0 ? '#10b981' : idx === 1 ? '#94a3b8' : idx === 2 ? '#d97706' : '#64748b', fontWeight: '800', background: idx === 0 ? 'rgba(16,185,129,0.1)' : idx === 1 ? 'rgba(148,163,184,0.1)' : idx === 2 ? 'rgba(217,119,6,0.1)' : 'rgba(255,255,255,0.04)', borderRadius: '4px', padding: '1px 0', fontSize: '0.65rem' }}>#{idx + 1}</span>
                                   <span className="truncate max-w-[90px]">{fd.name}</span>
                                 </div>
                               </td>
                               <td className="px-2 py-2 text-center"><span className="badge text-[9px] px-1 py-0.5 opacity-80">{fd.team}</span></td>
-                              <td className="px-2 py-2 text-center font-bold text-gray-300 whitespace-nowrap">{fd.catches || 0}</td>
-                              <td className="px-2 py-2 text-center font-bold text-gray-300 whitespace-nowrap">{fd.stumpings || 0}</td>
-                              <td className="px-2 py-2 text-center font-bold text-gray-300 whitespace-nowrap">{fd.runOuts || 0}</td>
-                              <td className="px-2 py-2 text-center font-extrabold text-[#10b981] text-[0.8rem] whitespace-nowrap drop-shadow-md">{totalDismissals}</td>
+                              <td className="px-2 py-2 text-right font-bold text-slate-300 whitespace-nowrap">{fd.catches || 0}</td>
+                              <td className="px-2 py-2 text-right font-bold text-slate-300 whitespace-nowrap">{fd.stumpings || 0}</td>
+                              <td className="px-2 py-2 text-right font-bold text-slate-300 whitespace-nowrap">{fd.runOuts || 0}</td>
+                              <td className="px-2 py-2 text-right font-extrabold text-[#10b981] text-[0.8rem] whitespace-nowrap drop-shadow-md">{totalDismissals}</td>
                             </tr>
                           );
                         })}
@@ -865,27 +865,26 @@ export default function Tournaments() {
           SECTION 4: TOURNAMENT STATS & TELEMETRY
       ======================================================== */}
       {(activeTab === 'ALL' || activeTab === 'STATS') && (() => {
-        // OVERRIDE WITH OFFICIAL PDF SCORECARD METRICS
-        const totalMatchesCount = "1";
-        const totalInnings = "2";
-        const totalRuns = 362;
-        const totalWickets = 20;
-        const totalBalls = 435;
-        const totalExtras = 31;
-        const totalFours = 34;
-        const totalSixes = 13;
-        const totalFifties = 1;
-        const totalHundreds = 0;
-        const fiftyPartnerships = 1;
-        const hundredPartnerships = 1;
-        const totalMaidens = 7;
-        const totalDotBalls = 291;
-        const totalCatches = 12;
-        const totalStumpings = 0;
-        const bdryPct = "59.12";
-        const bdryFreq = "9.26";
-        const dbFreq = "1.49";
-        const dbPct = "66.90";
+        const totalMatchesCount = tournament.completedMatches || 0;
+        const totalInnings = tournament.totalInnings || 0;
+        const totalRuns = tournament.totalRuns || 0;
+        const totalWickets = tournament.totalWickets || 0;
+        const totalBalls = tournament.totalBalls || 0;
+        const totalExtras = tournament.totalExtras || 0;
+        const totalFours = tournament.totalFours || 0;
+        const totalSixes = tournament.totalSixes || 0;
+        const totalFifties = 1; // Assuming static for now or can be tracked later
+        const totalHundreds = 0; // Assuming static for now
+        const fiftyPartnerships = 1; // Assuming static for now
+        const hundredPartnerships = 1; // Assuming static for now
+        const totalMaidens = tournament.totalMaidens || 0;
+        const totalDotBalls = tournament.totalDotBalls || 0;
+        const totalCatches = tournament.totalCatches || 0;
+        const totalStumpings = tournament.totalStumpings || 0;
+        const bdryPct = tournament.bdryPct || "0.00";
+        const bdryFreq = tournament.bdryFreq || "0.00";
+        const dbFreq = tournament.dbFreq || "0.00";
+        const dbPct = tournament.dbPct || "0.00";
 
         return (
           <div style={{ marginTop: '1rem' }}>

@@ -93,6 +93,24 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 2rem;
 }
 
+.leaderboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .leaderboard-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+
+.leaderboard-grid .content-card {
+  margin-bottom: 0;
+  height: 100%;
+}
+
 .stat-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
