@@ -688,25 +688,25 @@ export default function Tournaments() {
                     <table className="w-full text-xs" style={{ borderCollapse: 'collapse', tableLayout: 'fixed' }}>
                       <thead>
                         <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
-                          <th className="px-1 py-2 text-left w-[40%]">Batter</th>
-                          <th className="px-1 py-2 text-left">Team</th>
-                          <th className="px-1 py-2 text-right">Runs</th>
-                          <th className="px-1 py-2 text-right">HS</th>
-                          <th className="px-1 py-2 text-right">SR</th>
-                          <th className="px-1 py-2 text-right">4s/6s</th>
+                          <th className="px-2 py-2 text-left w-[35%]">Batter</th>
+                          <th className="px-2 py-2 text-left">Team</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap">Runs</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap">HS</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap">SR</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap">4s/6s</th>
                         </tr>
                       </thead>
                       <tbody>
                         {topBatters.map((b, idx) => (
                           <tr key={idx} style={{ borderBottom: '1px solid var(--border-color)' }}>
-                            <td className="px-1 py-2 font-bold truncate max-w-[90px]" title={b.name}>
+                            <td className="px-2 py-2 font-bold truncate max-w-[80px]" title={b.name}>
                               <span style={{ marginRight: '0.2rem', color: idx === 0 ? '#fbbf24' : idx === 1 ? '#94a3b8' : idx === 2 ? '#d97706' : 'var(--text-muted)', fontWeight: '800' }}>#{idx + 1}</span> {b.name}
                             </td>
-                            <td className="px-1 py-2"><span className="badge text-[10px] p-1">{b.team}</span></td>
-                            <td className="px-1 py-2 text-right font-extrabold text-[#fbbf24] text-sm">{b.runs}</td>
-                            <td className="px-1 py-2 text-right font-bold">{b.hs || b.runs}</td>
-                            <td className="px-1 py-2 text-right font-bold">{b.sr || '0.0'}</td>
-                            <td className="px-1 py-2 text-right text-gray-500">{b.fours || 0}/{b.sixes || 0}</td>
+                            <td className="px-2 py-2"><span className="badge text-[10px] p-1">{b.team}</span></td>
+                            <td className="px-2 py-2 text-right font-extrabold text-[#fbbf24] text-sm whitespace-nowrap">{b.runs}</td>
+                            <td className="px-2 py-2 text-right font-bold whitespace-nowrap">{b.hs || b.runs}</td>
+                            <td className="px-2 py-2 text-right font-bold whitespace-nowrap">{b.sr || '0.0'}</td>
+                            <td className="px-2 py-2 text-right text-gray-500 whitespace-nowrap">{b.fours || 0}/{b.sixes || 0}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -744,12 +744,12 @@ export default function Tournaments() {
                     <table className="w-full text-xs" style={{ borderCollapse: 'collapse', tableLayout: 'fixed' }}>
                       <thead>
                         <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
-                          <th className="px-1 py-2 text-left w-[40%]">Bowler</th>
-                          <th className="px-1 py-2 text-left">Team</th>
-                          <th className="px-1 py-2 text-right">Wkts</th>
-                          <th className="px-1 py-2 text-right">Best</th>
-                          <th className="px-1 py-2 text-right">Econ</th>
-                          <th className="px-1 py-2 text-right">Overs</th>
+                          <th className="px-2 py-2 text-left w-[35%]">Bowler</th>
+                          <th className="px-2 py-2 text-left">Team</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap">Wkts</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap">Best</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap">Econ</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap">Overs</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -759,14 +759,14 @@ export default function Tournaments() {
 
                           return (
                             <tr key={idx} style={{ borderBottom: '1px solid var(--border-color)' }}>
-                              <td className="px-1 py-2 font-bold truncate max-w-[90px]" title={bw.name}>
+                              <td className="px-2 py-2 font-bold truncate max-w-[80px]" title={bw.name}>
                                 <span style={{ marginRight: '0.2rem', color: idx === 0 ? '#3b82f6' : 'var(--text-muted)', fontWeight: '800' }}>#{idx + 1}</span> {bw.name}
                               </td>
-                              <td className="px-1 py-2"><span className="badge text-[10px] p-1">{bw.team}</span></td>
-                              <td className="px-1 py-2 text-right font-extrabold text-[#10b981] text-sm">{bw.wickets}</td>
-                              <td className="px-1 py-2 text-right font-bold">{bestFigure}</td>
-                              <td className="px-1 py-2 text-right font-bold text-[#fbbf24]">{bw.econ || '0.00'}</td>
-                              <td className="px-1 py-2 text-right text-gray-500">{calculatedOvers}</td>
+                              <td className="px-2 py-2"><span className="badge text-[10px] p-1">{bw.team}</span></td>
+                              <td className="px-2 py-2 text-right font-extrabold text-[#10b981] text-sm whitespace-nowrap">{bw.wickets}</td>
+                              <td className="px-2 py-2 text-right font-bold whitespace-nowrap">{bestFigure}</td>
+                              <td className="px-2 py-2 text-right font-bold text-[#fbbf24] whitespace-nowrap">{bw.econ || '0.00'}</td>
+                              <td className="px-2 py-2 text-right text-gray-500 whitespace-nowrap">{calculatedOvers}</td>
                             </tr>
                           );
                         })}
@@ -805,12 +805,12 @@ export default function Tournaments() {
                     <table className="w-full text-xs" style={{ borderCollapse: 'collapse', tableLayout: 'fixed' }}>
                       <thead>
                         <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
-                          <th className="px-1 py-2 text-left w-[40%]">Fielder</th>
-                          <th className="px-1 py-2 text-left">Team</th>
-                          <th className="px-1 py-2 text-right">Ctch</th>
-                          <th className="px-1 py-2 text-right">Stmp</th>
-                          <th className="px-1 py-2 text-right">RO</th>
-                          <th className="px-1 py-2 text-right">Tot</th>
+                          <th className="px-2 py-2 text-left w-[35%]">Fielder</th>
+                          <th className="px-2 py-2 text-left">Team</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap">Ctch</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap">Stmp</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap">RO</th>
+                          <th className="px-2 py-2 text-right whitespace-nowrap">Tot</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -818,14 +818,14 @@ export default function Tournaments() {
                           const totalDismissals = (fd.catches || 0) + (fd.stumpings || 0) + (fd.runOuts || 0);
                           return (
                             <tr key={idx} style={{ borderBottom: '1px solid var(--border-color)' }}>
-                              <td className="px-1 py-2 font-bold truncate max-w-[90px]" title={fd.name}>
+                              <td className="px-2 py-2 font-bold truncate max-w-[80px]" title={fd.name}>
                                 <span style={{ marginRight: '0.2rem', color: idx === 0 ? '#10b981' : 'var(--text-muted)', fontWeight: '800' }}>#{idx + 1}</span> {fd.name}
                               </td>
-                              <td className="px-1 py-2"><span className="badge text-[10px] p-1">{fd.team}</span></td>
-                              <td className="px-1 py-2 text-right font-bold">{fd.catches || 0}</td>
-                              <td className="px-1 py-2 text-right font-bold">{fd.stumpings || 0}</td>
-                              <td className="px-1 py-2 text-right font-bold">{fd.runOuts || 0}</td>
-                              <td className="px-1 py-2 text-right font-extrabold text-[#10b981] text-sm">{totalDismissals}</td>
+                              <td className="px-2 py-2"><span className="badge text-[10px] p-1">{fd.team}</span></td>
+                              <td className="px-2 py-2 text-right font-bold whitespace-nowrap">{fd.catches || 0}</td>
+                              <td className="px-2 py-2 text-right font-bold whitespace-nowrap">{fd.stumpings || 0}</td>
+                              <td className="px-2 py-2 text-right font-bold whitespace-nowrap">{fd.runOuts || 0}</td>
+                              <td className="px-2 py-2 text-right font-extrabold text-[#10b981] text-sm whitespace-nowrap">{totalDismissals}</td>
                             </tr>
                           );
                         })}
