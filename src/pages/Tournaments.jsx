@@ -436,8 +436,8 @@ export default function Tournaments() {
                             <td style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{tm.draw || 0}</td>
                             <td style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{tm.tie || 0}</td>
                             <td style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{tm.nr || 0}</td>
-                            <td style={{ textAlign: 'center', fontWeight: '800', color: tm.nrr.startsWith('+') ? 'var(--accent-green)' : tm.nrr === '0.000' || tm.nrr === '0' ? 'var(--text-muted)' : '#ef4444' }}>
-                              <span style={{ background: tm.nrr.startsWith('+') ? 'rgba(16, 185, 129, 0.15)' : tm.nrr === '0.000' || tm.nrr === '0' ? 'transparent' : 'rgba(239, 68, 68, 0.15)', padding: '0.15rem 0.45rem', borderRadius: '4px' }}>
+                            <td style={{ textAlign: 'center', fontWeight: '800', color: (tm.nrr || '').startsWith('+') ? 'var(--accent-green)' : tm.nrr === '0.000' || tm.nrr === '0' || !tm.nrr ? 'var(--text-muted)' : '#ef4444' }}>
+                              <span style={{ background: (tm.nrr || '').startsWith('+') ? 'rgba(16, 185, 129, 0.15)' : tm.nrr === '0.000' || tm.nrr === '0' || !tm.nrr ? 'transparent' : 'rgba(239, 68, 68, 0.15)', padding: '0.15rem 0.45rem', borderRadius: '4px' }}>
                                 {tm.nrr}
                               </span>
                             </td>
