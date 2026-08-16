@@ -77,7 +77,7 @@ export default function Tournaments() {
     { name: 'V Priyankan', team: 'JAF', catches: 1, stumpings: 0, runOuts: 0 },
     { name: 'Ravichandran Ragulan', team: 'VAV', catches: 1, stumpings: 0, runOuts: 0 },
     { name: 'Rashan Wijerathna', team: 'VAV', catches: 0, stumpings: 0, runOuts: 1 },
-  ].sort((a, b) => ((b.catches + b.stumpings + b.runOuts) - (a.catches + a.stumpings + a.runOuts))).slice(0, 3);
+  ].sort((a, b) => ((b.catches + b.stumpings + b.runOuts) - (a.catches + a.stumpings + a.runOuts))).slice(0, 10);
 
   const activeScorecard = selectedCompletedMatchId ? completedMatchScorecards[selectedCompletedMatchId] : null;
 
@@ -662,7 +662,7 @@ export default function Tournaments() {
             </div>
           </div>
 
-          <div className="mobile-col-1" style={{ display: 'grid', gridTemplateColumns: leaderboardCategory === 'ALL' ? 'repeat(auto-fit, minmax(340px, 1fr))' : '1fr', gap: '1.5rem' }}>
+          <div className={leaderboardCategory === 'ALL' ? "grid grid-cols-1 lg:grid-cols-3 gap-4 w-full" : "w-full"} style={{ marginTop: '1.5rem' }}>
             
             {/* 1. Batting Leaderboard */}
             {(leaderboardCategory === 'ALL' || leaderboardCategory === 'BAT') && (
@@ -676,33 +676,33 @@ export default function Tournaments() {
                 </div>
 
                 {topBatters.length > 0 ? (
-                  <div className="table-responsive">
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
-                    <thead>
-                      <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
-                        <th style={{ textAlign: 'left', padding: '0.75rem 1rem' }}>Batter</th>
-                        <th style={{ textAlign: 'left', padding: '0.75rem 1rem' }}>Team</th>
-                        <th style={{ textAlign: 'right', padding: '0.75rem 1rem' }}>Runs</th>
-                        <th style={{ textAlign: 'right', padding: '0.75rem 1rem' }}>HS</th>
-                        <th style={{ textAlign: 'right', padding: '0.75rem 1rem' }}>SR</th>
-                        <th style={{ textAlign: 'right', padding: '0.75rem 1rem' }}>4s/6s</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {topBatters.map((b, idx) => (
-                        <tr key={idx} style={{ borderBottom: '1px solid var(--border-color)' }}>
-                          <td style={{ padding: '0.75rem 1rem', fontWeight: '700' }}>
-                            <span style={{ marginRight: '0.4rem', color: idx === 0 ? '#fbbf24' : idx === 1 ? '#94a3b8' : idx === 2 ? '#d97706' : 'var(--text-muted)', fontWeight: '800' }}>#{idx + 1}</span> {b.name}
-                          </td>
-                          <td style={{ padding: '0.75rem 1rem' }}><span className="badge">{b.team}</span></td>
-                          <td style={{ textAlign: 'right', padding: '0.75rem 1rem', fontWeight: '800', color: 'var(--accent-gold)', fontSize: '1rem' }}>{b.runs}</td>
-                          <td style={{ textAlign: 'right', padding: '0.75rem 1rem', fontWeight: '700' }}>{b.hs || b.runs}</td>
-                          <td style={{ textAlign: 'right', padding: '0.75rem 1rem', fontWeight: '700' }}>{b.sr || '0.0'}</td>
-                          <td style={{ textAlign: 'right', padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>{b.fours || 0}/{b.sixes || 0}</td>
+                  <div className="w-full">
+                    <table className="w-full text-xs" style={{ borderCollapse: 'collapse', tableLayout: 'fixed' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
+                          <th className="px-1 py-2 text-left w-[40%]">Batter</th>
+                          <th className="px-1 py-2 text-left">Team</th>
+                          <th className="px-1 py-2 text-right">Runs</th>
+                          <th className="px-1 py-2 text-right">HS</th>
+                          <th className="px-1 py-2 text-right">SR</th>
+                          <th className="px-1 py-2 text-right">4s/6s</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {topBatters.map((b, idx) => (
+                          <tr key={idx} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                            <td className="px-1 py-2 font-bold truncate max-w-[90px]" title={b.name}>
+                              <span style={{ marginRight: '0.2rem', color: idx === 0 ? '#fbbf24' : idx === 1 ? '#94a3b8' : idx === 2 ? '#d97706' : 'var(--text-muted)', fontWeight: '800' }}>#{idx + 1}</span> {b.name}
+                            </td>
+                            <td className="px-1 py-2"><span className="badge text-[10px] p-1">{b.team}</span></td>
+                            <td className="px-1 py-2 text-right font-extrabold text-[#fbbf24] text-sm">{b.runs}</td>
+                            <td className="px-1 py-2 text-right font-bold">{b.hs || b.runs}</td>
+                            <td className="px-1 py-2 text-right font-bold">{b.sr || '0.0'}</td>
+                            <td className="px-1 py-2 text-right text-gray-500">{b.fours || 0}/{b.sixes || 0}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 ) : (
                   <div style={{ padding: '2.5rem 1rem', textAlign: 'center', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.01)', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
@@ -732,40 +732,38 @@ export default function Tournaments() {
                 </div>
 
                 {topBowlers.length > 0 ? (
-                  <div className="table-responsive">
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
-                    <thead>
-                      <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
-                        <th style={{ textAlign: 'left', padding: '0.75rem 1rem' }}>Bowler</th>
-                        <th style={{ textAlign: 'left', padding: '0.75rem 1rem' }}>Team</th>
-                        <th style={{ textAlign: 'right', padding: '0.75rem 1rem' }}>Wkts</th>
-                        <th style={{ textAlign: 'right', padding: '0.75rem 1rem' }}>Best</th>
-                        <th style={{ textAlign: 'right', padding: '0.75rem 1rem' }}>Econ</th>
-                        <th style={{ textAlign: 'right', padding: '0.75rem 1rem' }}>Overs</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {topBowlers.map((bw, idx) => {
-                        // Bind best figure to Wickets/Runs if bb is missing
-                        const bestFigure = bw.bb || `${bw.wickets}/${bw.runs || bw.runsConceded || 0}`;
-                        // Convert balls to overs if 'overs' is missing
-                        const calculatedOvers = bw.overs || (bw.balls ? `${Math.floor(bw.balls / 6)}.${bw.balls % 6}` : '0.0');
+                  <div className="w-full">
+                    <table className="w-full text-xs" style={{ borderCollapse: 'collapse', tableLayout: 'fixed' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
+                          <th className="px-1 py-2 text-left w-[40%]">Bowler</th>
+                          <th className="px-1 py-2 text-left">Team</th>
+                          <th className="px-1 py-2 text-right">Wkts</th>
+                          <th className="px-1 py-2 text-right">Best</th>
+                          <th className="px-1 py-2 text-right">Econ</th>
+                          <th className="px-1 py-2 text-right">Overs</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {topBowlers.map((bw, idx) => {
+                          const bestFigure = bw.bb || `${bw.wickets}/${bw.runs || bw.runsConceded || 0}`;
+                          const calculatedOvers = bw.overs || (bw.balls ? `${Math.floor(bw.balls / 6)}.${bw.balls % 6}` : '0.0');
 
-                        return (
-                          <tr key={idx} style={{ borderBottom: '1px solid var(--border-color)' }}>
-                            <td style={{ padding: '0.75rem 1rem', fontWeight: '700' }}>
-                              <span style={{ marginRight: '0.4rem', color: idx === 0 ? '#3b82f6' : 'var(--text-muted)', fontWeight: '800' }}>#{idx + 1}</span> {bw.name}
-                            </td>
-                            <td style={{ padding: '0.75rem 1rem' }}><span className="badge">{bw.team}</span></td>
-                            <td style={{ textAlign: 'right', padding: '0.75rem 1rem', fontWeight: '800', color: 'var(--accent-green)', fontSize: '1rem' }}>{bw.wickets}</td>
-                            <td style={{ textAlign: 'right', padding: '0.75rem 1rem', fontWeight: '700' }}>{bestFigure}</td>
-                            <td style={{ textAlign: 'right', padding: '0.75rem 1rem', fontWeight: '700', color: 'var(--accent-gold)' }}>{bw.econ || '0.00'}</td>
-                            <td style={{ textAlign: 'right', padding: '0.75rem 1rem', color: 'var(--text-muted)' }}>{calculatedOvers}</td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                          return (
+                            <tr key={idx} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                              <td className="px-1 py-2 font-bold truncate max-w-[90px]" title={bw.name}>
+                                <span style={{ marginRight: '0.2rem', color: idx === 0 ? '#3b82f6' : 'var(--text-muted)', fontWeight: '800' }}>#{idx + 1}</span> {bw.name}
+                              </td>
+                              <td className="px-1 py-2"><span className="badge text-[10px] p-1">{bw.team}</span></td>
+                              <td className="px-1 py-2 text-right font-extrabold text-[#10b981] text-sm">{bw.wickets}</td>
+                              <td className="px-1 py-2 text-right font-bold">{bestFigure}</td>
+                              <td className="px-1 py-2 text-right font-bold text-[#fbbf24]">{bw.econ || '0.00'}</td>
+                              <td className="px-1 py-2 text-right text-gray-500">{calculatedOvers}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
                   </div>
                 ) : (
                   <div style={{ padding: '2.5rem 1rem', textAlign: 'center', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.01)', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
@@ -795,36 +793,36 @@ export default function Tournaments() {
                 </div>
 
                 {topFielders.length > 0 ? (
-                  <div className="table-responsive">
-                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
-                    <thead>
-                      <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
-                        <th style={{ textAlign: 'left', padding: '0.75rem 1rem' }}>Fielder</th>
-                        <th style={{ textAlign: 'left', padding: '0.75rem 1rem' }}>Team</th>
-                        <th style={{ textAlign: 'right', padding: '0.75rem 1rem' }}>Catches</th>
-                        <th style={{ textAlign: 'right', padding: '0.75rem 1rem' }}>Stumpings</th>
-                        <th style={{ textAlign: 'right', padding: '0.75rem 1rem' }}>Run Outs</th>
-                        <th style={{ textAlign: 'right', padding: '0.75rem 1rem' }}>Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {topFielders.map((fd, idx) => {
-                        const totalDismissals = (fd.catches || 0) + (fd.stumpings || 0) + (fd.runOuts || 0);
-                        return (
-                          <tr key={idx} style={{ borderBottom: '1px solid var(--border-color)' }}>
-                            <td style={{ padding: '0.75rem 1rem', fontWeight: '700' }}>
-                              <span style={{ marginRight: '0.4rem', color: idx === 0 ? '#10b981' : 'var(--text-muted)', fontWeight: '800' }}>#{idx + 1}</span> {fd.name}
-                            </td>
-                            <td style={{ padding: '0.75rem 1rem' }}><span className="badge">{fd.team}</span></td>
-                            <td style={{ textAlign: 'right', padding: '0.75rem 1rem', fontWeight: '700' }}>{fd.catches || 0}</td>
-                            <td style={{ textAlign: 'right', padding: '0.75rem 1rem', fontWeight: '700' }}>{fd.stumpings || 0}</td>
-                            <td style={{ textAlign: 'right', padding: '0.75rem 1rem', fontWeight: '700' }}>{fd.runOuts || 0}</td>
-                            <td style={{ textAlign: 'right', padding: '0.75rem 1rem', fontWeight: '800', color: 'var(--accent-green)', fontSize: '1rem' }}>{totalDismissals}</td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                  <div className="w-full">
+                    <table className="w-full text-xs" style={{ borderCollapse: 'collapse', tableLayout: 'fixed' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
+                          <th className="px-1 py-2 text-left w-[40%]">Fielder</th>
+                          <th className="px-1 py-2 text-left">Team</th>
+                          <th className="px-1 py-2 text-right">Ctch</th>
+                          <th className="px-1 py-2 text-right">Stmp</th>
+                          <th className="px-1 py-2 text-right">RO</th>
+                          <th className="px-1 py-2 text-right">Tot</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {topFielders.map((fd, idx) => {
+                          const totalDismissals = (fd.catches || 0) + (fd.stumpings || 0) + (fd.runOuts || 0);
+                          return (
+                            <tr key={idx} style={{ borderBottom: '1px solid var(--border-color)' }}>
+                              <td className="px-1 py-2 font-bold truncate max-w-[90px]" title={fd.name}>
+                                <span style={{ marginRight: '0.2rem', color: idx === 0 ? '#10b981' : 'var(--text-muted)', fontWeight: '800' }}>#{idx + 1}</span> {fd.name}
+                              </td>
+                              <td className="px-1 py-2"><span className="badge text-[10px] p-1">{fd.team}</span></td>
+                              <td className="px-1 py-2 text-right font-bold">{fd.catches || 0}</td>
+                              <td className="px-1 py-2 text-right font-bold">{fd.stumpings || 0}</td>
+                              <td className="px-1 py-2 text-right font-bold">{fd.runOuts || 0}</td>
+                              <td className="px-1 py-2 text-right font-extrabold text-[#10b981] text-sm">{totalDismissals}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
                   </div>
                 ) : (
                   <div style={{ padding: '2.5rem 1rem', textAlign: 'center', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.01)', borderRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
