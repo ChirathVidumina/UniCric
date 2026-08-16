@@ -420,9 +420,17 @@ export default function Tournaments() {
                       </tr>
                     </thead>
                     <tbody>
-                      {grp.teams.map((baseTm, idx) => {
+                      {[...grp.teams].map(baseTm => {
                         const isGroupC = grp.code === 'GROUP_C';
-                        const tm = isGroupC && GROUP_C_OVERRIDES[baseTm.code] ? { ...baseTm, ...GROUP_C_OVERRIDES[baseTm.code] } : baseTm;
+                        return isGroupC && GROUP_C_OVERRIDES[baseTm.code] ? { ...baseTm, ...GROUP_C_OVERRIDES[baseTm.code] } : baseTm;
+                      }).sort((a, b) => {
+                        if (b.points !== a.points) {
+                          return (b.points || 0) - (a.points || 0);
+                        }
+                        const nrrA = parseFloat(a.nrr || '0');
+                        const nrrB = parseFloat(b.nrr || '0');
+                        return nrrB - nrrA;
+                      }).map((tm, idx) => {
                         const isUOM = tm.code === 'UOM' || tm.isPrimary;
                         return (
                           <tr 
