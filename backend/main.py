@@ -623,19 +623,26 @@ def process_and_save_scorecard_data(extracted_data: Dict[str, Any], filename: st
             existing_team.name = team_name
             teams_updated += 1
 
-    # 2. Match record creation
-    match_id = f"match_import_{os.path.splitext(filename)[0]}"
+    # 2. Match record creation with Strict Duplicate Prevention
+    import hashlib
+    content_str = "\n".join(raw_lines)
+    content_hash = hashlib.md5(content_str.encode('utf-8')).hexdigest()
+    
+    match_id = f"match_import_{content_hash[:16]}"
+    
     existing_match = db.query(MatchModel).filter(MatchModel.id == match_id).first()
-    if not existing_match:
-        match_obj = MatchModel(
-            id=match_id,
-            title=f"Scorecard Ingested - {filename}",
-            date_label="INGESTED TELEMETRY",
-            status="COMPLETED",
-            result="PDF Scorecard Ingested",
-            score_summary="Parsed Cricket Telemetry"
-        )
-        db.add(match_obj)
+    if existing_match:
+        raise HTTPException(status_code=409, detail="Duplicate Match Detected: This scorecard has already been ingested into the database.")
+        
+    match_obj = MatchModel(
+        id=match_id,
+        title=f"Scorecard Ingested - {filename}",
+        date_label="INGESTED TELEMETRY",
+        status="COMPLETED",
+        result="PDF Scorecard Ingested",
+        score_summary="Parsed Cricket Telemetry"
+    )
+    db.add(match_obj)
 
     # 3. Upsert Batting Players & Stats
     for bat in extracted_entities.get("batting_stats", []):
