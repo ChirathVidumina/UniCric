@@ -132,7 +132,7 @@ export default function Tournaments() {
             <div className="stat-icon"><Target size={20} color="#dc2626" /></div>
           </div>
           <div className="stat-value" style={{ color: '#dc2626' }}>
-            {uomTeam.played > 0 ? `${uomTeam.points} Pts (${uomTeam.nrr} NRR)` : '0 Matches Played'}
+            {uomTeam.played > 0 ? `${uomTeam.points} Pts (${uomTeam.nrr || '0.000'} NRR)` : '0 Matches Played'}
           </div>
           <div className="stat-change positive">
             {uomTeam.won} Won, {uomTeam.lost} Lost • {uomTeam.points} Points (Group C)
@@ -144,7 +144,7 @@ export default function Tournaments() {
             <span>CHAMPIONSHIP MATCHES INGESTED</span>
             <div className="stat-icon"><Activity size={20} color="var(--accent-green)" /></div>
           </div>
-          <div className="stat-value">1 / 32 Matches</div>
+          <div className="stat-value">{Object.keys(completedMatchScorecards || {}).length} / 32 Matches</div>
           <div className="stat-change positive">
             Verified CricHeroes Telemetry Data
           </div>
