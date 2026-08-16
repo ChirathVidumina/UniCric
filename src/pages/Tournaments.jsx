@@ -450,7 +450,7 @@ export default function Tournaments() {
                               <div style={{ display: 'flex', gap: '0.25rem', justifyContent: 'center' }}>
                                 {tm.last5 && tm.last5.length > 0 ? (
                                   tm.last5.map((res, i) => (
-                                    <span key={i} style={{ width: '18px', height: '18px', borderRadius: '50%', background: res === 'W' ? '#10b981' : '#ef4444', color: 'white', fontSize: '0.65rem', fontWeight: '900', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <span key={i} style={{ width: '18px', height: '18px', borderRadius: '50%', background: res === 'W' ? '#10b981' : res === 'L' ? '#ef4444' : 'var(--bg-subtle)', color: res === '-' ? 'var(--text-muted)' : 'white', fontSize: '0.65rem', fontWeight: '900', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
                                       {res}
                                     </span>
                                   ))
