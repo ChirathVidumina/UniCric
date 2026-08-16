@@ -1173,126 +1173,130 @@ export default function Tournaments() {
           <div style={{ width: '100%', maxWidth: '850px', display: 'flex', flexDirection: 'column', gap: '0.5rem', animation: 'fadeIn 0.3s ease-out', maxHeight: '98vh' }}>
             
             {/* Innings 1 Widget */}
-            <div style={{ background: '#0f172a', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', position: 'relative' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: 'linear-gradient(to bottom, #dc2626, #f59e0b)' }}></div>
-              
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                <div>
-                  <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: '800', letterSpacing: '1px' }}>1ST INNINGS</div>
-                  <div style={{ fontSize: '1.2rem', fontWeight: '900', color: 'white', letterSpacing: '0.5px' }}>JAFFNA UNIVERSITY</div>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '1.8rem', fontWeight: '900', color: '#f59e0b', lineHeight: '1' }}>271<span style={{ fontSize: '1rem', color: '#94a3b8' }}>/10</span></div>
-                  <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: '700' }}>50.0 OVERS</div>
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'rgba(255,255,255,0.05)' }}>
-                {/* Batters */}
-                <div style={{ background: '#0b1329', padding: '0.75rem 1rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#dc2626', fontWeight: '800', fontSize: '0.8rem', marginBottom: '0.5rem' }}>
-                    <Flame size={14} /> TOP BATTERS
+            {activeScorecard.scorecard.innings1 && (
+              <div style={{ background: '#0f172a', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', position: 'relative' }}>
+                <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: 'linear-gradient(to bottom, #dc2626, #f59e0b)' }}></div>
+                
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div>
+                    <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: '800', letterSpacing: '1px' }}>1ST INNINGS</div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: '900', color: 'white', letterSpacing: '0.5px' }}>{activeScorecard.scorecard.innings1.team}</div>
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                    {[ 
-                      { name: 'Ashmika Iddamalgoda', runs: 79, balls: '81' },
-                      { name: 'N Sivaruban', runs: 33, balls: '42' },
-                      { name: 'K Shanmuganathan', runs: 26, balls: '28' }
-                    ].map((p, i) => (
-                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '0.3rem 0.6rem', borderRadius: '4px' }}>
-                        <span style={{ color: '#e2e8f0', fontWeight: '600', fontSize: '0.85rem' }}>{p.name}</span>
-                        <div><strong style={{ color: 'white', fontSize: '0.95rem' }}>{p.runs}</strong> <span style={{ color: '#64748b', fontSize: '0.75rem' }}>({p.balls})</span></div>
-                      </div>
-                    ))}
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: '1.8rem', fontWeight: '900', color: '#f59e0b', lineHeight: '1' }}>{activeScorecard.scorecard.innings1.score}</div>
                   </div>
                 </div>
 
-                {/* Bowlers */}
-                <div style={{ background: '#0b1329', padding: '0.75rem 1rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#10b981', fontWeight: '800', fontSize: '0.8rem', marginBottom: '0.5rem' }}>
-                    <Target size={14} /> VAVUNIYA BOWLERS
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'rgba(255,255,255,0.05)' }}>
+                  {/* Batters */}
+                  <div style={{ background: '#0b1329', padding: '0.75rem 1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#dc2626', fontWeight: '800', fontSize: '0.8rem', marginBottom: '0.5rem' }}>
+                      <Flame size={14} /> TOP BATTERS
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                      {(activeScorecard.scorecard.innings1.batting || [])
+                        .filter(b => (b.runs !== undefined ? b.runs : b.r) > 0)
+                        .sort((a, b) => (b.runs !== undefined ? b.runs : b.r) - (a.runs !== undefined ? a.runs : a.r))
+                        .slice(0, 3)
+                        .map((b, i) => (
+                        <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '0.3rem 0.6rem', borderRadius: '4px' }}>
+                          <span style={{ color: '#e2e8f0', fontWeight: '600', fontSize: '0.85rem' }}>{b.player || b.batter}</span>
+                          <div><strong style={{ color: 'white', fontSize: '0.95rem' }}>{b.runs !== undefined ? b.runs : b.r}</strong> <span style={{ color: '#64748b', fontSize: '0.75rem' }}>({b.balls !== undefined ? b.balls : b.b})</span></div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                    {[ 
-                      { name: 'Riwaqi', fig: '2/38', ov: '8.0' },
-                      { name: 'Nharthanan', fig: '1/32', ov: '6.0' },
-                      { name: 'Ragulan', fig: '1/16', ov: '5.0' }
-                    ].map((p, i) => (
-                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '0.3rem 0.6rem', borderRadius: '4px' }}>
-                        <span style={{ color: '#e2e8f0', fontWeight: '600', fontSize: '0.85rem' }}>{p.name}</span>
-                        <div><strong style={{ color: '#10b981', fontSize: '0.95rem' }}>{p.fig}</strong> <span style={{ color: '#64748b', fontSize: '0.75rem', marginLeft: '4px' }}>{p.ov}</span></div>
-                      </div>
-                    ))}
+
+                  {/* Bowlers */}
+                  <div style={{ background: '#0b1329', padding: '0.75rem 1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#10b981', fontWeight: '800', fontSize: '0.8rem', marginBottom: '0.5rem' }}>
+                      <Target size={14} /> TOP BOWLERS
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                      {(activeScorecard.scorecard.innings1.bowling || [])
+                        .filter(bw => (bw.wickets !== undefined ? bw.wickets : bw.w) > 0 || parseFloat(bw.overs || bw.o || 0) > 0)
+                        .sort((a, b) => (b.wickets !== undefined ? b.wickets : b.w) - (a.wickets !== undefined ? a.wickets : a.w))
+                        .slice(0, 3)
+                        .map((bw, i) => (
+                        <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '0.3rem 0.6rem', borderRadius: '4px' }}>
+                          <span style={{ color: '#e2e8f0', fontWeight: '600', fontSize: '0.85rem' }}>{(bw.bowler || "Bowler").split(' ').slice(-1)[0]}</span>
+                          <div><strong style={{ color: '#10b981', fontSize: '0.95rem' }}>{bw.wickets !== undefined ? bw.wickets : bw.w}/{bw.runs !== undefined ? bw.runs : bw.r}</strong> <span style={{ color: '#64748b', fontSize: '0.75rem', marginLeft: '4px' }}>{bw.overs || bw.o}</span></div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Innings 2 Widget */}
-            <div style={{ background: '#0f172a', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', position: 'relative' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: 'linear-gradient(to bottom, #10b981, #3b82f6)' }}></div>
-              
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                <div>
-                  <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: '800', letterSpacing: '1px' }}>2ND INNINGS</div>
-                  <div style={{ fontSize: '1.2rem', fontWeight: '900', color: 'white', letterSpacing: '0.5px' }}>VAVUNIYA UNIVERSITY</div>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '1.8rem', fontWeight: '900', color: '#10b981', lineHeight: '1' }}>91<span style={{ fontSize: '1rem', color: '#94a3b8' }}>/10</span></div>
-                  <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: '700' }}>22.3 OVERS</div>
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'rgba(255,255,255,0.05)' }}>
-                {/* Batters */}
-                <div style={{ background: '#0b1329', padding: '0.75rem 1rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#f59e0b', fontWeight: '800', fontSize: '0.8rem', marginBottom: '0.5rem' }}>
-                    <Flame size={14} /> TOP BATTERS
+            {activeScorecard.scorecard.innings2 && (
+              <div style={{ background: '#0f172a', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.5)', position: 'relative' }}>
+                <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: 'linear-gradient(to bottom, #10b981, #3b82f6)' }}></div>
+                
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 1rem', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div>
+                    <div style={{ fontSize: '0.65rem', color: '#94a3b8', fontWeight: '800', letterSpacing: '1px' }}>2ND INNINGS</div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: '900', color: 'white', letterSpacing: '0.5px' }}>{activeScorecard.scorecard.innings2.team}</div>
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                    {[ 
-                      { name: 'Lahiru Welagedara', runs: 35, balls: '31' },
-                      { name: 'Rashan Wijerathna', runs: 23, balls: '28' },
-                      { name: 'Riwaqi', runs: 11, balls: '9' }
-                    ].map((p, i) => (
-                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '0.3rem 0.6rem', borderRadius: '4px' }}>
-                        <span style={{ color: '#e2e8f0', fontWeight: '600', fontSize: '0.85rem' }}>{p.name}</span>
-                        <div><strong style={{ color: 'white', fontSize: '0.95rem' }}>{p.runs}</strong> <span style={{ color: '#64748b', fontSize: '0.75rem' }}>({p.balls})</span></div>
-                      </div>
-                    ))}
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: '1.8rem', fontWeight: '900', color: '#10b981', lineHeight: '1' }}>{activeScorecard.scorecard.innings2.score}</div>
                   </div>
                 </div>
 
-                {/* Bowlers */}
-                <div style={{ background: '#0b1329', padding: '0.75rem 1rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#3b82f6', fontWeight: '800', fontSize: '0.8rem', marginBottom: '0.5rem' }}>
-                    <Target size={14} /> JAFFNA BOWLERS
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'rgba(255,255,255,0.05)' }}>
+                  {/* Batters */}
+                  <div style={{ background: '#0b1329', padding: '0.75rem 1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#f59e0b', fontWeight: '800', fontSize: '0.8rem', marginBottom: '0.5rem' }}>
+                      <Flame size={14} /> TOP BATTERS
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                      {(activeScorecard.scorecard.innings2.batting || [])
+                        .filter(b => (b.runs !== undefined ? b.runs : b.r) > 0)
+                        .sort((a, b) => (b.runs !== undefined ? b.runs : b.r) - (a.runs !== undefined ? a.runs : a.r))
+                        .slice(0, 3)
+                        .map((b, i) => (
+                        <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '0.3rem 0.6rem', borderRadius: '4px' }}>
+                          <span style={{ color: '#e2e8f0', fontWeight: '600', fontSize: '0.85rem' }}>{b.player || b.batter}</span>
+                          <div><strong style={{ color: 'white', fontSize: '0.95rem' }}>{b.runs !== undefined ? b.runs : b.r}</strong> <span style={{ color: '#64748b', fontSize: '0.75rem' }}>({b.balls !== undefined ? b.balls : b.b})</span></div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                    {[ 
-                      { name: 'R Niroshan', fig: '4/16', ov: '5.3' },
-                      { name: 'C Desvin', fig: '3/8', ov: '6.0' },
-                      { name: 'P Mathushan', fig: '1/11', ov: '3.0' }
-                    ].map((p, i) => (
-                      <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '0.3rem 0.6rem', borderRadius: '4px' }}>
-                        <span style={{ color: '#e2e8f0', fontWeight: '600', fontSize: '0.85rem' }}>{p.name}</span>
-                        <div><strong style={{ color: '#3b82f6', fontSize: '0.95rem' }}>{p.fig}</strong> <span style={{ color: '#64748b', fontSize: '0.75rem', marginLeft: '4px' }}>{p.ov}</span></div>
-                      </div>
-                    ))}
+
+                  {/* Bowlers */}
+                  <div style={{ background: '#0b1329', padding: '0.75rem 1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#3b82f6', fontWeight: '800', fontSize: '0.8rem', marginBottom: '0.5rem' }}>
+                      <Target size={14} /> TOP BOWLERS
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                      {(activeScorecard.scorecard.innings2.bowling || [])
+                        .filter(bw => (bw.wickets !== undefined ? bw.wickets : bw.w) > 0 || parseFloat(bw.overs || bw.o || 0) > 0)
+                        .sort((a, b) => (b.wickets !== undefined ? b.wickets : b.w) - (a.wickets !== undefined ? a.wickets : a.w))
+                        .slice(0, 3)
+                        .map((bw, i) => (
+                        <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)', padding: '0.3rem 0.6rem', borderRadius: '4px' }}>
+                          <span style={{ color: '#e2e8f0', fontWeight: '600', fontSize: '0.85rem' }}>{(bw.bowler || "Bowler").split(' ').slice(-1)[0]}</span>
+                          <div><strong style={{ color: '#3b82f6', fontSize: '0.95rem' }}>{bw.wickets !== undefined ? bw.wickets : bw.w}/{bw.runs !== undefined ? bw.runs : bw.r}</strong> <span style={{ color: '#64748b', fontSize: '0.75rem', marginLeft: '4px' }}>{bw.overs || bw.o}</span></div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Match Result Highlight */}
-            <div style={{ background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(11, 19, 41, 0.5))', border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: '12px', padding: '0.75rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', boxShadow: '0 5px 15px rgba(16, 185, 129, 0.1)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Trophy size={20} color="#f59e0b" style={{ filter: 'drop-shadow(0 0 10px rgba(245, 158, 11, 0.5))' }} />
-                <div style={{ fontSize: '1.1rem', fontWeight: '900', color: 'white', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                  JAFFNA UNIVERSITY WON BY 180 RUNS
+            {activeScorecard.scorecard.result && (
+              <div style={{ background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(11, 19, 41, 0.5))', border: '1px solid rgba(16, 185, 129, 0.4)', borderRadius: '12px', padding: '0.75rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', boxShadow: '0 5px 15px rgba(16, 185, 129, 0.1)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Trophy size={20} color="#f59e0b" style={{ filter: 'drop-shadow(0 0 10px rgba(245, 158, 11, 0.5))' }} />
+                  <div style={{ fontSize: '1.1rem', fontWeight: '900', color: 'white', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                    {activeScorecard.scorecard.result}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Floating Action Bar */}
             <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem' }}>
