@@ -274,11 +274,45 @@ export default function UOMOppositionScout() {
               primaryWeakness: weakness
           });
         } else {
-          setPlayerWindowStats(null);
+          const fallbackPlayer = opponentPlayers.find(p => p.id === selectedPlayerId);
+          if (fallbackPlayer) {
+              setPlayerWindowStats({
+                  player: { name: fallbackPlayer.name, role: fallbackPlayer.role, battingStyle: fallbackPlayer.battingStyle || 'Right-Hand Batter' },
+                  matchesInWindow: fallbackPlayer.matches || 0,
+                  totalRuns: fallbackPlayer.runs || 0,
+                  totalBalls: fallbackPlayer.balls || 0,
+                  strikeRate: fallbackPlayer.sr || 0,
+                  totalFours: fallbackPlayer.fours || 0,
+                  totalSixes: fallbackPlayer.sixes || 0,
+                  dotBallPct: 0,
+                  boundaryPct: 0,
+                  primaryWeakness: "Susceptible to disciplined batting, respect good balls",
+                  logsWindow: []
+              });
+          } else {
+              setPlayerWindowStats(null);
+          }
         }
       } catch (err) {
         console.error(`Error fetching form for player ${selectedPlayerId}:`, err);
-        setPlayerWindowStats(null);
+        const fallbackPlayer = opponentPlayers.find(p => p.id === selectedPlayerId);
+        if (fallbackPlayer) {
+            setPlayerWindowStats({
+                player: { name: fallbackPlayer.name, role: fallbackPlayer.role, battingStyle: fallbackPlayer.battingStyle || 'Right-Hand Batter' },
+                matchesInWindow: fallbackPlayer.matches || 0,
+                totalRuns: fallbackPlayer.runs || 0,
+                totalBalls: fallbackPlayer.balls || 0,
+                strikeRate: fallbackPlayer.sr || 0,
+                totalFours: fallbackPlayer.fours || 0,
+                totalSixes: fallbackPlayer.sixes || 0,
+                dotBallPct: 0,
+                boundaryPct: 0,
+                primaryWeakness: "Susceptible to disciplined batting, respect good balls",
+                logsWindow: []
+            });
+        } else {
+            setPlayerWindowStats(null);
+        }
       } finally {
         setLoadingPlayerForm(false);
       }

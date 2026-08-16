@@ -187,10 +187,12 @@ def get_player_form(player_id: str, last_n: int = 3, db: Session = Depends(get_d
             "isOut": s.is_out
         })
         
-    total_runs = p.total_runs
-    total_balls = p.total_balls
-    total_boundaries = p.total_fours + p.total_sixes
-    boundary_runs = (p.total_fours * 4) + (p.total_sixes * 6)
+    total_runs = p.total_runs or 0
+    total_balls = p.total_balls or 0
+    total_fours = p.total_fours or 0
+    total_sixes = p.total_sixes or 0
+    total_boundaries = total_fours + total_sixes
+    boundary_runs = (total_fours * 4) + (total_sixes * 6)
     
     boundary_pct = round((total_boundaries / total_balls) * 100) if total_balls > 0 else 0
     
