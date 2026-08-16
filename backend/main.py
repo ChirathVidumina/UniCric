@@ -1138,3 +1138,66 @@ def seed_peradeniya_match(db: Session = Depends(get_db)):
 
     db.commit()
     return {"status": "success", "message": "Peradeniya match seeded successfully into Render database!"}
+@app.get("/api/admin/seed_matches")
+def seed_matches(db: Session = Depends(get_db)):
+    try:
+        # Match 1: Jaffna vs Vavuniya
+        m1 = db.query(MatchModel).filter(MatchModel.id == "match_1").first()
+        if not m1:
+            m1 = MatchModel(id="match_1", title="Jaffna vs Vavuniya", date_label="2026-07-28", venue="University Ground", status="COMPLETED", result="Jaffna won", score_summary="JAF 271/5 | VAV 91/10")
+            db.add(m1)
+        
+        # Match 2: Peradeniya vs Moratuwa
+        m2 = db.query(MatchModel).filter(MatchModel.id == "match_2").first()
+        if not m2:
+            m2 = MatchModel(id="match_2", title="Peradeniya vs Moratuwa", date_label="2026-08-01", venue="University Of Moratuwa Ground, Moratuwa", status="COMPLETED", result="Moratuwa University won by 5 wickets", score_summary="PER 114/10 | MOR 115/5")
+            db.add(m2)
+
+        # Let's insert a couple of player stats for Match 1 just to populate runs
+        # Jaffna Batsmen (match 1)
+        jaf_stats = [
+            {"match_id": "match_1", "player_name": "Ashmika Iddamalgoda", "team_code": "JAF", "runs": 79, "balls": 81, "fours": 13, "sixes": 1, "wickets": 1, "overs": 4.0, "runs_conceded": 14, "is_out": False},
+            {"match_id": "match_1", "player_name": "Sivaruban Sivanujan", "team_code": "JAF", "runs": 33, "balls": 42, "fours": 3, "sixes": 2, "wickets": 0, "overs": 2.0, "runs_conceded": 18, "is_out": True, "dismissal": "caught"},
+            {"match_id": "match_1", "player_name": "Antony Desvin", "team_code": "JAF", "runs": 23, "balls": 31, "fours": 1, "sixes": 2, "wickets": 3, "overs": 6.0, "runs_conceded": 8, "is_out": True, "dismissal": "stumped"},
+            {"match_id": "match_1", "player_name": "Selvanathan Niroshan", "team_code": "JAF", "runs": 13, "balls": 6, "fours": 0, "sixes": 2, "wickets": 4, "overs": 8.0, "runs_conceded": 23, "is_out": False}
+        ]
+
+        # Peradeniya Batsmen (match 2)
+        per_stats = [
+            {"match_id": "match_2", "player_name": "Nadeeshan Bandara", "team_code": "PER", "runs": 28, "balls": 49, "fours": 2, "sixes": 0, "wickets": 0, "overs": 2.0, "runs_conceded": 20, "is_out": True, "dismissal": "caught"},
+            {"match_id": "match_2", "player_name": "Pulitha Sarathchandra", "team_code": "PER", "runs": 26, "balls": 70, "fours": 0, "sixes": 0, "wickets": 0, "overs": 0.0, "runs_conceded": 0, "is_out": True, "dismissal": "lbw"},
+            {"match_id": "match_2", "player_name": "Nahularaja Kathurshan", "team_code": "PER", "runs": 19, "balls": 46, "fours": 3, "sixes": 0, "wickets": 0, "overs": 0.0, "runs_conceded": 0, "is_out": True, "dismissal": "run out"}
+        ]
+
+        # Moratuwa Batsmen (match 2)
+        mor_stats = [
+            {"match_id": "match_2", "player_name": "Sathira Vikasitha", "team_code": "MOR", "runs": 48, "balls": 63, "fours": 6, "sixes": 0, "wickets": 0, "overs": 0.0, "runs_conceded": 0, "is_out": True, "dismissal": "caught"},
+            {"match_id": "match_2", "player_name": "Muftee Mysan", "team_code": "MOR", "runs": 33, "balls": 28, "fours": 4, "sixes": 1, "wickets": 0, "overs": 6.0, "runs_conceded": 20, "is_out": True, "dismissal": "bowled"},
+            {"match_id": "match_2", "player_name": "Behan Wickramasinghe", "team_code": "MOR", "runs": 10, "balls": 16, "fours": 2, "sixes": 0, "wickets": 2, "overs": 4.0, "runs_conceded": 7, "is_out": False},
+            {"match_id": "match_2", "player_name": "Kevindu Perera", "team_code": "MOR", "runs": 8, "balls": 9, "fours": 0, "sixes": 1, "wickets": 3, "overs": 6.0, "runs_conceded": 16, "is_out": True, "dismissal": "caught"}
+        ]
+
+        # Combine all mock stats to reach roughly 591 total runs, 35 wickets
+        # 79+33+23+13 + 28+26+19 + 48+33+10+8 = 320 runs explicitly stated here.
+        # Let's add a dummy "Extras/Others" player stat to balance out the remaining runs and wickets.
+        dummy_jaf = {"match_id": "match_1", "player_name": "Other JAF", "team_code": "JAF", "runs": 123, "balls": 150, "fours": 15, "sixes": 5, "wickets": 2, "overs": 30.0, "runs_conceded": 100, "is_out": False}
+        dummy_vav = {"match_id": "match_1", "player_name": "Other VAV", "team_code": "VAV", "runs": 91, "balls": 135, "fours": 10, "sixes": 2, "wickets": 5, "overs": 50.0, "runs_conceded": 271, "is_out": True, "dismissal": "caught"}
+        dummy_per = {"match_id": "match_2", "player_name": "Other PER", "team_code": "PER", "runs": 41, "balls": 80, "fours": 2, "sixes": 0, "wickets": 5, "overs": 44.0, "runs_conceded": 95, "is_out": True, "dismissal": "caught"}
+        dummy_mor = {"match_id": "match_2", "player_name": "Other MOR", "team_code": "MOR", "runs": 16, "balls": 34, "fours": 1, "sixes": 0, "wickets": 5, "overs": 14.3, "runs_conceded": 87, "is_out": False}
+
+        all_to_insert = jaf_stats + per_stats + mor_stats + [dummy_jaf, dummy_vav, dummy_per, dummy_mor]
+
+        for pstat in all_to_insert:
+            existing = db.query(PlayerStatModel).filter(PlayerStatModel.match_id == pstat["match_id"], PlayerStatModel.player_name == pstat["player_name"]).first()
+            if not existing:
+                st = PlayerStatModel(**pstat)
+                db.add(st)
+            else:
+                for k, v in pstat.items():
+                    setattr(existing, k, v)
+        
+        db.commit()
+        return {"status": "success", "message": "Telemetry Data Seeded Successfully!"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
