@@ -857,7 +857,7 @@ def seed_peradeniya_match(db: Session = Depends(get_db)):
         else:
             if "Bowler" not in p.role:
                 p.role = "All-Rounder"
-            p.total_wickets = (p.total_wickets or 0) + bw["wickets"]
+            p.total_wickets = (p.total_wickets or 0) + int(bw["wickets"])
             p.economy_rate = bw["econ"]
             
         stat = db.query(PlayerStatModel).filter(PlayerStatModel.match_id == "m2", PlayerStatModel.player_name == bw["name"]).first()
