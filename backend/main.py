@@ -264,6 +264,19 @@ def get_tournaments(db: Session = Depends(get_db)):
         
     p_list = []
     for p in players:
+        # Fetch stats to calculate best bowling, total overs, and catches
+        p_stats = db.query(PlayerStatModel).filter(PlayerStatModel.player_name == p.name).all()
+        best_w = 0
+        best_r = 999
+        total_overs = 0.0
+        for st in p_stats:
+            total_overs += st.overs
+            if st.wickets > best_w or (st.wickets == best_w and st.runs_conceded < best_r):
+                best_w = st.wickets
+                best_r = st.runs_conceded
+        
+        best_figure = f"{best_w}/{best_r if best_r != 999 else 0}" if best_w > 0 else "0/0"
+        
         p_list.append({
             "name": p.name,
             "team": p.team_code,
@@ -274,7 +287,8 @@ def get_tournaments(db: Session = Depends(get_db)):
             "sixes": p.total_sixes,
             "sr": p.strike_rate,
             "econ": p.economy_rate,
-            "overs": 0.0
+            "overs": round(total_overs, 1),
+            "bb": best_figure
         })
         
     m_list = []
