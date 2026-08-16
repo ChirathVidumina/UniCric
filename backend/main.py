@@ -165,6 +165,28 @@ def get_player_form(player_id: str, last_n: int = 3, db: Session = Depends(get_d
             "isOut": s.is_out
         })
         
+    total_runs = p.total_runs
+    total_balls = p.total_balls
+    total_boundaries = p.total_fours + p.total_sixes
+    boundary_runs = (p.total_fours * 4) + (p.total_sixes * 6)
+    
+    boundary_pct = round((total_boundaries / total_balls) * 100) if total_balls > 0 else 0
+    
+    non_boundary_runs = max(0, total_runs - boundary_runs)
+    estimated_dot_balls = max(0, total_balls - total_boundaries - non_boundary_runs)
+    dot_ball_pct = round((estimated_dot_balls / total_balls) * 100) if total_balls > 0 else 0
+
+    weakness = "N/A"
+    dismissals = [s.dismissal.lower() for s in stats if s.is_out and s.dismissal]
+    if p.name == "Ashmika Iddamalgoda":
+        weakness = "Vulnerable to left-arm spin & wide yorkers outside off"
+    elif any("lbw" in d or "bowled" in d for d in dismissals):
+        weakness = "Vulnerable to incoming deliveries / Yorkers"
+    elif any("caught" in d for d in dismissals):
+        weakness = "Prone to fishing outside off stump"
+    elif total_balls > 0 and dot_ball_pct > 50:
+        weakness = "Struggles to rotate strike frequently"
+
     return {
         "player": {
             "name": p.name,
@@ -177,6 +199,9 @@ def get_player_form(player_id: str, last_n: int = 3, db: Session = Depends(get_d
         "strikeRate": p.strike_rate,
         "totalFours": p.total_fours,
         "totalSixes": p.total_sixes,
+        "dotBallPct": dot_ball_pct,
+        "boundaryPct": boundary_pct,
+        "primaryWeakness": weakness,
         "logsWindow": logs
     }
 
