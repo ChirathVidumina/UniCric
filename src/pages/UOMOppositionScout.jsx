@@ -456,7 +456,7 @@ export default function UOMOppositionScout() {
               <RefreshCw className="animate-spin" size={18} /> Loading schedule timeline...
             </div>
           ) : scheduleTimeline.length > 0 ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem' }}>
+            <div className="mobile-col-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem' }}>
               {scheduleTimeline.map((item) => (
                 <div 
                   key={item.id}
@@ -592,7 +592,7 @@ export default function UOMOppositionScout() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginTop: '1.25rem', background: '#0f172a', padding: '1rem', borderRadius: '8px' }}>
+              <div className="mobile-col-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginTop: '1.25rem', background: '#0f172a', padding: '1rem', borderRadius: '8px' }}>
                 <div>
                   <span style={{ fontSize: '0.75rem', color: 'var(--cric-text-sub)' }}>PAR 1ST INNINGS SCORE</span>
                   <div style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--cric-gold)' }}>
@@ -751,7 +751,7 @@ export default function UOMOppositionScout() {
                   }
 
                   return (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
+                    <div className="mobile-col-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
                       <div style={{ background: 'var(--cric-card-hover)', padding: '1.25rem', borderRadius: '8px', border: '1px solid var(--cric-border)' }}>
                         <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--cric-text-sub)' }}>ECONOMY RATE (LAST {playerWindowStats.matchesInWindow || 0} M)</span>
                         <div style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--cric-gold)', marginTop: '0.25rem' }}>{econ}</div>
@@ -798,7 +798,7 @@ export default function UOMOppositionScout() {
                 const strikeRotation = tRuns > 0 ? (100 - boundaryReliance).toFixed(1) : 0;
 
                 return (
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
+                  <div className="mobile-col-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
                     <div style={{ background: 'var(--cric-card-hover)', padding: '1.25rem', borderRadius: '8px', border: '1px solid var(--cric-border)' }}>
                       <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--cric-text-sub)' }}>BAT. STRIKE RATE (LAST {playerWindowStats.matchesInWindow || 0} M)</span>
                       <div style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--cric-gold)', marginTop: '0.25rem' }}>{playerWindowStats.strikeRate ?? 0}</div>
@@ -962,7 +962,7 @@ export default function UOMOppositionScout() {
                       </div>
                       
                       {/* Grid */}
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+                      <div className="mobile-col-1" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
                         {/* Top Batters */}
                         <div style={{ padding: '1rem 1.25rem', borderRight: '1px solid var(--cric-border)' }}>
                           <div style={{ fontSize: '0.75rem', fontWeight: '800', color: '#f97316', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
@@ -1020,7 +1020,7 @@ export default function UOMOppositionScout() {
                         </div>
                         
                         {/* Grid */}
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+                        <div className="mobile-col-1" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
                           {/* Top Batters */}
                           <div style={{ padding: '1rem 1.25rem', borderRight: '1px solid var(--cric-border)' }}>
                             <div style={{ fontSize: '0.75rem', fontWeight: '800', color: '#eab308', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>

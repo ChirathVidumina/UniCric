@@ -114,7 +114,7 @@ export default function Tournaments() {
       ) : (
         <>
           {/* KPI Header Grid */}
-      <div className="stats-grid" style={{ marginBottom: '2rem' }}>
+      <div className="stats-grid mobile-col-1" style={{ marginBottom: '2rem' }}>
         <div className="stat-card">
           <div className="stat-header">
             <span>PARTICIPATING UNIVERSITIES</span>
@@ -247,6 +247,7 @@ export default function Tournaments() {
         >
           <BarChart3 size={16} /> 4. Tournament Stats
         </button>
+      </div>
       </div>
 
       {/* ========================================================
@@ -389,7 +390,7 @@ export default function Tournaments() {
                   <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: '700' }}>4 Universities</span>
                 </div>
 
-                <div style={{ overflowX: 'auto', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                <div className="mobile-scroll" style={{ overflowX: 'auto', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.875rem' }}>
                     <thead>
                       <tr style={{ background: 'var(--bg-subtle)', color: 'var(--text-muted)', borderBottom: '1px solid var(--border-color)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -481,7 +482,7 @@ export default function Tournaments() {
           </div>
 
           {schedule.length > 0 ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
+            <div className="mobile-col-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
               {schedule.map((item) => (
                 <div 
                   key={item.id}
@@ -649,7 +650,7 @@ export default function Tournaments() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: leaderboardCategory === 'ALL' ? 'repeat(auto-fit, minmax(340px, 1fr))' : '1fr', gap: '1.5rem' }}>
+          <div className="mobile-col-1" style={{ display: 'grid', gridTemplateColumns: leaderboardCategory === 'ALL' ? 'repeat(auto-fit, minmax(340px, 1fr))' : '1fr', gap: '1.5rem' }}>
             
             {/* 1. Batting Leaderboard */}
             {(leaderboardCategory === 'ALL' || leaderboardCategory === 'BAT') && (
@@ -877,7 +878,7 @@ export default function Tournaments() {
             </div>
 
             {/* UniCric Signature Telemetry Cards Grid (20 Individual Metric Cards) */}
-            <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
+            <div className="stats-grid mobile-col-1" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
               
               {/* 1. Matches */}
               <div className="stat-card" style={{ borderLeft: '4px solid var(--accent-blue)' }}>
@@ -1187,7 +1188,7 @@ export default function Tournaments() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'rgba(255,255,255,0.05)' }}>
+              <div className="mobile-col-1" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'rgba(255,255,255,0.05)' }}>
                 {/* Batters */}
                 <div style={{ background: '#0b1329', padding: '0.75rem 1rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#dc2626', fontWeight: '800', fontSize: '0.8rem', marginBottom: '0.5rem' }}>
@@ -1243,7 +1244,7 @@ export default function Tournaments() {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'rgba(255,255,255,0.05)' }}>
+              <div className="mobile-col-1" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'rgba(255,255,255,0.05)' }}>
                 {/* Batters */}
                 <div style={{ background: '#0b1329', padding: '0.75rem 1rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#f59e0b', fontWeight: '800', fontSize: '0.8rem', marginBottom: '0.5rem' }}>
@@ -1402,7 +1403,7 @@ export default function Tournaments() {
                     <span style={{ fontWeight: '800', fontSize: '1.1rem', color: 'white' }}>{activeScorecard.innings1.score} ({activeScorecard.innings1.overs})</span>
                   </div>
                   
-                  <div style={{ overflowX: 'auto' }}>
+                  <div className="mobile-scroll" style={{ overflowX: 'auto' }}>
                     <div className="table-responsive">
                     <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem', background: '#0f172a' }}>
                       <thead>
@@ -1434,7 +1435,7 @@ export default function Tournaments() {
                   <div style={{ background: '#0b1329', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: '800', color: '#3b82f6', borderLeft: '3px solid #3b82f6', marginTop: '0.5rem' }}>
                     1ST INNINGS BOWLING ANALYSIS
                   </div>
-                  <div style={{ overflowX: 'auto' }}>
+                  <div className="mobile-scroll" style={{ overflowX: 'auto' }}>
                     <div className="table-responsive">
                     <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem', background: '#0f172a' }}>
                       <thead>
@@ -1473,7 +1474,7 @@ export default function Tournaments() {
                     <span style={{ fontWeight: '800', fontSize: '1.1rem', color: 'white' }}>{activeScorecard.innings2.score} ({activeScorecard.innings2.overs})</span>
                   </div>
 
-                  <div style={{ overflowX: 'auto' }}>
+                  <div className="mobile-scroll" style={{ overflowX: 'auto' }}>
                     <div className="table-responsive">
                     <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem', background: '#0f172a' }}>
                       <thead>
@@ -1505,7 +1506,7 @@ export default function Tournaments() {
                   <div style={{ background: '#0b1329', padding: '0.5rem 1rem', fontSize: '0.85rem', fontWeight: '800', color: '#3b82f6', borderLeft: '3px solid #3b82f6', marginTop: '0.5rem' }}>
                     2ND INNINGS BOWLING ANALYSIS
                   </div>
-                  <div style={{ overflowX: 'auto' }}>
+                  <div className="mobile-scroll" style={{ overflowX: 'auto' }}>
                     <div className="table-responsive">
                     <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem', background: '#0f172a' }}>
                       <thead>

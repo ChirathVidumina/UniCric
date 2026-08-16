@@ -1,3 +1,6 @@
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --bg-primary: #0b0f19;
   --bg-secondary: #131b2e;
@@ -251,5 +254,17 @@ h1, h2, h3, h4, h5, h6 {
   
   .content-card {
     padding: 1.25rem;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .mobile-col-1 {
+    grid-template-columns: 1fr !important;
+  }
+  .mobile-scroll {
+    overflow-x: auto !important;
+    display: block;
+    width: 100%;
   }
 }

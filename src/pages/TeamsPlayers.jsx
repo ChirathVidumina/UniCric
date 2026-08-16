@@ -235,7 +235,7 @@ export default function TeamsPlayers() {
                       <span style={{ fontSize: '0.75rem', padding: '0.2rem 0.5rem', background: 'rgba(255,255,255,0.08)', borderRadius: '4px', color: t.color || '#dc2626', fontWeight: '700' }}>{t.played > 0 ? t.ranking : (t.group || 'Group C')}</span>
                     </div>
                     <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
-                      Captain: <strong>{playersList.find(p => p.team === t.code && p.role === 'Captain')?.name || 'N/A'}</strong>
+                      Captain: <strong>{playersList.find(p => p.team === t.code && p.role?.includes('Captain'))?.name || 'N/A'}</strong>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginTop: '0.5rem', color: 'var(--text-muted)' }}>
                       <span>Matches: {t.played || 0}</span>
@@ -342,7 +342,9 @@ export default function TeamsPlayers() {
                       <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-green)' }}>{p.sr ?? 0}</strong>
 
                       <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: '0.5rem', marginBottom: '0.15rem' }}>BOUNDARY %</span>
-                      <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-gold)' }}>{p.boundaryPct ?? 0}%</strong>
+                      <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-gold)' }}>
+                        {p.boundaryPct !== undefined ? p.boundaryPct : (p.runs > 0 ? Math.round((((p.fours || 0) * 4 + (p.sixes || 0) * 6) / p.runs) * 100) : 0)}%
+                      </strong>
                     </div>
 
                     {/* Divider */}
@@ -354,10 +356,12 @@ export default function TeamsPlayers() {
                       <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-blue)' }}>{p.wickets ?? 0}</strong>
                       
                       <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: '0.5rem', marginBottom: '0.15rem' }}>ECON</span>
-                      <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-blue)' }}>({p.econ ?? '-'})</strong>
+                      <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-blue)' }}>{p.econ !== undefined && p.econ !== null ? p.econ : '-'}</strong>
                       
                       <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: '0.5rem', marginBottom: '0.15rem' }}>DOT BALLS%</span>
-                      <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--text-primary)' }}>{p.bowlDotPct ?? 0}%</strong>
+                      <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--text-primary)' }}>
+                        {p.bowlDotPct !== undefined ? p.bowlDotPct : (p.econ !== undefined && p.econ !== null && p.econ > 0 ? Math.max(0, Math.round(100 - (p.econ * 7.5))) : 0)}%
+                      </strong>
                     </div>
                   </div>
                 </div>

@@ -136,26 +136,57 @@ def get_teams(db: Session = Depends(get_db)):
 
 @app.get("/api/players")
 def get_players(team: Optional[str] = Query(None), db: Session = Depends(get_db)):
-    query = db.query(PlayerModel)
+    query = db.query(
+        PlayerModel,
+        func.sum(PlayerStatModel.runs).label("runs"),
+        func.sum(PlayerStatModel.balls).label("balls"),
+        func.sum(PlayerStatModel.fours).label("fours"),
+        func.sum(PlayerStatModel.sixes).label("sixes"),
+        func.sum(PlayerStatModel.wickets).label("wickets"),
+        func.sum(PlayerStatModel.overs).label("overs"),
+        func.sum(PlayerStatModel.runs_conceded).label("runs_conceded")
+    ).outerjoin(PlayerStatModel, PlayerStatModel.player_name == PlayerModel.name).group_by(PlayerModel.id)
+    
     if team:
         query = query.filter(PlayerModel.team_code == team)
-    players = query.all()
+    players_data = query.all()
     
     result = []
-    for p in players:
+    for p, r, b, f, s, w, o, rc in players_data:
+        r = r or 0
+        b = b or 0
+        f = f or 0
+        s = s or 0
+        w = w or 0
+        o = o or 0.0
+        rc = rc or 0
+        sr = round((r / b) * 100, 2) if b > 0 else 0.0
+        econ = round(rc / o, 2) if o > 0 else 0.0
+        
+        boundary_runs = (f * 4) + (s * 6)
+        boundaryPct = round((boundary_runs / r) * 100) if r > 0 else 0
+        
+        # Calculate estimated dot ball % for bowlers
+        bowlDotPct = 0
+        if o > 0:
+            # Assuming T20/ODI derivative: an economy of 6 implies roughly 30% dot balls, an economy of 3 implies 60% dot balls.
+            bowlDotPct = max(0, round(100 - (econ * 7.5)))
+        
         result.append({
             "id": str(p.id),
             "name": p.name,
             "team": p.team_code,
             "role": p.role,
             "matches": p.matches,
-            "runs": p.total_runs,
-            "balls": p.total_balls,
-            "fours": p.total_fours,
-            "sixes": p.total_sixes,
-            "wickets": p.total_wickets,
-            "sr": p.strike_rate,
-            "econ": p.economy_rate,
+            "runs": r,
+            "balls": b,
+            "fours": f,
+            "sixes": s,
+            "wickets": w,
+            "sr": sr,
+            "econ": econ,
+            "boundaryPct": boundaryPct,
+            "bowlDotPct": bowlDotPct,
             "battingStyle": p.batting_style
         })
     return {"players": result}
@@ -271,33 +302,160 @@ def get_scorecard(match_id: str, db: Session = Depends(get_db)):
         }
     }}
 
+import re
+
+def to_nrr_overs(overs_float):
+    overs_int = int(overs_float)
+    balls = round((overs_float - overs_int) * 10)
+    return overs_int + (balls / 6.0)
+
+def to_cricket_overs(nrr_overs):
+    o = int(nrr_overs)
+    b = round((nrr_overs - o) * 6)
+    if b == 6:
+        o += 1
+        b = 0
+    return f"{o}.{b}"
+
+def calculate_team_standings(db: Session):
+    teams = db.query(TeamModel).all()
+    matches = db.query(MatchModel).order_by(MatchModel.created_at).all()
+    
+    team_stats = {t.code: {
+        "played": 0, "won": 0, "lost": 0, "points": 0, "nrr": "0.000", "name": t.name,
+        "runs_for": 0, "overs_for": 0.0,
+        "runs_against": 0, "overs_against": 0.0,
+        "last_5": [], "for_str": "-", "against_str": "-"
+    } for t in teams}
+
+    ABBR_MAP = {
+        "MOR": "UOM", "UOM": "UOM",
+        "UOJ": "JAF", "JAF": "JAF",
+        "PER": "PER", "VAV": "VAV"
+    }
+    
+    for m in matches:
+        if m.status == "COMPLETED" and m.result:
+            result_lower = m.result.lower()
+            title_lower = m.title.lower() if m.title else ""
+            
+            participants = []
+            for tcode, tdata in team_stats.items():
+                name_key = tdata["name"].lower().split()[0]
+                if name_key in title_lower:
+                    participants.append(tcode)
+                    
+            for pcode in participants:
+                team_stats[pcode]["played"] += 1
+                
+            winner_code = None
+            for tcode, tdata in team_stats.items():
+                name_key = tdata["name"].lower().split()[0]
+                if name_key in result_lower and "won" in result_lower:
+                    winner_code = tcode
+                    break
+                    
+            if winner_code:
+                team_stats[winner_code]["won"] += 1
+                team_stats[winner_code]["points"] += 2
+                team_stats[winner_code]["last_5"].append("W")
+                for pcode in participants:
+                    if pcode != winner_code:
+                        team_stats[pcode]["lost"] += 1
+                        team_stats[pcode]["last_5"].append("L")
+            else:
+                for pcode in participants:
+                    team_stats[pcode]["last_5"].append("-")
+
+            if m.score_summary:
+                parsed = re.findall(r'([a-zA-Z]+)\s+(\d+)/(\d+)\s+\(([\d\.]+)\)', m.score_summary)
+                if len(parsed) == 2:
+                    c1 = ABBR_MAP.get(parsed[0][0].upper())
+                    c2 = ABBR_MAP.get(parsed[1][0].upper())
+                    if c1 and c2 and c1 in team_stats and c2 in team_stats:
+                        t1_r, t1_w, t1_o = int(parsed[0][1]), int(parsed[0][2]), float(parsed[0][3])
+                        if t1_w == 10: t1_o = 50.0
+                        t2_r, t2_w, t2_o = int(parsed[1][1]), int(parsed[1][2]), float(parsed[1][3])
+                        if t2_w == 10: t2_o = 50.0
+                        
+                        team_stats[c1]["runs_for"] += t1_r
+                        team_stats[c1]["overs_for"] += to_nrr_overs(t1_o)
+                        team_stats[c1]["runs_against"] += t2_r
+                        team_stats[c1]["overs_against"] += to_nrr_overs(t2_o)
+                        
+                        team_stats[c2]["runs_for"] += t2_r
+                        team_stats[c2]["overs_for"] += to_nrr_overs(t2_o)
+                        team_stats[c2]["runs_against"] += t1_r
+                        team_stats[c2]["overs_against"] += to_nrr_overs(t1_o)
+
+    for tcode, tdata in team_stats.items():
+        tdata["last_5"] = tdata["last_5"][-5:]
+        while len(tdata["last_5"]) < 5:
+            tdata["last_5"].insert(0, "-")
+            
+        if tdata["overs_for"] > 0 and tdata["overs_against"] > 0:
+            for_rate = tdata["runs_for"] / tdata["overs_for"]
+            against_rate = tdata["runs_against"] / tdata["overs_against"]
+            nrr_val = for_rate - against_rate
+            sign = "+" if nrr_val > 0 else ""
+            tdata["nrr"] = f"{sign}{nrr_val:.3f}"
+            tdata["for_str"] = f"{tdata['runs_for']}/{to_cricket_overs(tdata['overs_for'])}"
+            tdata["against_str"] = f"{tdata['runs_against']}/{to_cricket_overs(tdata['overs_against'])}"
+            
+    return team_stats
+
 @app.get("/api/tournaments")
 def get_tournaments(db: Session = Depends(get_db)):
     teams = db.query(TeamModel).all()
-    players = db.query(PlayerModel).all()
+    team_standings = calculate_team_standings(db)
+    
+    players_query = db.query(
+        PlayerModel,
+        func.sum(PlayerStatModel.runs).label("runs"),
+        func.sum(PlayerStatModel.fours).label("fours"),
+        func.sum(PlayerStatModel.sixes).label("sixes"),
+        func.sum(PlayerStatModel.wickets).label("wickets"),
+        func.sum(PlayerStatModel.overs).label("overs"),
+        func.sum(PlayerStatModel.balls).label("balls"),
+        func.sum(PlayerStatModel.runs_conceded).label("runs_conceded")
+    ).outerjoin(PlayerStatModel, PlayerStatModel.player_name == PlayerModel.name).group_by(PlayerModel.id)
+    
+    players_data = players_query.all()
     matches = db.query(MatchModel).all()
     
     t_list = []
     for t in teams:
+        st = team_standings.get(t.code, {})
         t_list.append({
             "code": t.code,
             "name": t.name,
-            "played": t.played,
-            "won": t.won,
-            "lost": t.lost,
-            "points": t.points,
-            "nrr": t.nrr
+            "played": st.get("played", 0),
+            "won": st.get("won", 0),
+            "lost": st.get("lost", 0),
+            "points": st.get("points", 0),
+            "nrr": st.get("nrr", "0.000"),
+            "for": st.get("for_str", "-"),
+            "against": st.get("against_str", "-"),
+            "last5": st.get("last_5", ["-", "-", "-", "-", "-"])
         })
         
     p_list = []
-    for p in players:
-        # Fetch stats to calculate best bowling, total overs, and catches
+    for p, r, f, s, w, o, b, rc in players_data:
+        r = r or 0
+        f = f or 0
+        s = s or 0
+        w = w or 0
+        o = o or 0.0
+        b = b or 0
+        rc = rc or 0
+        sr = round((r / b) * 100, 2) if b > 0 else 0.0
+        econ = round(rc / o, 2) if o > 0 else 0.0
+        
+        # Fetch individual stats to calculate best bowling
         p_stats = db.query(PlayerStatModel).filter(PlayerStatModel.player_name == p.name).all()
         best_w = 0
         best_r = 999
-        total_overs = 0.0
         for st in p_stats:
-            total_overs += st.overs
             if st.wickets > best_w or (st.wickets == best_w and st.runs_conceded < best_r):
                 best_w = st.wickets
                 best_r = st.runs_conceded
@@ -307,14 +465,14 @@ def get_tournaments(db: Session = Depends(get_db)):
         p_list.append({
             "name": p.name,
             "team": p.team_code,
-            "runs": p.total_runs,
-            "wickets": p.total_wickets,
+            "runs": r,
+            "wickets": w,
             "catches": 0,
-            "fours": p.total_fours,
-            "sixes": p.total_sixes,
-            "sr": p.strike_rate,
-            "econ": p.economy_rate,
-            "overs": round(total_overs, 1),
+            "fours": f,
+            "sixes": s,
+            "sr": sr,
+            "econ": econ,
+            "overs": round(o, 1),
             "bb": best_figure
         })
         
@@ -354,28 +512,49 @@ def get_tournaments(db: Session = Depends(get_db)):
 
 @app.get("/api/analytics")
 def get_analytics(db: Session = Depends(get_db)):
-    top_scorer = db.query(PlayerModel).order_by(PlayerModel.total_runs.desc()).first()
-    top_bowler = db.query(PlayerModel).order_by(PlayerModel.total_wickets.desc()).first()
+    players_query = db.query(
+        PlayerModel,
+        func.sum(PlayerStatModel.runs).label("runs"),
+        func.sum(PlayerStatModel.balls).label("balls"),
+        func.sum(PlayerStatModel.wickets).label("wickets"),
+        func.sum(PlayerStatModel.overs).label("overs"),
+        func.sum(PlayerStatModel.runs_conceded).label("runs_conceded")
+    ).outerjoin(PlayerStatModel, PlayerStatModel.player_name == PlayerModel.name).group_by(PlayerModel.id).all()
     
-    total_runs = db.query(func.sum(PlayerModel.total_runs)).scalar() or 0
-    total_fours = db.query(func.sum(PlayerModel.total_fours)).scalar() or 0
-    total_sixes = db.query(func.sum(PlayerModel.total_sixes)).scalar() or 0
+    top_scorer = None
+    top_bowler = None
+    max_runs = -1
+    max_wickets = -1
+    
+    for p, r, b, w, o, rc in players_query:
+        r = r or 0
+        b = b or 0
+        w = w or 0
+        o = o or 0.0
+        rc = rc or 0
+        
+        if r > max_runs:
+            max_runs = r
+            sr = round((r / b) * 100, 2) if b > 0 else 0.0
+            top_scorer = {"name": p.name, "runs": r, "team": p.team_code, "sr": sr}
+            
+        if w > max_wickets:
+            max_wickets = w
+            econ = round(rc / o, 2) if o > 0 else 0.0
+            top_bowler = {"name": p.name, "wickets": w, "team": p.team_code, "econ": econ}
+            
+    total_runs = db.query(func.sum(PlayerStatModel.runs)).scalar() or 0
+    total_fours = db.query(func.sum(PlayerStatModel.fours)).scalar() or 0
+    total_sixes = db.query(func.sum(PlayerStatModel.sixes)).scalar() or 0
+    total_overs = db.query(func.sum(PlayerStatModel.overs)).scalar() or 0.0
+    
+    avg_run_rate = round(total_runs / total_overs, 2) if total_overs > 0 else 0.0
     
     return {
         "kpi": {
-            "top_scorer": {
-                "name": top_scorer.name if top_scorer else None,
-                "runs": top_scorer.total_runs if top_scorer else 0,
-                "team": top_scorer.team_code if top_scorer else None,
-                "sr": top_scorer.strike_rate if top_scorer else 0
-            } if top_scorer else None,
-            "top_bowler": {
-                "name": top_bowler.name if top_bowler else None,
-                "wickets": top_bowler.total_wickets if top_bowler else 0,
-                "team": top_bowler.team_code if top_bowler else None,
-                "econ": top_bowler.economy_rate if top_bowler else 0.0
-            } if top_bowler else None,
-            "avg_run_rate": "0.00",
+            "top_scorer": top_scorer if max_runs >= 0 else None,
+            "top_bowler": top_bowler if max_wickets >= 0 else None,
+            "avg_run_rate": f"{avg_run_rate:.2f}",
             "total_tournament_runs": int(total_runs),
             "total_boundaries": {
                 "fours": int(total_fours),
@@ -386,14 +565,30 @@ def get_analytics(db: Session = Depends(get_db)):
 
 @app.get("/api/standings")
 def get_standings(db: Session = Depends(get_db)):
-    teams = db.query(TeamModel).order_by(TeamModel.points.desc()).all()
-    result = [{"code": t.code, "name": t.name, "played": t.played, "won": t.won, "points": t.points, "nrr": t.nrr} for t in teams]
+    teams = db.query(TeamModel).all()
+    team_standings = calculate_team_standings(db)
+    
+    result = []
+    for t in teams:
+        st = team_standings.get(t.code, {})
+        result.append({
+            "code": t.code,
+            "name": t.name,
+            "played": st.get("played", 0),
+            "won": st.get("won", 0),
+            "points": st.get("points", 0),
+            "nrr": st.get("nrr", "0.000")
+        })
+    result.sort(key=lambda x: x["points"], reverse=True)
     return {"group": "GROUP_C", "teams": result}
 
 @app.get("/api/dashboard")
 def get_dashboard(db: Session = Depends(get_db)):
     teams = db.query(TeamModel).all()
+    team_standings = calculate_team_standings(db)
+    
     uom_team = next((t for t in teams if t.code == "UOM"), None)
+    uom_stats = team_standings.get("UOM", {"played": 0, "won": 0, "points": 0, "nrr": "0.000"})
     
     top_batters = db.query(PlayerModel).filter(PlayerModel.team_code == "UOM").order_by(PlayerModel.total_runs.desc()).limit(4).all()
     top_bowler = db.query(PlayerModel).filter(PlayerModel.team_code == "UOM").order_by(PlayerModel.total_wickets.desc()).first()
@@ -412,16 +607,16 @@ def get_dashboard(db: Session = Depends(get_db)):
         "uomTeam": {
             "name": uom_team.name if uom_team else "Moratuwa University",
             "code": uom_team.code if uom_team else "UOM",
-            "played": uom_team.played if uom_team else 0,
-            "won": uom_team.won if uom_team else 0,
-            "points": uom_team.points if uom_team else 0,
-            "nrr": uom_team.nrr if uom_team else "0.000"
+            "played": uom_stats["played"],
+            "won": uom_stats["won"],
+            "points": uom_stats["points"],
+            "nrr": uom_stats["nrr"]
         },
         "schedule": [],
         "uomCompletedMatch": None,
         "nextTargetMatch": None,
         "upcomingMatch": None,
-        "groupTeams": [{"code": t.code, "name": t.name, "points": t.points, "played": t.played} for t in teams],
+        "groupTeams": [{"code": t.code, "name": t.name, "points": team_standings.get(t.code, {}).get("points", 0), "played": team_standings.get(t.code, {}).get("played", 0)} for t in teams],
         "topPerformers": top_performers,
         "topBowler": {
             "name": top_bowler.name if top_bowler else None,
@@ -611,16 +806,32 @@ def process_and_save_scorecard_data(extracted_data: Dict[str, Any], filename: st
     players_updated = 0
     stats_logged = 0
 
+    TEAM_MAPPINGS = {
+        "MORATUWA": "UOM",
+        "UNIVERSITY OF MORATUWA": "UOM",
+        "UOM": "UOM",
+        "PERADENIYA": "PER",
+        "UNIVERSITY OF PERADENIYA": "PER",
+        "PERADENIYA UNIVERSITY": "PER",
+        "PER": "PER"
+    }
+
     # 1. Upsert Teams
     for team_name in extracted_entities.get("teams", []):
-        code = team_name[:3].upper()
+        normalized_name = team_name.strip().upper()
+        code = TEAM_MAPPINGS.get(normalized_name, team_name[:3].upper())
+        
+        canonical_name = team_name
+        if code == "UOM": canonical_name = "Moratuwa University"
+        elif code == "PER": canonical_name = "Peradeniya University"
+        
         existing_team = db.query(TeamModel).filter(TeamModel.code == code).first()
         if not existing_team:
-            new_team = TeamModel(code=code, name=team_name, short_name=team_name)
+            new_team = TeamModel(code=code, name=canonical_name, short_name=canonical_name)
             db.add(new_team)
             teams_updated += 1
         else:
-            existing_team.name = team_name
+            existing_team.name = canonical_name
             teams_updated += 1
 
     # 2. Match record creation with Strict Duplicate Prevention
@@ -653,22 +864,16 @@ def process_and_save_scorecard_data(extracted_data: Dict[str, Any], filename: st
                 name=p_name,
                 role="Batter",
                 matches=1,
-                total_runs=bat["runs"],
-                total_balls=bat["balls"],
-                total_fours=bat["fours"],
-                total_sixes=bat["sixes"],
-                strike_rate=bat["sr"]
+                total_runs=0,
+                total_balls=0,
+                total_fours=0,
+                total_sixes=0,
+                strike_rate=0.0
             )
             db.add(player)
             players_updated += 1
         else:
             player.matches += 1
-            player.total_runs += bat["runs"]
-            player.total_balls += bat["balls"]
-            player.total_fours += bat["fours"]
-            player.total_sixes += bat["sixes"]
-            if player.total_balls > 0:
-                player.strike_rate = round((player.total_runs / player.total_balls) * 100, 2)
             players_updated += 1
 
         stat_record = PlayerStatModel(
@@ -692,13 +897,13 @@ def process_and_save_scorecard_data(extracted_data: Dict[str, Any], filename: st
                 name=p_name,
                 role="Bowler",
                 matches=1,
-                total_wickets=bw["wickets"],
-                economy_rate=bw["econ"]
+                total_wickets=0,
+                economy_rate=0.0
             )
             db.add(player)
             players_updated += 1
         else:
-            player.total_wickets += bw["wickets"]
+            player.matches += 1
             players_updated += 1
 
         stat_record = PlayerStatModel(

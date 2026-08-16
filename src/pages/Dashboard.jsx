@@ -161,7 +161,7 @@ export default function Dashboard() {
       ) : (
         <>
           {/* Primary KPI Grid */}
-          <div className="stats-grid" style={{ marginBottom: '2rem' }}>
+          <div className="stats-grid mobile-col-1" style={{ marginBottom: '2rem' }}>
             <div className="stat-card">
               <div className="stat-header">
                 <span>GROUP C STANDING</span>
@@ -216,7 +216,7 @@ export default function Dashboard() {
           </div>
 
           {/* Main Two Column Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1.75rem', marginBottom: '2rem' }}>
+          <div className="mobile-col-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1.75rem', marginBottom: '2rem' }}>
             
             {/* Left Column: Match Schedule Timeline */}
             <div className="content-card" style={{ borderLeft: '4px solid #dc2626' }}>
@@ -450,7 +450,7 @@ export default function Dashboard() {
           </div>
 
           {/* Quick Navigation Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+          <div className="mobile-col-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
             <Link 
               to="/analytics"
               style={{
