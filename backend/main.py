@@ -329,8 +329,8 @@ def get_dashboard(db: Session = Depends(get_db)):
     teams = db.query(TeamModel).all()
     uom_team = next((t for t in teams if t.code == "UOM"), None)
     
-    top_batters = db.query(PlayerModel).order_by(PlayerModel.total_runs.desc()).limit(4).all()
-    top_bowler = db.query(PlayerModel).order_by(PlayerModel.total_wickets.desc()).first()
+    top_batters = db.query(PlayerModel).filter(PlayerModel.team_code == "UOM").order_by(PlayerModel.total_runs.desc()).limit(4).all()
+    top_bowler = db.query(PlayerModel).filter(PlayerModel.team_code == "UOM").order_by(PlayerModel.total_wickets.desc()).first()
     
     top_performers = [
         {
