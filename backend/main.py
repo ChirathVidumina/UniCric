@@ -88,24 +88,18 @@ def get_venue_by_id(venue_id: str, db: Session = Depends(get_db)):
                     "keyInsight": "High-scoring ground with short square boundaries. Batting first is highly advantageous as the pitch slows down and assists spin in the second innings."
                 }}
             else:
-                import hashlib
-                seed = int(hashlib.md5(venue_id.encode()).hexdigest(), 16)
-                bat_win = 45 + (seed % 15)
-                par_score = 140 + (seed % 45)
-                pace_pct = 55 + (seed % 20)
-                
                 return {"venue": {
                     "id": venue_id,
                     "name": m.venue,
-                    "city": m.venue.split(" ")[0] if " " in m.venue else "Unknown",
-                    "pitchType": "Balanced" if seed % 2 == 0 else "Spin Friendly",
-                    "battingFirstWinPct": bat_win,
-                    "bowlingFirstWinPct": 100 - bat_win,
-                    "avgFirstInningsScore": par_score,
-                    "tossRecommendation": "Bat First" if bat_win > 50 else "Bowl First",
-                    "paceWicketsPct": pace_pct,
-                    "spinWicketsPct": 100 - pace_pct,
-                    "keyInsight": "Standard conditions apply. Recommend evaluating overhead conditions before toss." if seed % 2 == 0 else "Pitch expected to offer turn in the second innings. Spinners will play a crucial role."
+                    "city": "Unknown",
+                    "pitchType": "Balanced",
+                    "battingFirstWinPct": 50,
+                    "bowlingFirstWinPct": 50,
+                    "avgFirstInningsScore": 160,
+                    "tossRecommendation": "Bowl First",
+                    "paceWicketsPct": 65,
+                    "spinWicketsPct": 35,
+                    "keyInsight": "Standard conditions apply. Recommend evaluating overhead conditions before toss."
                 }}
     raise HTTPException(status_code=404, detail="Venue not found")
 
@@ -208,7 +202,9 @@ def get_player_form(player_id: str, last_n: int = 3, db: Session = Depends(get_d
 
     weakness = "N/A"
     dismissals = [s.dismissal.lower() for s in stats if s.is_out and s.dismissal]
-    if any("lbw" in d or "bowled" in d for d in dismissals):
+    if p.name == "Ashmika Iddamalgoda":
+        weakness = "Vulnerable to left-arm spin & wide yorkers outside off"
+    elif any("lbw" in d or "bowled" in d for d in dismissals):
         weakness = "Vulnerable to incoming deliveries / Yorkers"
     elif any("caught" in d for d in dismissals):
         weakness = "Prone to fishing outside off stump"
@@ -767,3 +763,121 @@ async def process_pdf_scorecard(file: UploadFile = File(...), db: Session = Depe
             status_code=400,
             detail=f"Unsupported file format '{ext}'. Only PDF and Excel files are supported."
         )
+
+@app.get("/api/seed-peradeniya-match")
+def seed_peradeniya_match(db: Session = Depends(get_db)):
+    uom = db.query(TeamModel).filter(TeamModel.code == "UOM").first()
+    if not uom:
+        uom = TeamModel(code="UOM", name="Moratuwa University", short_name="Moratuwa", group_name="Group C")
+        db.add(uom)
+    
+    per = db.query(TeamModel).filter(TeamModel.code == "PER").first()
+    if not per:
+        per = TeamModel(code="PER", name="Peradeniya University", short_name="Peradeniya", group_name="Group C")
+        db.add(per)
+
+    match = db.query(MatchModel).filter(MatchModel.id == "m2").first()
+    if not match:
+        match = MatchModel(
+            id="m2",
+            title="Peradeniya University vs Moratuwa University",
+            date_label="2026-08-01, 04:17 AM UTC",
+            venue="University Of Moratuwa Ground, Moratuwa",
+            status="COMPLETED",
+            result="Moratuwa University won by 5 wickets",
+            score_summary="Peradeniya University 114/10 (46.0 Ov)"
+        )
+        db.add(match)
+    
+    players_data = [
+        {"name": "Sathira Vikasitha", "team": "UOM", "role": "Batter", "runs": 48, "balls": 63, "fours": 6, "sixes": 0, "sr": 76.19},
+        {"name": "Muftee Mysan", "team": "UOM", "role": "Batter", "runs": 33, "balls": 28, "fours": 4, "sixes": 1, "sr": 117.86},
+        {"name": "Nadeeshan Bandara", "team": "PER", "role": "Batter / Captain", "runs": 28, "balls": 49, "fours": 2, "sixes": 0, "sr": 57.14},
+        {"name": "Pulitha Sarathchandra", "team": "PER", "role": "Batter", "runs": 26, "balls": 70, "fours": 0, "sixes": 0, "sr": 37.14},
+        {"name": "Nahularaja Kathurshan", "team": "PER", "role": "Batter / WK", "runs": 19, "balls": 46, "fours": 3, "sixes": 0, "sr": 41.30},
+        {"name": "G P Rashmika", "team": "PER", "role": "Batter", "runs": 12, "balls": 46, "fours": 1, "sixes": 0, "sr": 26.09},
+        {"name": "Behan Wickramasinghe", "team": "UOM", "role": "Batter / Captain", "runs": 10, "balls": 16, "fours": 2, "sixes": 0, "sr": 62.50},
+        {"name": "Vijayan Yashwinshan", "team": "PER", "role": "Batter", "runs": 10, "balls": 23, "fours": 1, "sixes": 0, "sr": 43.48},
+        {"name": "Devdun Nethusahan", "team": "UOM", "role": "Batter", "runs": 9, "balls": 25, "fours": 1, "sixes": 0, "sr": 36.00},
+        {"name": "Kevindu Perera", "team": "UOM", "role": "Batter", "runs": 8, "balls": 9, "fours": 0, "sixes": 1, "sr": 88.89},
+        {"name": "Isuru Kuruneru", "team": "PER", "role": "Batter", "runs": 5, "balls": 10, "fours": 0, "sixes": 0, "sr": 50.00},
+        {"name": "Janeesha Hansaka", "team": "PER", "role": "Batter", "runs": 2, "balls": 4, "fours": 0, "sixes": 0, "sr": 50.00},
+        {"name": "Maneesha Nilanduwa", "team": "PER", "role": "Batter", "runs": 2, "balls": 14, "fours": 0, "sixes": 0, "sr": 14.29},
+        {"name": "Deshan Ekanayake", "team": "PER", "role": "Batter", "runs": 2, "balls": 6, "fours": 0, "sixes": 0, "sr": 33.33},
+        {"name": "Sasith Rambukwella", "team": "UOM", "role": "Batter", "runs": 1, "balls": 2, "fours": 0, "sixes": 0, "sr": 50.00},
+        {"name": "Sahan Arumasinghe", "team": "PER", "role": "Batter", "runs": 0, "balls": 3, "fours": 0, "sixes": 0, "sr": 0.00},
+        {"name": "Kavindu Bandara", "team": "PER", "role": "Batter", "runs": 0, "balls": 6, "fours": 0, "sixes": 0, "sr": 0.00},
+        {"name": "Lahiru Amarasekara", "team": "UOM", "role": "Batter", "runs": 0, "balls": 4, "fours": 0, "sixes": 0, "sr": 0.00}
+    ]
+
+    bowlers_data = [
+        {"name": "Isuru Kuruneru", "team": "PER", "overs": 6.0, "runs_c": 24, "wickets": 0, "econ": 4.00},
+        {"name": "Muftee Mysan", "team": "UOM", "overs": 6.0, "runs_c": 20, "wickets": 0, "econ": 3.33},
+        {"name": "Kelum Hirudika", "team": "UOM", "overs": 4.0, "runs_c": 10, "wickets": 1, "econ": 2.50},
+        {"name": "Behan Wickramasinghe", "team": "UOM", "overs": 4.0, "runs_c": 7, "wickets": 2, "econ": 1.75},
+        {"name": "Sanithu Wijerathne", "team": "UOM", "overs": 8.0, "runs_c": 15, "wickets": 1, "econ": 1.88},
+        {"name": "Kevindu Perera", "team": "UOM", "overs": 6.0, "runs_c": 16, "wickets": 3, "econ": 2.67},
+        {"name": "Yasiru Ruwantha", "team": "UOM", "overs": 10.0, "runs_c": 25, "wickets": 1, "econ": 2.50},
+        {"name": "Lahiru Amarasekara", "team": "UOM", "overs": 8.0, "runs_c": 20, "wickets": 1, "econ": 2.50},
+        {"name": "Nadeeshan Bandara", "team": "PER", "overs": 2.0, "runs_c": 20, "wickets": 0, "econ": 10.00},
+        {"name": "Vijayan Yashwinshan", "team": "PER", "overs": 2.0, "runs_c": 14, "wickets": 0, "econ": 7.00},
+        {"name": "Janeesha Hansaka", "team": "PER", "overs": 1.0, "runs_c": 9, "wickets": 0, "econ": 9.00},
+        {"name": "Deshan Ekanayake", "team": "PER", "overs": 7.0, "runs_c": 20, "wickets": 2, "econ": 2.86},
+        {"name": "Kavindu Bandara", "team": "PER", "overs": 6.3, "runs_c": 28, "wickets": 3, "econ": 4.31}
+    ]
+    
+    for b in players_data:
+        p = db.query(PlayerModel).filter(PlayerModel.name == b["name"]).first()
+        if not p:
+            p = PlayerModel(name=b["name"], team_code=b["team"], role=b["role"], matches=1, 
+                            total_runs=b["runs"], total_balls=b["balls"], total_fours=b["fours"], 
+                            total_sixes=b["sixes"], strike_rate=b["sr"])
+            db.add(p)
+        else:
+            p.matches += 1
+            p.total_runs += b["runs"]
+            p.total_balls += b["balls"]
+            p.total_fours += b["fours"]
+            p.total_sixes += b["sixes"]
+            if p.total_balls > 0:
+                p.strike_rate = round((p.total_runs / p.total_balls) * 100, 2)
+        
+        stat = db.query(PlayerStatModel).filter(PlayerStatModel.match_id == "m2", PlayerStatModel.player_name == b["name"]).first()
+        if not stat:
+            stat = PlayerStatModel(match_id="m2", player_name=b["name"], runs=b["runs"], balls=b["balls"], 
+                                   fours=b["fours"], sixes=b["sixes"], strike_rate=b["sr"])
+            db.add(stat)
+
+    for bw in bowlers_data:
+        p = db.query(PlayerModel).filter(PlayerModel.name == bw["name"]).first()
+        if not p:
+            p = PlayerModel(name=bw["name"], team_code=bw["team"], role="Bowler", matches=1, 
+                            total_wickets=bw["wickets"], economy_rate=bw["econ"])
+            db.add(p)
+        else:
+            if "Bowler" not in p.role:
+                p.role = "All-Rounder"
+            p.total_wickets = (p.total_wickets or 0) + bw["wickets"]
+            p.economy_rate = bw["econ"]
+            
+        stat = db.query(PlayerStatModel).filter(PlayerStatModel.match_id == "m2", PlayerStatModel.player_name == bw["name"]).first()
+        if not stat:
+            stat = PlayerStatModel(match_id="m2", player_name=bw["name"], wickets=bw["wickets"], 
+                                   overs=bw["overs"], runs_conceded=bw["runs_c"], economy=bw["econ"])
+            db.add(stat)
+        else:
+            stat.wickets = bw["wickets"]
+            stat.overs = bw["overs"]
+            stat.runs_conceded = bw["runs_c"]
+            stat.economy = bw["econ"]
+            
+    # Update UOM and PER Team matches if first run
+    if uom.played == 0:
+        uom.played += 1
+        uom.won += 1
+        uom.points += 2
+        per.played += 1
+        per.lost += 1
+
+    db.commit()
+    return {"status": "success", "message": "Peradeniya match seeded successfully into Render database!"}
