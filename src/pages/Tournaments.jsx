@@ -82,7 +82,18 @@ export default function Tournaments() {
   const activeScorecard = selectedCompletedMatchId ? completedMatchScorecards[selectedCompletedMatchId] : null;
 
   const groupC = groups.find(g => g.code === 'GROUP_C') || { teams: [] };
-  const uomTeam = groupC.teams ? (groupC.teams.find(t => t.code === 'UOM') || { played: 0, won: 0, lost: 0, points: 0, nrr: '0.000' }) : { played: 0, won: 0, lost: 0, points: 0, nrr: '0.000' };
+
+  // INJECTED OVERRIDES FOR GROUP C
+  const GROUP_C_OVERRIDES = {
+    "JAF": { played: 1, won: 1, lost: 0, points: 2, nrr: "+1.500", for: "271/50.0", against: "91/22.3", last5: ["W"] },
+    "UOM": { played: 1, won: 1, lost: 0, points: 2, nrr: "+2.414", for: "115/24.3", against: "114/50.0", last5: ["W"] },
+    "PER": { played: 1, won: 0, lost: 1, points: 0, nrr: "-2.414", for: "114/50.0", against: "115/24.3", last5: ["L"] },
+    "VAV": { played: 1, won: 0, lost: 1, points: 0, nrr: "-1.500", for: "91/22.3", against: "271/50.0", last5: ["L"] }
+  };
+
+  // Pre-apply UOM overrides so summary cards don't break
+  const rawUomTeam = groupC.teams ? (groupC.teams.find(t => t.code === 'UOM') || { played: 0, won: 0, lost: 0, points: 0, nrr: '0.000' }) : { played: 0, won: 0, lost: 0, points: 0, nrr: '0.000' };
+  const uomTeam = { ...rawUomTeam, ...GROUP_C_OVERRIDES["UOM"] };
 
   return (
     <div className="tournaments-page" style={{ paddingBottom: '4rem' }}>
@@ -409,7 +420,9 @@ export default function Tournaments() {
                       </tr>
                     </thead>
                     <tbody>
-                      {grp.teams.map((tm, idx) => {
+                      {grp.teams.map((baseTm, idx) => {
+                        const isGroupC = grp.code === 'GROUP_C';
+                        const tm = isGroupC && GROUP_C_OVERRIDES[baseTm.code] ? { ...baseTm, ...GROUP_C_OVERRIDES[baseTm.code] } : baseTm;
                         const isUOM = tm.code === 'UOM' || tm.isPrimary;
                         return (
                           <tr 
