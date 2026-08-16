@@ -248,7 +248,6 @@ export default function Tournaments() {
           <BarChart3 size={16} /> 4. Tournament Stats
         </button>
       </div>
-      </div>
 
       {/* ========================================================
           SECTION 1: CRICHEROES 4-GROUP LEAGUE STANDINGS
