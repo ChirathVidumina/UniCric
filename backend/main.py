@@ -258,6 +258,9 @@ def get_scorecard(match_id: str, db: Session = Depends(get_db)):
             })
             
     return {"scorecard": {
+        "title": match.title,
+        "date": match.date_label,
+        "venue": match.venue,
         "innings1": {
             "team": "Team 1",
             "score": match.score_summary or "",
