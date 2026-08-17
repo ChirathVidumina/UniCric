@@ -138,21 +138,45 @@ export default function Tournaments() {
   const schedule = tournamentData?.schedule || tournament.schedule || [];
   const groups = tournamentData?.groups || tournament.groups || [];
 
-  const topBatters = [...players].filter(p => p.runs !== undefined && p.runs > 0).sort((a, b) => (b.runs || 0) - (a.runs || 0)).slice(0, 10);
-  const topBowlers = [...players].filter(p => p.wickets !== undefined && p.wickets > 0).sort((a, b) => b.wickets - a.wickets).slice(0, 10);
+  const topBatters = [
+    { name: 'Ashmika Iddamalgoda', team: 'JAF', runs: 79, hs: 79, sr: '97.53', fours: 13, sixes: 1 },
+    { name: 'Sathira Vikasitha', team: 'MOR', runs: 48, hs: 48, sr: '76.19', fours: 6, sixes: 0 },
+    { name: 'Lahiru Welagedara', team: 'VAV', runs: 35, hs: 35, sr: '112.90', fours: 4, sixes: 2 },
+    { name: 'Sivaruban Sivanujan', team: 'JAF', runs: 33, hs: 33, sr: '78.57', fours: 3, sixes: 2 },
+    { name: 'Muftee Mysan', team: 'MOR', runs: 33, hs: 33, sr: '117.86', fours: 4, sixes: 1 },
+    { name: 'Nadeeshan Bandara', team: 'PER', runs: 28, hs: 28, sr: '57.14', fours: 2, sixes: 0 },
+    { name: 'Shanmuganathan Silaxan', team: 'JAF', runs: 26, hs: 26, sr: '92.86', fours: 4, sixes: 1 },
+    { name: 'Pulitha Sarathchandra', team: 'PER', runs: 26, hs: 26, sr: '37.14', fours: 0, sixes: 0 },
+    { name: 'Antony Desvin', team: 'JAF', runs: 23, hs: 23, sr: '74.19', fours: 1, sixes: 2 },
+    { name: 'Rashan Wijerathna', team: 'VAV', runs: 23, hs: 23, sr: '82.14', fours: 3, sixes: 1 }
+  ];
+
+  const topBowlers = [
+    { name: 'Selvanathan Niroshan', team: 'JAF', wickets: 4, bb: '4/16', econ: '2.91', overs: '5.3' },
+    { name: 'Antony Desvin', team: 'JAF', wickets: 3, bb: '3/8', econ: '1.33', overs: '6.0' },
+    { name: 'Kevindu Perera', team: 'MOR', wickets: 3, bb: '3/16', econ: '2.67', overs: '6.0' },
+    { name: 'Kavindu Bandara', team: 'PER', wickets: 3, bb: '3/28', econ: '4.31', overs: '6.3' },
+    { name: 'Behan Wickramasinghe', team: 'MOR', wickets: 2, bb: '2/7', econ: '1.75', overs: '4.0' },
+    { name: 'Deshan Ekanayake', team: 'PER', wickets: 2, bb: '2/20', econ: '2.86', overs: '7.0' },
+    { name: 'Mohammed Riwaqi', team: 'VAV', wickets: 2, bb: '2/38', econ: '4.75', overs: '8.0' },
+    { name: 'Sanithu Wijerathne', team: 'MOR', wickets: 1, bb: '1/15', econ: '1.88', overs: '8.0' },
+    { name: 'Kelum Hirudika', team: 'MOR', wickets: 1, bb: '1/10', econ: '2.50', overs: '4.0' },
+    { name: 'Lahiru Amarasekara', team: 'MOR', wickets: 1, bb: '1/20', econ: '2.50', overs: '8.0' }
+  ];
   
   // OVERRIDE WITH OFFICIAL PDF SCORECARD METRICS FOR SILVER CAP
   const topFielders = [
+    { name: 'Lahiru Welagedara', team: 'VAV', catches: 1, stumpings: 0, runOuts: 1 },
+    { name: 'Pahan Bimsara', team: 'VAV', catches: 1, stumpings: 0, runOuts: 1 },
+    { name: 'Yasiru Ruwantha', team: 'MOR', catches: 1, stumpings: 0, runOuts: 1 },
     { name: 'Sivakaran Venujan', team: 'JAF', catches: 2, stumpings: 0, runOuts: 0 },
     { name: 'Patkunam Mathushan', team: 'JAF', catches: 2, stumpings: 0, runOuts: 0 },
     { name: 'Sahan Siriwardana', team: 'VAV', catches: 2, stumpings: 0, runOuts: 0 },
-    { name: 'Lahiru Welagedara', team: 'VAV', catches: 1, stumpings: 0, runOuts: 1 },
-    { name: 'Pahan Bimsara', team: 'VAV', catches: 1, stumpings: 0, runOuts: 0 },
-    { name: 'K Siyanujan', team: 'JAF', catches: 1, stumpings: 0, runOuts: 0 },
-    { name: 'V Priyankan', team: 'JAF', catches: 1, stumpings: 0, runOuts: 0 },
-    { name: 'Ravichandran Ragulan', team: 'VAV', catches: 1, stumpings: 0, runOuts: 0 },
+    { name: 'Lahiru Amarasekara', team: 'MOR', catches: 2, stumpings: 0, runOuts: 0 },
+    { name: 'K Kirubagaran', team: 'VAV', catches: 0, stumpings: 0, runOuts: 1 },
     { name: 'Rashan Wijerathna', team: 'VAV', catches: 0, stumpings: 0, runOuts: 1 },
-  ].sort((a, b) => ((b.catches + b.stumpings + b.runOuts) - (a.catches + a.stumpings + a.runOuts))).slice(0, 10);
+    { name: 'Nahularaja Kathurshan', team: 'PER', catches: 1, stumpings: 0, runOuts: 0 },
+  ];
 
   const activeScorecard = selectedCompletedMatchId ? completedMatchScorecards[selectedCompletedMatchId] : null;
 
@@ -484,13 +508,10 @@ export default function Tournaments() {
                         <th style={{ padding: '0.75rem 0.75rem', textAlign: 'center' }}>M</th>
                         <th style={{ padding: '0.75rem 0.75rem', textAlign: 'center' }}>W</th>
                         <th style={{ padding: '0.75rem 0.75rem', textAlign: 'center' }}>L</th>
-                        <th style={{ padding: '0.75rem 0.75rem', textAlign: 'center' }}>D</th>
-                        <th style={{ padding: '0.75rem 0.75rem', textAlign: 'center' }}>T</th>
-                        <th style={{ padding: '0.75rem 0.75rem', textAlign: 'center' }}>NR</th>
+                        <th style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>Pts</th>
                         <th style={{ padding: '0.75rem 0.75rem', textAlign: 'center' }}>NRR</th>
                         <th style={{ padding: '0.75rem 0.75rem', textAlign: 'center' }}>For</th>
                         <th style={{ padding: '0.75rem 0.75rem', textAlign: 'center' }}>Against</th>
-                        <th style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>Pt.</th>
                         <th style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>Last 5</th>
                       </tr>
                     </thead>
@@ -529,9 +550,9 @@ export default function Tournaments() {
                             <td style={{ textAlign: 'center', fontWeight: '700' }}>{tm.played}</td>
                             <td style={{ textAlign: 'center', color: 'var(--accent-green)', fontWeight: '800' }}>{tm.won}</td>
                             <td style={{ textAlign: 'center', color: tm.lost > 0 ? '#ef4444' : 'var(--text-muted)' }}>{tm.lost}</td>
-                            <td style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{tm.draw || 0}</td>
-                            <td style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{tm.tie || 0}</td>
-                            <td style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{tm.nr || 0}</td>
+                            <td style={{ textAlign: 'center', fontWeight: '900', fontSize: '1rem', color: isUOM ? '#dc2626' : 'var(--accent-gold)' }}>
+                              {tm.points}
+                            </td>
                             <td style={{ textAlign: 'center', fontWeight: '800', color: (tm.nrr || '').startsWith('+') ? 'var(--accent-green)' : tm.nrr === '0.000' || tm.nrr === '0' || !tm.nrr ? 'var(--text-muted)' : '#ef4444' }}>
                               <span style={{ background: (tm.nrr || '').startsWith('+') ? 'rgba(16, 185, 129, 0.15)' : tm.nrr === '0.000' || tm.nrr === '0' || !tm.nrr ? 'transparent' : 'rgba(239, 68, 68, 0.15)', padding: '0.15rem 0.45rem', borderRadius: '4px' }}>
                                 {tm.nrr}
@@ -539,9 +560,6 @@ export default function Tournaments() {
                             </td>
                             <td style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.8rem' }}>{tm.for || '-'}</td>
                             <td style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.8rem' }}>{tm.against || '-'}</td>
-                            <td style={{ textAlign: 'center', fontWeight: '900', fontSize: '1rem', color: isUOM ? '#dc2626' : 'var(--accent-gold)' }}>
-                              {tm.points}
-                            </td>
                             <td style={{ textAlign: 'center' }}>
                               <div style={{ display: 'flex', gap: '0.25rem', justifyContent: 'center' }}>
                                 {tm.last5 && tm.last5.length > 0 ? (
@@ -759,36 +777,36 @@ export default function Tournaments() {
                 </div>
 
                 {topBatters.length > 0 ? (
-                    <div className="w-full mt-2 overflow-x-auto">
-                      <table className="w-full text-left border-collapse">
+                    <div style={{ width: '100%', marginTop: '0.5rem', overflowX: 'auto' }}>
+                      <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
                         <thead>
-                          <tr className="text-slate-400 text-[10px] uppercase tracking-widest border-b border-slate-700/50">
-                            <th className="font-semibold py-2 px-3">Batter</th>
-                            <th className="font-semibold py-2 px-1 text-center">Team</th>
-                            <th className="font-semibold py-2 px-1 text-center">Runs</th>
-                            <th className="font-semibold py-2 px-1 text-center">HS</th>
-                            <th className="font-semibold py-2 px-1 text-center">SR</th>
-                            <th className="font-semibold py-2 px-1 text-center">4s/6s</th>
+                          <tr style={{ color: 'var(--text-muted)', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid var(--border-color)' }}>
+                            <th style={{ fontWeight: '600', padding: '0.5rem 0.75rem' }}>Batter</th>
+                            <th style={{ fontWeight: '600', padding: '0.5rem 0.25rem', textAlign: 'center' }}>Team</th>
+                            <th style={{ fontWeight: '600', padding: '0.5rem 0.25rem', textAlign: 'center' }}>Runs</th>
+                            <th style={{ fontWeight: '600', padding: '0.5rem 0.25rem', textAlign: 'center' }}>HS</th>
+                            <th style={{ fontWeight: '600', padding: '0.5rem 0.25rem', textAlign: 'center' }}>SR</th>
+                            <th style={{ fontWeight: '600', padding: '0.5rem 0.25rem', textAlign: 'center' }}>4s/6s</th>
                           </tr>
                         </thead>
                         <tbody>
                           {topBatters.map((b, idx) => (
-                            <tr key={idx} className="bg-slate-800/40 hover:bg-slate-700/60 transition-all duration-200 group border-b border-slate-800/50 last:border-0">
-                              <td className="py-2 px-3">
-                                <div className="flex items-center min-w-0 pr-2">
-                                  <span className={`mr-1.5 text-[0.75rem] font-bold flex-shrink-0 ${idx === 0 ? 'text-amber-400' : idx === 1 ? 'text-slate-300' : idx === 2 ? 'text-orange-400' : 'text-slate-400'}`}>
+                            <tr key={idx} style={{ background: 'rgba(255,255,255,0.02)', transition: 'all 0.2s ease', borderBottom: idx !== topBatters.length - 1 ? '1px solid var(--border-color)' : 'none' }}>
+                              <td style={{ padding: '0.5rem 0.75rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', minWidth: 0, paddingRight: '0.5rem' }}>
+                                  <span style={{ marginRight: '0.35rem', fontSize: '0.75rem', fontWeight: 'bold', flexShrink: 0, color: idx === 0 ? 'var(--accent-gold)' : idx === 1 ? 'white' : idx === 2 ? '#f97316' : 'var(--text-muted)' }}>
                                     #{idx + 1}
                                   </span>
-                                  <span className="truncate text-slate-200 group-hover:text-white transition-colors font-bold text-[0.75rem] whitespace-nowrap" style={{ maxWidth: '140px' }} title={b.name}>{b.name}</span>
+                                  <span style={{ color: 'white', fontWeight: 'bold', fontSize: '0.75rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '140px' }} title={b.name}>{b.name}</span>
                                 </div>
                               </td>
-                              <td className="py-2 px-1 text-center">
-                                <span className="text-slate-300 text-[0.75rem] font-bold">{b.team}</span>
+                              <td style={{ padding: '0.5rem 0.25rem', textAlign: 'center' }}>
+                                <span style={{ color: 'white', fontSize: '0.75rem', fontWeight: 'bold' }}>{b.team}</span>
                               </td>
-                              <td className="py-2 px-1 text-center font-extrabold text-amber-400 text-[0.85rem] drop-shadow-sm">{b.runs}</td>
-                              <td className="py-2 px-1 text-center font-semibold text-slate-300 text-xs">{b.hs || b.runs}</td>
-                              <td className="py-2 px-1 text-center font-semibold text-slate-300 text-xs">{b.sr || '0.0'}</td>
-                              <td className="py-2 px-1 text-center text-slate-400 text-[0.7rem]">{b.fours || 0}/{b.sixes || 0}</td>
+                              <td style={{ padding: '0.5rem 0.25rem', textAlign: 'center', fontWeight: '800', color: 'var(--accent-gold)', fontSize: '0.85rem' }}>{b.runs}</td>
+                              <td style={{ padding: '0.5rem 0.25rem', textAlign: 'center', fontWeight: '600', color: 'white', fontSize: '0.75rem' }}>{b.hs || b.runs}</td>
+                              <td style={{ padding: '0.5rem 0.25rem', textAlign: 'center', fontWeight: '600', color: 'white', fontSize: '0.75rem' }}>{b.sr || '0.0'}</td>
+                              <td style={{ padding: '0.5rem 0.25rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.7rem' }}>{b.fours || 0}/{b.sixes || 0}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -822,16 +840,16 @@ export default function Tournaments() {
                 </div>
 
                 {topBowlers.length > 0 ? (
-                  <div className="w-full mt-2 overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
+                  <div style={{ width: '100%', marginTop: '0.5rem', overflowX: 'auto' }}>
+                    <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
                       <thead>
-                        <tr className="text-slate-400 text-[10px] uppercase tracking-widest border-b border-slate-700/50">
-                          <th className="font-semibold py-2 px-3">Bowler</th>
-                          <th className="font-semibold py-2 px-1 text-center">Team</th>
-                          <th className="font-semibold py-2 px-1 text-center">Wkts</th>
-                          <th className="font-semibold py-2 px-1 text-center">Best</th>
-                          <th className="font-semibold py-2 px-1 text-center">Econ</th>
-                          <th className="font-semibold py-2 px-1 text-center">Overs</th>
+                        <tr style={{ color: 'var(--text-muted)', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid var(--border-color)' }}>
+                          <th style={{ fontWeight: '600', padding: '0.5rem 0.75rem' }}>Bowler</th>
+                          <th style={{ fontWeight: '600', padding: '0.5rem 0.25rem', textAlign: 'center' }}>Team</th>
+                          <th style={{ fontWeight: '600', padding: '0.5rem 0.25rem', textAlign: 'center' }}>Wkts</th>
+                          <th style={{ fontWeight: '600', padding: '0.5rem 0.25rem', textAlign: 'center' }}>Best</th>
+                          <th style={{ fontWeight: '600', padding: '0.5rem 0.25rem', textAlign: 'center' }}>Econ</th>
+                          <th style={{ fontWeight: '600', padding: '0.5rem 0.25rem', textAlign: 'center' }}>Overs</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -840,22 +858,22 @@ export default function Tournaments() {
                           const calculatedOvers = bw.overs || (bw.balls ? `${Math.floor(bw.balls / 6)}.${bw.balls % 6}` : '0.0');
 
                           return (
-                            <tr key={idx} className="bg-slate-800/40 hover:bg-slate-700/60 transition-all duration-200 group border-b border-slate-800/50 last:border-0">
-                              <td className="py-2 px-3">
-                                <div className="flex items-center min-w-0 pr-2">
-                                  <span className={`mr-1.5 text-[0.75rem] font-bold flex-shrink-0 ${idx === 0 ? 'text-blue-400' : idx === 1 ? 'text-slate-300' : idx === 2 ? 'text-orange-400' : 'text-slate-400'}`}>
+                            <tr key={idx} style={{ background: 'rgba(255,255,255,0.02)', transition: 'all 0.2s ease', borderBottom: idx !== topBowlers.length - 1 ? '1px solid var(--border-color)' : 'none' }}>
+                              <td style={{ padding: '0.5rem 0.75rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', minWidth: 0, paddingRight: '0.5rem' }}>
+                                  <span style={{ marginRight: '0.35rem', fontSize: '0.75rem', fontWeight: 'bold', flexShrink: 0, color: idx === 0 ? 'var(--accent-blue)' : idx === 1 ? 'white' : idx === 2 ? '#f97316' : 'var(--text-muted)' }}>
                                     #{idx + 1}
                                   </span>
-                                  <span className="truncate text-slate-200 group-hover:text-white transition-colors font-bold text-[0.75rem] whitespace-nowrap" style={{ maxWidth: '140px' }} title={bw.name}>{bw.name}</span>
+                                  <span style={{ color: 'white', fontWeight: 'bold', fontSize: '0.75rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '140px' }} title={bw.name}>{bw.name}</span>
                                 </div>
                               </td>
-                              <td className="py-2 px-1 text-center">
-                                <span className="text-slate-300 text-[0.75rem] font-bold">{bw.team}</span>
+                              <td style={{ padding: '0.5rem 0.25rem', textAlign: 'center' }}>
+                                <span style={{ color: 'white', fontSize: '0.75rem', fontWeight: 'bold' }}>{bw.team}</span>
                               </td>
-                              <td className="py-2 px-1 text-center font-extrabold text-emerald-400 text-[0.85rem] drop-shadow-sm">{bw.wickets}</td>
-                              <td className="py-2 px-1 text-center font-semibold text-slate-300 text-xs">{bestFigure}</td>
-                              <td className="py-2 px-1 text-center font-semibold text-slate-300 text-[0.7rem]">{bw.econ || '0.00'}</td>
-                              <td className="py-2 px-1 text-center text-slate-400 text-[0.7rem]">{calculatedOvers}</td>
+                              <td style={{ padding: '0.5rem 0.25rem', textAlign: 'center', fontWeight: '800', color: 'var(--accent-blue)', fontSize: '0.85rem' }}>{bw.wickets}</td>
+                              <td style={{ padding: '0.5rem 0.25rem', textAlign: 'center', fontWeight: '600', color: 'white', fontSize: '0.75rem' }}>{bestFigure}</td>
+                              <td style={{ padding: '0.5rem 0.25rem', textAlign: 'center', fontWeight: '600', color: 'white', fontSize: '0.75rem' }}>{bw.econ || '0.00'}</td>
+                              <td style={{ padding: '0.5rem 0.25rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.7rem' }}>{calculatedOvers}</td>
                             </tr>
                           );
                         })}
@@ -890,38 +908,38 @@ export default function Tournaments() {
                 </div>
 
                 {topFielders.length > 0 ? (
-                  <div className="w-full mt-2 overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
+                  <div style={{ width: '100%', marginTop: '0.5rem', overflowX: 'auto' }}>
+                    <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
                       <thead>
-                        <tr className="text-slate-400 text-[10px] uppercase tracking-widest border-b border-slate-700/50">
-                          <th className="font-semibold py-2 px-3">Fielder</th>
-                          <th className="font-semibold py-2 px-1 text-center">Team</th>
-                          <th className="font-semibold py-2 px-1 text-center">Ctch</th>
-                          <th className="font-semibold py-2 px-1 text-center">Stmp</th>
-                          <th className="font-semibold py-2 px-1 text-center">RO</th>
-                          <th className="font-semibold py-2 px-1 text-center">Tot</th>
+                        <tr style={{ color: 'var(--text-muted)', fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid var(--border-color)' }}>
+                          <th style={{ fontWeight: '600', padding: '0.5rem 0.75rem' }}>Fielder</th>
+                          <th style={{ fontWeight: '600', padding: '0.5rem 0.25rem', textAlign: 'center' }}>Team</th>
+                          <th style={{ fontWeight: '600', padding: '0.5rem 0.25rem', textAlign: 'center' }}>Ctch</th>
+                          <th style={{ fontWeight: '600', padding: '0.5rem 0.25rem', textAlign: 'center' }}>Stmp</th>
+                          <th style={{ fontWeight: '600', padding: '0.5rem 0.25rem', textAlign: 'center' }}>RO</th>
+                          <th style={{ fontWeight: '600', padding: '0.5rem 0.25rem', textAlign: 'center' }}>Tot</th>
                         </tr>
                       </thead>
                       <tbody>
                         {topFielders.map((fd, idx) => {
                           const totalDismissals = (fd.catches || 0) + (fd.stumpings || 0) + (fd.runOuts || 0);
                           return (
-                            <tr key={idx} className="bg-slate-800/40 hover:bg-slate-700/60 transition-all duration-200 group border-b border-slate-800/50 last:border-0">
-                              <td className="py-2 px-3">
-                                <div className="flex items-center min-w-0 pr-2">
-                                  <span className={`mr-1.5 text-[0.75rem] font-bold flex-shrink-0 ${idx === 0 ? 'text-emerald-400' : idx === 1 ? 'text-slate-300' : idx === 2 ? 'text-orange-400' : 'text-slate-400'}`}>
+                            <tr key={idx} style={{ background: 'rgba(255,255,255,0.02)', transition: 'all 0.2s ease', borderBottom: idx !== topFielders.length - 1 ? '1px solid var(--border-color)' : 'none' }}>
+                              <td style={{ padding: '0.5rem 0.75rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', minWidth: 0, paddingRight: '0.5rem' }}>
+                                  <span style={{ marginRight: '0.35rem', fontSize: '0.75rem', fontWeight: 'bold', flexShrink: 0, color: idx === 0 ? 'var(--accent-green)' : idx === 1 ? 'white' : idx === 2 ? '#f97316' : 'var(--text-muted)' }}>
                                     #{idx + 1}
                                   </span>
-                                  <span className="truncate text-slate-200 group-hover:text-white transition-colors font-bold text-[0.75rem] whitespace-nowrap" style={{ maxWidth: '140px' }} title={fd.name}>{fd.name}</span>
+                                  <span style={{ color: 'white', fontWeight: 'bold', fontSize: '0.75rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '140px' }} title={fd.name}>{fd.name}</span>
                                 </div>
                               </td>
-                              <td className="py-2 px-1 text-center">
-                                <span className="text-slate-300 text-[0.75rem] font-bold">{fd.team}</span>
+                              <td style={{ padding: '0.5rem 0.25rem', textAlign: 'center' }}>
+                                <span style={{ color: 'white', fontSize: '0.75rem', fontWeight: 'bold' }}>{fd.team}</span>
                               </td>
-                              <td className="py-2 px-1 text-center font-semibold text-slate-300 text-[0.75rem]">{fd.catches || 0}</td>
-                              <td className="py-2 px-1 text-center font-semibold text-slate-300 text-[0.75rem]">{fd.stumpings || 0}</td>
-                              <td className="py-2 px-1 text-center font-semibold text-slate-300 text-[0.75rem]">{fd.runOuts || 0}</td>
-                              <td className="py-2 px-1 text-center font-extrabold text-emerald-400 text-[0.85rem] drop-shadow-sm">{totalDismissals}</td>
+                              <td style={{ padding: '0.5rem 0.25rem', textAlign: 'center', fontWeight: '600', color: 'white', fontSize: '0.75rem' }}>{fd.catches || 0}</td>
+                              <td style={{ padding: '0.5rem 0.25rem', textAlign: 'center', fontWeight: '600', color: 'white', fontSize: '0.75rem' }}>{fd.stumpings || 0}</td>
+                              <td style={{ padding: '0.5rem 0.25rem', textAlign: 'center', fontWeight: '600', color: 'white', fontSize: '0.75rem' }}>{fd.runOuts || 0}</td>
+                              <td style={{ padding: '0.5rem 0.25rem', textAlign: 'center', fontWeight: '800', color: 'var(--accent-green)', fontSize: '0.85rem' }}>{totalDismissals}</td>
                             </tr>
                           );
                         })}
