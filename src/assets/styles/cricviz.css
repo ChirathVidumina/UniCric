@@ -1,7 +1,7 @@
 :root {
-  --cric-navy-bg: #0b1329;
-  --cric-card-bg: #132036;
-  --cric-card-hover: #1c2d4a;
+  --cric-navy-bg: #070c18;
+  --cric-card-bg: #131e36;
+  --cric-card-hover: #1b2a4a;
   --cric-border: rgba(255, 255, 255, 0.1);
   --cric-border-strong: rgba(220, 38, 38, 0.4);
 
@@ -23,21 +23,23 @@
 
 .cricviz-scout-container {
   min-height: 100vh;
-  background-color: var(--cric-navy-bg);
   color: var(--cric-text-main);
   font-family: var(--cric-font-body);
 }
 
 .scout-header-banner {
-  background: linear-gradient(135deg, #180808 0%, #132036 60%, #0b1329 100%);
-  border-bottom: 2px solid var(--uom-red);
-  padding: 2rem 1.5rem;
+  background: linear-gradient(135deg, #180808 0%, #131e36 60%, #070c18 100%);
+  border: 1px solid var(--cric-border-strong);
+  border-radius: 16px;
+  padding: 2rem;
   margin-bottom: 2rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
 }
 
 .scout-banner-inner {
-  max-width: 1300px;
+  max-width: 1440px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -63,10 +65,11 @@
 }
 
 .scout-title-text {
-  font-size: 2.25rem;
+  font-size: clamp(1.6rem, 2.8vw, 2.25rem);
   font-weight: 800;
   font-family: var(--cric-font-heading);
   letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .opponent-select-dropdown {
@@ -75,7 +78,7 @@
   color: var(--cric-text-main);
   padding: 0.75rem 1.25rem;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
   outline: none;
@@ -91,7 +94,7 @@
 /* CricViz KPI Cards */
 .cricviz-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.25rem;
   margin-bottom: 2rem;
 }
@@ -103,12 +106,14 @@
   padding: 1.5rem;
   position: relative;
   overflow: hidden;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
 }
 
 .cricviz-card:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
 .cricviz-card.threat-critical {
@@ -126,8 +131,8 @@
 /* Pitch & Toss Visualizer */
 .pitch-bar-container {
   display: flex;
-  height: 24px;
-  border-radius: 12px;
+  height: 28px;
+  border-radius: 14px;
   overflow: hidden;
   margin: 1rem 0;
   border: 1px solid var(--cric-border);
@@ -138,7 +143,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 800;
   color: white;
 }
@@ -148,7 +153,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 800;
   color: white;
 }
@@ -161,7 +166,7 @@
 }
 
 .matchup-table th {
-  background: rgba(15, 23, 42, 0.6);
+  background: rgba(15, 23, 42, 0.7);
   color: var(--cric-text-sub);
   padding: 0.85rem 1rem;
   font-size: 0.8rem;
@@ -215,9 +220,28 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  text-decoration: none;
 }
 
 .cric-btn-danger:hover {
   transform: translateY(-2px);
   filter: brightness(1.1);
+}
+
+/* CricViz Mobile Tweaks */
+@media (max-width: 768px) {
+  .scout-header-banner {
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .cricviz-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .matchup-table th, .matchup-table td {
+    padding: 0.65rem 0.5rem;
+    font-size: 0.8rem;
+  }
 }

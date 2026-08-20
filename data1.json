@@ -1,0 +1,103 @@
+{
+  "tournament_metadata": {
+    "name": "Inter University Cricket Championship - 2026",
+    "total_matches_scheduled": 32,
+    "matches_completed": 3,
+    "total_groups": 4,
+    "groups": ["A", "B", "C", "D"]
+  },
+  "teams": [
+    {
+      "team_id": "JAF",
+      "name": "Jaffna",
+      "group": "A",
+      "matches": 1,
+      "won": 1,
+      "lost": 0,
+      "pts": 2,
+      "nrr": "+1.500",
+      "for_str": "271/50.0",
+      "against_str": "91/22.3",
+      "last_5": ["W"],
+      "captain": "Antony Desvin"
+    },
+    {
+      "team_id": "VAV",
+      "name": "Vavuniya",
+      "group": "B",
+      "matches": 1,
+      "won": 0,
+      "lost": 1,
+      "pts": 0,
+      "nrr": "-1.500",
+      "for_str": "91/22.3",
+      "against_str": "271/50.0",
+      "last_5": ["L"],
+      "captain": "Sahan Siriwardana"
+    },
+    {
+      "team_id": "MOR",
+      "name": "Moratuwa",
+      "group": "C",
+      "matches": 1,
+      "won": 1,
+      "lost": 0,
+      "pts": 2,
+      "nrr": "+2.414",
+      "for_str": "115/24.3",
+      "against_str": "114/50.0",
+      "last_5": ["W"],
+      "captain": "Behan Wickramasinghe"
+    },
+    {
+      "team_id": "PER",
+      "name": "Peradeniya",
+      "group": "C",
+      "matches": 1,
+      "won": 0,
+      "lost": 1,
+      "pts": 0,
+      "nrr": "-2.414",
+      "for_str": "114/50.0",
+      "against_str": "115/24.3",
+      "last_5": ["L"],
+      "captain": "Nadeeshan Bandara"
+    },
+    {
+      "team_id": "WAY",
+      "name": "Wayamba",
+      "group": "D",
+      "matches": 1,
+      "won": 1,
+      "lost": 0,
+      "pts": 2,
+      "nrr": "+1.040",
+      "for_str": "63/19.4",
+      "against_str": "62/28.4",
+      "last_5": ["W"],
+      "captain": "Sadinsha Herath"
+    },
+    {
+      "team_id": "RAJ",
+      "name": "Rajarata",
+      "group": "D",
+      "matches": 1,
+      "won": 0,
+      "lost": 1,
+      "pts": 0,
+      "nrr": "-1.040",
+      "for_str": "62/28.4",
+      "against_str": "63/19.4",
+      "last_5": ["L"],
+      "captain": "Pavindu Sandeepa"
+    }
+  ],
+  "captains": {
+    "Jaffna": "Antony Desvin",
+    "Vavuniya": "Sahan Siriwardana",
+    "Moratuwa": "Behan Wickramasinghe",
+    "Peradeniya": "Nadeeshan Bandara",
+    "Wayamba": "Sadinsha Herath",
+    "Rajarata": "Pavindu Sandeepa"
+  }
+}

@@ -119,18 +119,23 @@ def get_opponents(db: Session = Depends(get_db)):
 @app.get("/api/teams")
 def get_teams(db: Session = Depends(get_db)):
     teams = db.query(TeamModel).all()
+    team_standings = calculate_team_standings(db)
     result = []
     for t in teams:
+        st = team_standings.get(t.code, {})
         result.append({
             "code": t.code,
             "name": t.name,
             "shortName": t.short_name or t.name,
             "group": t.group_name or "Group C",
-            "played": t.played,
-            "won": t.won,
-            "lost": t.lost,
-            "points": t.points,
-            "nrr": t.nrr
+            "played": st.get("played", t.played or 0),
+            "won": st.get("won", t.won or 0),
+            "lost": st.get("lost", t.lost or 0),
+            "points": st.get("points", t.points or 0),
+            "nrr": st.get("nrr", t.nrr or "0.000"),
+            "for": st.get("for_str", "-"),
+            "against": st.get("against_str", "-"),
+            "last5": st.get("last_5", [])
         })
     return {"teams": result}
 
@@ -172,11 +177,25 @@ def get_players(team: Optional[str] = Query(None), db: Session = Depends(get_db)
             # Assuming T20/ODI derivative: an economy of 6 implies roughly 30% dot balls, an economy of 3 implies 60% dot balls.
             bowlDotPct = max(0, round(100 - (econ * 7.5)))
         
+        # Determine evolving role based on match stats
+        dynamic_role = p.role
+        if r > 10 and o >= 2:
+            dynamic_role = "All-Rounder"
+        elif o >= 2:
+            dynamic_role = "Bowler"
+        elif r >= 10:
+            dynamic_role = "Batter"
+        elif dynamic_role == "Player" or not dynamic_role:
+            if o > 0:
+                dynamic_role = "Bowler"
+            else:
+                dynamic_role = "Batter"
+                
         result.append({
             "id": str(p.id),
             "name": p.name,
             "team": p.team_code,
-            "role": p.role,
+            "role": dynamic_role,
             "matches": p.matches,
             "runs": r,
             "balls": b,
@@ -329,9 +348,20 @@ def calculate_team_standings(db: Session):
     } for t in teams}
 
     ABBR_MAP = {
-        "MOR": "UOM", "UOM": "UOM",
-        "UOJ": "JAF", "JAF": "JAF",
-        "PER": "PER", "VAV": "VAV"
+        "MOR": "MOR", "UOM": "MOR", "MORATUWA": "MOR", "MORATUWA UNIVERSITY": "MOR",
+        "UOJ": "JAF", "JAF": "JAF", "JAFFNA": "JAF", "JAFFNA UNIVERSITY": "JAF",
+        "PER": "PER", "PERADENIYA": "PER", "PERADENIYA UNIVERSITY": "PER",
+        "VAV": "VAV", "VAVUNIYA": "VAV", "VAVUNIYA UNIVERSITY": "VAV",
+        "WAY": "WAY", "WAYAMBA": "WAY", "WAYAMBA UNIVERSITY": "WAY",
+        "RAJ": "RAJ", "RAJARATA": "RAJ", "RAJARATA UNIVERSITY": "RAJ",
+        "GAM": "GAM", "GAMPAHA": "GAM", "GAMPAHA WICKRAMARACHCHI": "GAM", "GAMPAHA WICKRAMARACHCHI UNIVERSITY": "GAM", "WICKRAMARACHCHI": "GAM",
+        "KEL": "KEL", "KELANIYA": "KEL", "KELANIYA UNIVERSITY": "KEL",
+        "COL": "COL", "COLOMBO": "COL", "UOC": "COL",
+        "SJP": "SJP", "JAYAWARDENAPURA": "SJP", "USJP": "SJP",
+        "RUH": "RUH", "RUHUNA": "RUH",
+        "SAB": "SAB", "SABARAGAMUWA": "SAB",
+        "EST": "EST", "EASTERN": "EST",
+        "SEU": "SEU", "SOUTH EASTERN": "SEU"
     }
     
     for m in matches:
@@ -342,7 +372,7 @@ def calculate_team_standings(db: Session):
             participants = []
             for tcode, tdata in team_stats.items():
                 name_key = tdata["name"].lower().split()[0]
-                if name_key in title_lower:
+                if name_key in title_lower or tcode.lower() in title_lower:
                     participants.append(tcode)
                     
             for pcode in participants:
@@ -351,7 +381,7 @@ def calculate_team_standings(db: Session):
             winner_code = None
             for tcode, tdata in team_stats.items():
                 name_key = tdata["name"].lower().split()[0]
-                if name_key in result_lower and "won" in result_lower:
+                if (name_key in result_lower or tcode.lower() in result_lower) and "won" in result_lower:
                     winner_code = tcode
                     break
                     
@@ -368,10 +398,12 @@ def calculate_team_standings(db: Session):
                     team_stats[pcode]["last_5"].append("-")
 
             if m.score_summary:
-                parsed = re.findall(r'([a-zA-Z]+)\s+(\d+)/(\d+)\s+\(([\d\.]+)\)', m.score_summary)
-                if len(parsed) == 2:
-                    c1 = ABBR_MAP.get(parsed[0][0].upper())
-                    c2 = ABBR_MAP.get(parsed[1][0].upper())
+                parsed = re.findall(r'([A-Za-z\s\-]+?)\s+(\d+)/(\d+)\s+\(([\d\.]+)\)', m.score_summary)
+                if len(parsed) >= 2:
+                    raw_c1 = parsed[0][0].strip('- ').strip().upper()
+                    raw_c2 = parsed[1][0].strip('- ').strip().upper()
+                    c1 = ABBR_MAP.get(raw_c1, raw_c1[:3])
+                    c2 = ABBR_MAP.get(raw_c2, raw_c2[:3])
                     if c1 and c2 and c1 in team_stats and c2 in team_stats:
                         t1_r, t1_w, t1_o = int(parsed[0][1]), int(parsed[0][2]), float(parsed[0][3])
                         if t1_w == 10: t1_o = 50.0
@@ -401,6 +433,18 @@ def calculate_team_standings(db: Session):
             tdata["nrr"] = f"{sign}{nrr_val:.3f}"
             tdata["for_str"] = f"{tdata['runs_for']}/{to_cricket_overs(tdata['overs_for'])}"
             tdata["against_str"] = f"{tdata['runs_against']}/{to_cricket_overs(tdata['overs_against'])}"
+
+        tm = next((t for t in teams if t.code == tcode), None)
+        if tm:
+            tm.played = tdata["played"]
+            tm.won = tdata["won"]
+            tm.lost = tdata["lost"]
+            tm.points = tdata["points"]
+            tm.nrr = tdata["nrr"]
+    try:
+        db.commit()
+    except Exception:
+        db.rollback()
             
     return team_stats
 
@@ -490,37 +534,99 @@ def get_tournaments(db: Session = Depends(get_db)):
             "isHome": False
         })
         if m.status == "COMPLETED":
-            completed_scorecards[m.id] = {"innings1": {"team": "Data", "score": m.score_summary}}
+            if m.scorecard_json:
+                completed_scorecards[m.id] = json.loads(m.scorecard_json)
+            else:
+                completed_scorecards[m.id] = {"title": m.title, "result": m.result, "date": m.date_label, "venue": m.venue}
             
-    groups = [{
-        "code": "GROUP_C",
-        "name": "Group C",
-        "isOurGroup": True,
-        "teams": sorted(t_list, key=lambda x: x["points"], reverse=True)
-    }]
+    from collections import defaultdict
+    group_map = defaultdict(list)
+    for t in t_list:
+        # Find group name from original teams list
+        t_obj = next((x for x in teams if x.code == t["code"]), None)
+        g_name = t_obj.group_name if t_obj and t_obj.group_name else "Group C"
+        group_map[g_name].append(t)
+        
+    groups = []
+    for g_name, g_teams in group_map.items():
+        groups.append({
+            "code": g_name.replace(" ", "_").upper(),
+            "name": g_name,
+            "isOurGroup": g_name == "Group C",
+            "teams": sorted(g_teams, key=lambda x: (x["points"], float(x["nrr"].replace("+", ""))), reverse=True)
+        })
+    groups.sort(key=lambda x: x["name"])
     
     completed_matches = [m for m in matches if m.status == "COMPLETED"]
     total_matches_count = len(completed_matches)
     total_innings = total_matches_count * 2
     
-    all_stats = db.query(PlayerStatModel).all()
-    
-    t_runs = sum(s.runs for s in all_stats)
-    t_wickets = sum(s.wickets for s in all_stats)
-    t_balls = sum(s.balls for s in all_stats)
-    t_fours = sum(s.fours for s in all_stats)
-    t_sixes = sum(s.sixes for s in all_stats)
-    t_overs = sum(s.overs for s in all_stats)
-    
-    t_runs_conceded = sum(s.runs_conceded for s in all_stats)
-    t_extras = max(0, t_runs_conceded - t_runs)
-    
+    t_runs = 0
+    t_wickets = 0
+    t_balls = 0
+    t_extras = 0
+    t_fours = 0
+    t_sixes = 0
+    t_fifties = 0
+    t_centuries = 0
+    t_maidens = 0
+    t_catches = 0
+    t_stumpings = 0
+    t_fifty_partnerships = 0
+    t_hundred_partnerships = 0
+
+    for m in completed_matches:
+        if m.scorecard_json:
+            try:
+                s_data = json.loads(m.scorecard_json)
+                for inn_key in ['team_a_innings', 'team_b_innings']:
+                    inn = s_data.get(inn_key, {})
+                    t_runs += inn.get('total_runs', 0)
+                    t_wickets += inn.get('wickets', 0)
+                    t_extras += inn.get('extras', 0)
+                    
+                    for b in inn.get('batting', []):
+                        r = b.get('runs', 0)
+                        balls = b.get('balls', 0)
+                        f = b.get('fours', 0)
+                        s = b.get('sixes', 0)
+                        status = str(b.get('status') or b.get('dismissal') or '').strip().lower()
+                        
+                        t_balls += balls
+                        t_fours += f
+                        t_sixes += s
+                        
+                        if 50 <= r < 100:
+                            t_fifties += 1
+                        elif r >= 100:
+                            t_centuries += 1
+                            
+                        if status.startswith('c ') or 'caught' in status or 'c&b' in status or 'ct ' in status:
+                            t_catches += 1
+                        if status.startswith('st ') or 'stumped' in status:
+                            t_stumpings += 1
+                            
+                    for bw in inn.get('bowling', []):
+                        t_maidens += bw.get('maidens', 0)
+            except Exception as e:
+                print(f"Error aggregating scorecard {m.id}: {e}")
+
+    # Fallback to PlayerStatModel if matches had no scorecard_json
+    if t_runs == 0:
+        all_stats = db.query(PlayerStatModel).all()
+        t_runs = sum(s.runs for s in all_stats)
+        t_wickets = sum(s.wickets for s in all_stats)
+        t_balls = sum(s.balls for s in all_stats)
+        t_fours = sum(s.fours for s in all_stats)
+        t_sixes = sum(s.sixes for s in all_stats)
+        t_fifties = sum(getattr(s, 'fifties', 0) for s in all_stats)
+        t_centuries = sum(getattr(s, 'centuries', 0) for s in all_stats)
+        t_maidens = sum(getattr(s, 'maidens', 0) for s in all_stats)
+        t_runs_conceded = sum(s.runs_conceded for s in all_stats)
+        t_extras = max(0, t_runs_conceded - t_runs)
+
     t_boundaries = t_fours + t_sixes
     t_boundary_runs = (t_fours * 4) + (t_sixes * 6)
-    
-    t_catches = sum(1 for s in all_stats if s.is_out and s.dismissal and ("caught" in s.dismissal.lower() or "c " in s.dismissal.lower()))
-    t_stumpings = sum(1 for s in all_stats if s.is_out and s.dismissal and ("stumped" in s.dismissal.lower() or "st " in s.dismissal.lower()))
-    
     t_non_boundary_runs = max(0, t_runs - t_boundary_runs)
     t_estimated_dot_balls = max(0, t_balls - t_boundaries - t_non_boundary_runs)
     
@@ -544,10 +650,14 @@ def get_tournaments(db: Session = Depends(get_db)):
             "totalExtras": t_extras,
             "totalFours": t_fours,
             "totalSixes": t_sixes,
-            "totalMaidens": 0,
+            "totalFifties": t_fifties,
+            "totalCenturies": t_centuries,
+            "totalMaidens": t_maidens,
             "totalDotBalls": t_estimated_dot_balls,
             "totalCatches": t_catches,
             "totalStumpings": t_stumpings,
+            "fiftyPartnerships": t_fifty_partnerships,
+            "hundredPartnerships": t_hundred_partnerships,
             "bdryPct": bdry_pct,
             "bdryFreq": bdry_freq,
             "dbPct": db_pct,
@@ -557,6 +667,107 @@ def get_tournaments(db: Session = Depends(get_db)):
 
 @app.get("/api/analytics")
 def get_analytics(db: Session = Depends(get_db)):
+    # Re-calculate leaderboards dynamically
+    all_players = db.query(PlayerModel).all()
+    all_stats = db.query(PlayerStatModel).all()
+    
+    p_stats = {}
+    for p in all_players:
+        p_stats[p.name] = {"team": p.team_code, "runs": 0, "balls": 0, "wickets": 0, "overs": 0.0, "runs_conceded": 0, "catches": 0, "stumpings": 0, "highest_score": 0}
+        
+    for s in all_stats:
+        if s.player_name not in p_stats:
+            continue
+        p = p_stats[s.player_name]
+        p["runs"] += s.runs
+        p["balls"] += s.balls
+        p["wickets"] += s.wickets
+        p["overs"] += s.overs
+        p["runs_conceded"] += s.runs_conceded
+        if s.runs > p["highest_score"]:
+            p["highest_score"] = s.runs
+        if s.is_out and s.dismissal:
+            d = s.dismissal.lower()
+            if "c " in d and s.player_name.lower() in d.split(" b ")[0]:
+                p["catches"] += 1
+            if "st " in d and s.player_name.lower() in d.split(" b ")[0]:
+                p["stumpings"] += 1
+
+    FIELDING_DISMISSALS_MAP = {
+        "Sivakaran Venujan": {"catches": 3, "stumpings": 1, "runOuts": 0, "team": "JAF"},
+        "Muftee Mysan": {"catches": 3, "stumpings": 1, "runOuts": 0, "team": "MOR"},
+        "Randul Samarahewa": {"catches": 3, "stumpings": 0, "runOuts": 0, "team": "KEL"},
+        "Nadeeshan Bandara": {"catches": 2, "stumpings": 1, "runOuts": 0, "team": "PER"},
+        "Prabhashana Silva": {"catches": 3, "stumpings": 0, "runOuts": 0, "team": "WAY"},
+        "Janith Dilshan": {"catches": 2, "stumpings": 0, "runOuts": 0, "team": "VAV"},
+        "Menusha Premalal": {"catches": 2, "stumpings": 0, "runOuts": 0, "team": "RAJ"},
+        "Thimira Wanninayake": {"catches": 2, "stumpings": 0, "runOuts": 0, "team": "GAM"},
+        "Ashmika Iddamalgoda": {"catches": 2, "stumpings": 0, "runOuts": 0, "team": "JAF"},
+        "Kevindu Perera": {"catches": 2, "stumpings": 0, "runOuts": 0, "team": "MOR"}
+    }
+
+    for name, f_data in FIELDING_DISMISSALS_MAP.items():
+        if name in p_stats:
+            p_stats[name]["catches"] = max(p_stats[name].get("catches", 0), f_data["catches"])
+            p_stats[name]["stumpings"] = max(p_stats[name].get("stumpings", 0), f_data["stumpings"])
+            p_stats[name]["runOuts"] = f_data.get("runOuts", 0)
+
+    for name, st in p_stats.items():
+        st["name"] = name
+        st["sr"] = round((st["runs"] / st["balls"]) * 100, 2) if st["balls"] > 0 else 0.0
+        st["econ"] = round(st["runs_conceded"] / st["overs"], 2) if st["overs"] > 0 else 0.0
+
+    players_list = list(p_stats.values())
+    orange_cap = sorted(players_list, key=lambda x: (x["runs"], x["highest_score"], x["sr"]), reverse=True)[:10]
+    purple_cap = sorted([p for p in players_list if p["wickets"] > 0], key=lambda x: (x["wickets"], -x["econ"]), reverse=True)[:10]
+    
+    silver_glove = []
+    for p in players_list:
+        total_dismissals = p.get("catches", 0) + p.get("stumpings", 0) + p.get("runOuts", 0)
+        if total_dismissals > 0:
+            silver_glove.append({
+                "name": p["name"],
+                "team": p["team"],
+                "catches": p.get("catches", 0),
+                "stumpings": p.get("stumpings", 0),
+                "runOuts": p.get("runOuts", 0),
+                "total": total_dismissals
+            })
+    silver_glove.sort(key=lambda x: (x["total"], x["catches"], x["stumpings"]), reverse=True)
+    silver_glove = silver_glove[:10]
+
+    # Venue Insights
+    matches = db.query(MatchModel).filter(MatchModel.status == "COMPLETED").all()
+    venues = {}
+    for m in matches:
+        v = m.venue or "Unknown"
+        if v not in venues:
+            venues[v] = {"matches": 0, "bat_first_wins": 0, "bowl_first_wins": 0, "first_innings_scores": []}
+        venues[v]["matches"] += 1
+        
+        if m.scorecard_json:
+            try:
+                sc = json.loads(m.scorecard_json)
+                venues[v]["first_innings_scores"].append(sc["team_a_innings"]["total_runs"])
+                if sc["team_a"] == sc["winner"]:
+                    venues[v]["bat_first_wins"] += 1
+                else:
+                    venues[v]["bowl_first_wins"] += 1
+            except Exception:
+                pass
+                
+    venue_insights = []
+    for v, data in venues.items():
+        avg_score = sum(data["first_innings_scores"]) // len(data["first_innings_scores"]) if data["first_innings_scores"] else 0
+        bat1_pct = (data["bat_first_wins"] / data["matches"]) * 100 if data["matches"] > 0 else 0
+        venue_insights.append({
+            "name": v,
+            "matches": data["matches"],
+            "par_score": avg_score,
+            "bat1_win_pct": f"{bat1_pct:.1f}%",
+            "toss_decision": "BAT FIRST" if bat1_pct >= 50 else "BOWL FIRST"
+        })
+
     players_query = db.query(
         PlayerModel,
         func.sum(PlayerStatModel.runs).label("runs"),
@@ -588,7 +799,16 @@ def get_analytics(db: Session = Depends(get_db)):
             econ = round(rc / o, 2) if o > 0 else 0.0
             top_bowler = {"name": p.name, "wickets": w, "team": p.team_code, "econ": econ}
             
-    total_runs = db.query(func.sum(PlayerStatModel.runs)).scalar() or 0
+    total_runs = 0
+    for m in db.query(MatchModel).filter(MatchModel.status == "COMPLETED").all():
+        if m.scorecard_json:
+            try:
+                sc = json.loads(m.scorecard_json)
+                total_runs += sc.get("team_a_innings", {}).get("total_runs", 0) + sc.get("team_b_innings", {}).get("total_runs", 0)
+            except Exception:
+                pass
+    if total_runs == 0:
+        total_runs = db.query(func.sum(PlayerStatModel.runs)).scalar() or 0
     total_fours = db.query(func.sum(PlayerStatModel.fours)).scalar() or 0
     total_sixes = db.query(func.sum(PlayerStatModel.sixes)).scalar() or 0
     total_overs = db.query(func.sum(PlayerStatModel.overs)).scalar() or 0.0
@@ -605,7 +825,13 @@ def get_analytics(db: Session = Depends(get_db)):
                 "fours": int(total_fours),
                 "sixes": int(total_sixes)
             }
-        }
+        },
+        "leaderboards": {
+            "orange_cap": orange_cap,
+            "purple_cap": purple_cap,
+            "silver_glove": silver_glove
+        },
+        "venue_insights": venue_insights
     }
 
 @app.get("/api/standings")
@@ -632,42 +858,190 @@ def get_dashboard(db: Session = Depends(get_db)):
     teams = db.query(TeamModel).all()
     team_standings = calculate_team_standings(db)
     
-    uom_team = next((t for t in teams if t.code == "UOM"), None)
-    uom_stats = team_standings.get("UOM", {"played": 0, "won": 0, "points": 0, "nrr": "0.000"})
+    uom_team = next((t for t in teams if t.code in ["UOM", "MOR"]), None)
+    uom_code = uom_team.code if uom_team else "MOR"
+    uom_stats = team_standings.get(uom_code, {"played": 0, "won": 0, "lost": 0, "points": 0, "nrr": "0.000"})
     
-    top_batters = db.query(PlayerModel).filter(PlayerModel.team_code == "UOM").order_by(PlayerModel.total_runs.desc()).limit(4).all()
-    top_bowler = db.query(PlayerModel).filter(PlayerModel.team_code == "UOM").order_by(PlayerModel.total_wickets.desc()).first()
+    # Aggregated UOM Batters
+    uom_batters_query = db.query(
+        PlayerStatModel.player_name,
+        func.sum(PlayerStatModel.runs).label("runs"),
+        func.sum(PlayerStatModel.balls).label("balls"),
+        func.sum(PlayerStatModel.fours).label("fours"),
+        func.sum(PlayerStatModel.sixes).label("sixes")
+    ).filter(PlayerStatModel.team_code.in_(["UOM", "MOR"])).group_by(PlayerStatModel.player_name).order_by(func.sum(PlayerStatModel.runs).desc()).all()
     
-    top_performers = [
-        {
-            "name": p.name,
-            "role": p.role,
-            "stat": f"{p.total_runs} Runs",
-            "note": f"Team {p.team_code or ''} • SR {p.strike_rate}",
-            "icon": "🏏"
-        } for p in top_batters
-    ]
+    top_batters_list = []
+    for p_name, r, b, f, s in uom_batters_query:
+        r = r or 0
+        b = b or 0
+        f = f or 0
+        s = s or 0
+        sr = round((r / b) * 100, 2) if b > 0 else 0.0
+        top_batters_list.append({
+            "name": p_name,
+            "runs": r,
+            "balls": b,
+            "fours": f,
+            "sixes": s,
+            "sr": sr
+        })
+        
+    # Aggregated UOM Bowlers
+    uom_bowlers_query = db.query(
+        PlayerStatModel.player_name,
+        func.sum(PlayerStatModel.wickets).label("wickets"),
+        func.sum(PlayerStatModel.runs_conceded).label("runs_conceded"),
+        func.sum(PlayerStatModel.overs).label("overs")
+    ).filter(PlayerStatModel.team_code.in_(["UOM", "MOR"])).group_by(PlayerStatModel.player_name).order_by(func.sum(PlayerStatModel.wickets).desc(), func.sum(PlayerStatModel.runs_conceded).asc()).all()
     
+    top_bowlers_list = []
+    for p_name, w, rc, ov in uom_bowlers_query:
+        w = w or 0
+        rc = rc or 0
+        ov = ov or 0.0
+        econ = round(rc / ov, 2) if ov > 0 else 0.0
+        top_bowlers_list.append({
+            "name": p_name,
+            "wkts": w,
+            "wickets": w,
+            "runs": rc,
+            "runs_conceded": rc,
+            "overs": ov,
+            "ov": ov,
+            "econ": econ
+        })
+        
+    top_performer_batter = top_batters_list[0] if top_batters_list else None
+    top_performer_bowler = top_bowlers_list[0] if top_bowlers_list else None
+    
+    top_performers = []
+    if top_performer_batter:
+        top_performers.append({
+            "title": "🌟 STAR PERFORMER",
+            "name": top_performer_batter["name"],
+            "role": "Batter",
+            "stat": f"{top_performer_batter['runs']} Runs",
+            "sub": f"Crucial {top_performer_batter['runs']} runs ({top_performer_batter['balls']} balls, SR: {top_performer_batter['sr']})",
+            "note": f"SR {top_performer_batter['sr']} • {top_performer_batter['fours']} Fours",
+            "icon": "star"
+        })
+    if len(top_batters_list) > 1:
+        p2 = top_batters_list[1]
+        top_performers.append({
+            "title": "🏏 KEY STRIKE BATTER",
+            "name": p2["name"],
+            "role": "Batter",
+            "stat": f"{p2['runs']} Runs",
+            "sub": f"Quickfire {p2['runs']} (SR: {p2['sr']})",
+            "note": f"SR {p2['sr']} • {p2['fours']} 4s, {p2['sixes']} 6s",
+            "icon": "zap"
+        })
+    if top_performer_bowler:
+        top_performers.append({
+            "title": "🎯 KEY STRIKE BOWLER",
+            "name": top_performer_bowler["name"],
+            "role": "Bowler",
+            "stat": f"{top_performer_bowler['wkts']} Wickets",
+            "sub": f"{top_performer_bowler['wkts']} Wkts (Econ {top_performer_bowler['econ']})",
+            "note": f"{top_performer_bowler['overs']} Overs • Econ {top_performer_bowler['econ']}",
+            "icon": "award"
+        })
+        
+    # Standings groups
+    t_list = []
+    for t in teams:
+        st = team_standings.get(t.code, {})
+        t_list.append({
+            "code": t.code,
+            "name": t.name,
+            "played": st.get("played", 0),
+            "won": st.get("won", 0),
+            "lost": st.get("lost", 0),
+            "points": st.get("points", 0),
+            "nrr": st.get("nrr", "0.000"),
+            "for": st.get("for_str", "-"),
+            "against": st.get("against_str", "-"),
+            "last5": st.get("last_5", ["-", "-", "-", "-", "-"])
+        })
+        
+    from collections import defaultdict
+    group_map = defaultdict(list)
+    for t in t_list:
+        t_obj = next((x for x in teams if x.code == t["code"]), None)
+        g_name = t_obj.group_name if t_obj and t_obj.group_name else "Group C"
+        group_map[g_name].append(t)
+        
+    groups = []
+    for g_name, g_teams in group_map.items():
+        groups.append({
+            "code": g_name.replace(" ", "_").upper(),
+            "name": g_name,
+            "isOurGroup": "C" in g_name,
+            "teams": sorted(g_teams, key=lambda x: (x["points"], float(x["nrr"].replace("+", ""))), reverse=True)
+        })
+    groups.sort(key=lambda x: x["name"])
+    
+    # Matches / Schedule
+    matches = db.query(MatchModel).all()
+    schedule_items = []
+    uom_completed_match = None
+    
+    for m in matches:
+        is_uom = "moratuwa" in (m.title or "").lower() or "moratuwa" in (m.result or "").lower()
+        m_dict = {
+            "id": m.id,
+            "dateLabel": m.date_label,
+            "opponentName": m.title,
+            "venue": m.venue,
+            "status": m.status,
+            "result": m.result,
+            "scoreSummary": m.score_summary,
+            "isHome": "moratuwa ground" in (m.venue or "").lower()
+        }
+        schedule_items.append(m_dict)
+        if is_uom and m.status == "COMPLETED" and not uom_completed_match:
+            uom_completed_match = m_dict
+
+    next_target_match = {
+        "id": "target_jaf",
+        "dateLabel": "August 2026",
+        "opponentName": "Moratuwa vs Jaffna",
+        "opponentId": "JAF",
+        "venue": "University Of Jaffna Ground, Jaffna",
+        "status": "NEXT_TARGET"
+    }
+    
+    upcoming_match = {
+        "id": "upcoming_vav",
+        "dateLabel": "September 2026",
+        "opponentName": "Moratuwa vs Vavuniya",
+        "opponentId": "VAV",
+        "venue": "University Of Moratuwa Ground, Moratuwa",
+        "status": "UPCOMING"
+    }
+
     return {
         "uomTeam": {
             "name": uom_team.name if uom_team else "Moratuwa University",
-            "code": uom_team.code if uom_team else "UOM",
-            "played": uom_stats["played"],
-            "won": uom_stats["won"],
-            "points": uom_stats["points"],
-            "nrr": uom_stats["nrr"]
+            "code": uom_code,
+            "played": uom_stats.get("played", 0),
+            "won": uom_stats.get("won", 0),
+            "lost": uom_stats.get("lost", 0),
+            "points": uom_stats.get("points", 0),
+            "nrr": uom_stats.get("nrr", "0.000")
         },
-        "schedule": [],
-        "uomCompletedMatch": None,
-        "nextTargetMatch": None,
-        "upcomingMatch": None,
+        "schedule": schedule_items,
+        "uomCompletedMatch": uom_completed_match,
+        "nextTargetMatch": next_target_match,
+        "upcomingMatch": upcoming_match,
         "groupTeams": [{"code": t.code, "name": t.name, "points": team_standings.get(t.code, {}).get("points", 0), "played": team_standings.get(t.code, {}).get("played", 0)} for t in teams],
+        "groups": groups,
         "topPerformers": top_performers,
-        "topBowler": {
-            "name": top_bowler.name if top_bowler else None,
-            "wickets": top_bowler.total_wickets if top_bowler else 0,
-            "econ": top_bowler.economy_rate if top_bowler else 0.0
-        } if top_bowler else None
+        "topBatters": top_batters_list[:4],
+        "topBowlers": top_bowlers_list[:4],
+        "starPerformer": top_performer_batter,
+        "topBowler": top_performer_bowler
     }
 
 

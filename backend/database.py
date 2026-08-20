@@ -1,7 +1,7 @@
 import os
 from datetime import datetime, timezone
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, Column, Integer, String, Float, Boolean, ForeignKey, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, Float, Boolean, ForeignKey, DateTime, Text
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 # Load environment variables from .env file if present
@@ -9,6 +9,12 @@ load_dotenv()
 load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///unicric.db")
+
+# Automatically resolve SQLite path to root unicric.db if default
+if DATABASE_URL == "sqlite:///unicric.db":
+    root_db = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "unicric.db")
+    if os.path.exists(root_db):
+        DATABASE_URL = f"sqlite:///{root_db}"
 
 # Automatically fix legacy 'postgres://' URI compatibility (SQLAlchemy 1.4+ / 2.0+)
 if DATABASE_URL.startswith("postgres://"):
@@ -61,6 +67,7 @@ class MatchModel(Base):
     status = Column(String(30), default="COMPLETED")  # COMPLETED, NEXT_TARGET, UPCOMING
     result = Column(String(200))
     score_summary = Column(String(200))
+    scorecard_json = Column(Text, nullable=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
 class PlayerStatModel(Base):
@@ -79,6 +86,9 @@ class PlayerStatModel(Base):
     runs_conceded = Column(Integer, default=0)
     economy = Column(Float, default=0.0)
     strike_rate = Column(Float, default=0.0)
+    fifties = Column(Integer, default=0)
+    centuries = Column(Integer, default=0)
+    maidens = Column(Integer, default=0)
     dismissal = Column(String(150), default="Not Out")
     is_out = Column(Boolean, default=False)
 

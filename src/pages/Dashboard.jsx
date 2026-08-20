@@ -7,7 +7,7 @@ import {
 import UOMSpotlightSidebar from '../components/UOMSpotlightSidebar';
 import UOMTopPerformersCard from '../components/UOMTopPerformersCard';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://unicric-backend.onrender.com';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState(null);
@@ -39,41 +39,19 @@ export default function Dashboard() {
     fetchDashboard();
   }, []);
 
-  const uomTeam = dashboardData?.uomTeam?.played > 0 ? dashboardData.uomTeam : { played: 1, won: 1, points: 2, nrr: '+2.414' };
-  const schedule = dashboardData?.schedule?.length > 0 ? dashboardData.schedule : [1, 2, 3];
+  const uomTeam = dashboardData?.uomTeam || { name: 'Moratuwa University', code: 'UOM', played: 0, won: 0, lost: 0, points: 0, nrr: '0.000' };
+  const schedule = dashboardData?.schedule || [];
   
-  const uomCompletedMatch = dashboardData?.uomCompletedMatch || {
-    dateLabel: 'AUG 1, 2026',
-    opponentName: 'Peradeniya University',
-    result: 'Moratuwa won by 5 wickets',
-    scoreSummary: 'PER 114/10 • UOM 115/5'
-  };
-  
-  const nextTargetMatch = dashboardData?.nextTargetMatch || {
-    dateLabel: 'AUG 15, 2026',
-    opponentName: 'Vavuniya University',
-    opponentId: '(VAV)',
-    venue: 'Vavuniya Ground (Away)'
-  };
-  
-  const upcomingMatch = dashboardData?.upcomingMatch || {
-    dateLabel: 'AUG 22, 2026',
-    opponentName: 'Jaffna University',
-    venue: 'Moratuwa Ground (Home)'
-  };
-  const RAW_GROUP_C = {
-    "UOM": { name: 'Moratuwa', code: 'UOM', isPrimary: true, played: 1, won: 1, lost: 0, points: 2, nrr: "+2.414" },
-    "JAF": { name: 'Jaffna', code: 'JAF', played: 1, won: 1, lost: 0, points: 2, nrr: "+1.500" },
-    "VAV": { name: 'Vavuniya', code: 'VAV', played: 1, won: 0, lost: 1, points: 0, nrr: "-1.500" },
-    "PER": { name: 'Peradeniya', code: 'PER', played: 1, won: 0, lost: 1, points: 0, nrr: "-2.414" }
-  };
-  const rawGroupTeams = dashboardData?.groupTeams?.length > 0 ? dashboardData.groupTeams : Object.values(RAW_GROUP_C);
-  const groupTeams = [...rawGroupTeams].map(tm => RAW_GROUP_C[tm.code] ? { ...tm, ...RAW_GROUP_C[tm.code] } : tm).sort((a, b) => {
-    if (b.points !== a.points) return (b.points || 0) - (a.points || 0);
-    return parseFloat(b.nrr || '0') - parseFloat(a.nrr || '0');
-  });
+  const uomCompletedMatch = dashboardData?.uomCompletedMatch || null;
+  const nextTargetMatch = dashboardData?.nextTargetMatch || null;
+  const upcomingMatch = dashboardData?.upcomingMatch || null;
+  const rawGroups = dashboardData?.groups || [];
+  const groupC = rawGroups.find(g => g.code === 'GROUP_C' || g.code?.includes('C')) || { teams: [] };
+  const groupTeams = groupC.teams || [];
   const topPerformers = dashboardData?.topPerformers || [];
-  const topBowler = dashboardData?.topBowler;
+  const topBatters = dashboardData?.topBatters || [];
+  const topBowlers = dashboardData?.topBowlers || [];
+  const starPerformer = dashboardData?.starPerformer || null;
 
   return (
     <div className="dashboard-page" style={{ paddingBottom: '4rem' }}>
@@ -88,7 +66,7 @@ export default function Dashboard() {
           border: '1px solid rgba(220, 38, 38, 0.3)',
           boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
           display: 'flex',
-          justify: 'space-between',
+          justifyContent: 'space-between',
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '1.5rem',
@@ -230,7 +208,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <UOMTopPerformersCard />
+            <UOMTopPerformersCard performers={topPerformers} />
           </div>
 
           {/* Main Two Column Grid */}
@@ -380,16 +358,19 @@ export default function Dashboard() {
                         <th style={{ textAlign: 'center' }}>M</th>
                         <th style={{ textAlign: 'center' }}>W</th>
                         <th style={{ textAlign: 'center' }}>L</th>
-                        <th style={{ textAlign: 'right' }}>NRR</th>
-                        <th style={{ textAlign: 'right' }}>Pts</th>
+                        <th style={{ textAlign: 'center' }}>Pts</th>
+                        <th style={{ textAlign: 'center' }}>NRR</th>
+                        <th style={{ textAlign: 'center' }}>For</th>
+                        <th style={{ textAlign: 'center' }}>Against</th>
+                        <th style={{ textAlign: 'center' }}>Last 5</th>
                       </tr>
                     </thead>
                     <tbody>
                       {groupTeams.map((tm, idx) => {
-                        const isUOM = tm.code === 'UOM' || tm.isPrimary;
+                        const isUOM = tm.code === 'UOM' || tm.code === 'MOR' || tm.isPrimary;
                         return (
                           <tr 
-                            key={tm.code || tm.name}
+                            key={tm.code || tm.name || idx}
                             style={{ 
                               borderBottom: '1px solid var(--border-color)',
                               background: isUOM ? 'rgba(220, 38, 38, 0.15)' : 'transparent',
@@ -402,14 +383,35 @@ export default function Dashboard() {
                             <td style={{ fontWeight: '800', color: isUOM ? '#ef4444' : 'white' }}>
                               {tm.name} {isUOM && '(UOM)'}
                             </td>
-                            <td style={{ textAlign: 'center' }}>{tm.played}</td>
-                            <td style={{ textAlign: 'center', color: '#10b981', fontWeight: '800' }}>{tm.won}</td>
-                            <td style={{ textAlign: 'center', color: tm.lost > 0 ? '#ef4444' : '#94a3b8', fontWeight: '800' }}>{tm.lost}</td>
-                            <td style={{ textAlign: 'right', fontWeight: '700', color: tm.nrr && tm.nrr.startsWith('+') ? '#10b981' : tm.nrr && tm.nrr.startsWith('-') ? '#ef4444' : '#94a3b8' }}>
-                              {tm.nrr}
+                            <td style={{ textAlign: 'center' }}>{tm.played ?? 0}</td>
+                            <td style={{ textAlign: 'center', color: '#10b981', fontWeight: '800' }}>{tm.won ?? 0}</td>
+                            <td style={{ textAlign: 'center', color: (tm.lost ?? 0) > 0 ? '#ef4444' : '#94a3b8', fontWeight: '800' }}>{tm.lost ?? 0}</td>
+                            <td style={{ textAlign: 'center', fontWeight: '900', color: isUOM ? '#ef4444' : '#fbbf24' }}>
+                              {tm.points ?? 0}
                             </td>
-                            <td style={{ textAlign: 'right', fontWeight: '900', color: isUOM ? '#ef4444' : '#fbbf24' }}>
-                              {tm.points}
+                            <td style={{ textAlign: 'center', fontWeight: '700', color: tm.nrr && String(tm.nrr).startsWith('+') ? '#10b981' : tm.nrr && String(tm.nrr).startsWith('-') ? '#ef4444' : '#94a3b8' }}>
+                              {tm.nrr || '0.000'}
+                            </td>
+                            <td style={{ textAlign: 'center', color: '#94a3b8' }}>{tm.for || '-'}</td>
+                            <td style={{ textAlign: 'center', color: '#94a3b8' }}>{tm.against || '-'}</td>
+                            <td style={{ textAlign: 'center' }}>
+                              {tm.last5 && tm.last5.length > 0 ? tm.last5.map((res, i) => (
+                                <span key={i} style={{
+                                  display: 'inline-block',
+                                  width: '16px',
+                                  height: '16px',
+                                  lineHeight: '16px',
+                                  textAlign: 'center',
+                                  borderRadius: '50%',
+                                  background: res === 'W' ? '#10b981' : res === 'L' ? '#ef4444' : '#475569',
+                                  color: 'white',
+                                  fontSize: '0.6rem',
+                                  fontWeight: '800',
+                                  marginRight: '2px'
+                                }}>
+                                  {res}
+                                </span>
+                              )) : '-'}
                             </td>
                           </tr>
                         );
@@ -425,7 +427,11 @@ export default function Dashboard() {
               </div>
 
               {/* Top Performers Box */}
-              <UOMSpotlightSidebar />
+              <UOMSpotlightSidebar 
+                starPerformer={starPerformer}
+                topBatters={topBatters}
+                topBowlers={topBowlers}
+              />
             </div>
           </div>
 

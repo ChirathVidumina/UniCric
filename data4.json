@@ -1,0 +1,64 @@
+{
+  "match_id": 3,
+  "team_a": "Rajarata",
+  "team_b": "Wayamba",
+  "winner": "Wayamba",
+  "ground": "Wayamba University Grounds, Kuliyapitiya",
+  "date": "2026-08-01",
+  "toss": "Rajarata University opt to bat",
+  "result": "Wayamba University won by 4 wickets",
+  "team_a_innings": {
+    "team": "Rajarata",
+    "total_runs": 62,
+    "wickets": 10,
+    "overs": 28.4,
+    "extras": 9,
+    "batting": [
+      {"name": "Menusha Premalal", "runs": 4, "balls": 7, "fours": 0, "sixes": 0, "sr": 57.14, "status": "out"},
+      {"name": "Ishandika Sandaruwan", "runs": 0, "balls": 2, "fours": 0, "sixes": 0, "sr": 0.00, "status": "out"},
+      {"name": "Pavindu Sandeepa", "runs": 11, "balls": 17, "fours": 1, "sixes": 0, "sr": 64.71, "status": "out"},
+      {"name": "Harindu Lakshan", "runs": 7, "balls": 29, "fours": 1, "sixes": 0, "sr": 24.14, "status": "out"},
+      {"name": "Samal Nisitha", "runs": 13, "balls": 51, "fours": 1, "sixes": 0, "sr": 25.49, "status": "out"},
+      {"name": "Hashan Weerakoon", "runs": 0, "balls": 7, "fours": 0, "sixes": 0, "sr": 0.00, "status": "out"},
+      {"name": "Hachitha Hemapriya", "runs": 7, "balls": 25, "fours": 1, "sixes": 0, "sr": 28.00, "status": "out"},
+      {"name": "Kaveen Senanayaka", "runs": 6, "balls": 18, "fours": 0, "sixes": 0, "sr": 33.33, "status": "out"},
+      {"name": "Shashen Madhumalka", "runs": 2, "balls": 7, "fours": 0, "sixes": 0, "sr": 28.57, "status": "out"},
+      {"name": "Sakuna Waduwadeniya", "runs": 3, "balls": 7, "fours": 0, "sixes": 0, "sr": 42.86, "status": "not out"},
+      {"name": "Arithassegaran Kinthusan", "runs": 0, "balls": 2, "fours": 0, "sixes": 0, "sr": 0.00, "status": "out"}
+    ],
+    "bowling": [
+      {"name": "Dilshan Wijemanna", "overs": 6.0, "maidens": 1, "runs": 20, "wickets": 1, "eco": 3.33},
+      {"name": "Thilanka Sandeepa", "overs": 4.0, "maidens": 0, "runs": 11, "wickets": 2, "eco": 2.75},
+      {"name": "Methsara Perera", "overs": 6.0, "maidens": 0, "runs": 7, "wickets": 1, "eco": 1.17},
+      {"name": "Prabhashana Silva", "overs": 5.4, "maidens": 2, "runs": 8, "wickets": 3, "eco": 1.41},
+      {"name": "Aloka Mihiranga", "overs": 3.0, "maidens": 1, "runs": 7, "wickets": 1, "eco": 2.33},
+      {"name": "Selvakumar Dilukshan", "overs": 4.0, "maidens": 1, "runs": 8, "wickets": 2, "eco": 2.00}
+    ]
+  },
+  "team_b_innings": {
+    "team": "Wayamba",
+    "total_runs": 63,
+    "wickets": 6,
+    "overs": 19.4,
+    "extras": 17,
+    "batting": [
+      {"name": "Dilshan Wijemanna", "runs": 0, "balls": 4, "fours": 0, "sixes": 0, "sr": 0.00, "status": "out"},
+      {"name": "Tharindu peiris", "runs": 8, "balls": 16, "fours": 1, "sixes": 0, "sr": 50.00, "status": "out"},
+      {"name": "Krishan Fernandopulle", "runs": 0, "balls": 1, "fours": 0, "sixes": 0, "sr": 0.00, "status": "out"},
+      {"name": "Prabhashana Silva", "runs": 26, "balls": 61, "fours": 2, "sixes": 0, "sr": 42.62, "status": "not out"},
+      {"name": "Sajan Wijerathna", "runs": 1, "balls": 11, "fours": 0, "sixes": 0, "sr": 9.09, "status": "out"},
+      {"name": "Sadinsha Herath", "runs": 3, "balls": 10, "fours": 0, "sixes": 0, "sr": 30.00, "status": "out"},
+      {"name": "Praneeth Sandaru", "runs": 2, "balls": 5, "fours": 0, "sixes": 0, "sr": 40.00, "status": "out"},
+      {"name": "Methsara Perera", "runs": 6, "balls": 10, "fours": 0, "sixes": 0, "sr": 60.00, "status": "not out"},
+      {"name": "Thilanka Sandeepa", "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "sr": 0.00, "status": "did not bat"},
+      {"name": "Aloka Mihiranga", "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "sr": 0.00, "status": "did not bat"},
+      {"name": "Selvakumar Dilukshan", "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "sr": 0.00, "status": "did not bat"}
+    ],
+    "bowling": [
+      {"name": "Arithassegaran Kinthusan", "overs": 10.0, "maidens": 1, "runs": 25, "wickets": 5, "eco": 2.50},
+      {"name": "Kaveen Senanayaka", "overs": 2.0, "maidens": 0, "runs": 9, "wickets": 0, "eco": 4.50},
+      {"name": "Hachitha Hemapriya", "overs": 4.4, "maidens": 0, "runs": 19, "wickets": 0, "eco": 4.07},
+      {"name": "Harindu Lakshan", "overs": 3.0, "maidens": 0, "runs": 9, "wickets": 1, "eco": 3.00}
+    ]
+  }
+}

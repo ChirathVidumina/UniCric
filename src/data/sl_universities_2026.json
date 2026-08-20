@@ -6,7 +6,7 @@
     "primaryTeam": "UOM",
     "status": "MATCH TELEMETRY ACTIVE",
     "totalTeams": 16,
-    "completedMatches": 0,
+    "completedMatches": 1,
     "totalMatches": 2,
     "groups": [
       {
@@ -31,8 +31,8 @@
           {
             "name": "Wayamba University",
             "code": "WAY",
-            "played": 0,
-            "won": 0,
+            "played": 1,
+            "won": 1,
             "lost": 0,
             "draw": 0,
             "tie": 0,
@@ -40,15 +40,15 @@
             "nrr": "0.000",
             "for": "-",
             "against": "-",
-            "points": 0,
+            "points": 2,
             "last5": []
           },
           {
             "name": "Rajarata University",
             "code": "RAJ",
-            "played": 0,
+            "played": 1,
             "won": 0,
-            "lost": 0,
+            "lost": 1,
             "draw": 0,
             "tie": 0,
             "nr": 0,
@@ -552,8 +552,577 @@
       }
     ]
   },
-  "completedMatchScorecards": {},
-  "players": [],
+  "completedMatchScorecards": {
+    "3": {
+      "match_id": 3,
+      "team_a": "Rajarata",
+      "team_b": "Wayamba",
+      "winner": "Wayamba",
+      "ground": "Wayamba University Grounds, Kuliyapitiya",
+      "date": "2026-08-01",
+      "toss": "Rajarata University opt to bat",
+      "result": "Wayamba University won by 4 wickets",
+      "team_a_innings": {
+        "team": "Rajarata",
+        "total_runs": 62,
+        "wickets": 10,
+        "overs": 28.4,
+        "batting": [
+          {
+            "name": "Menusha Premalal",
+            "runs": 4,
+            "balls": 7,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 57.14,
+            "status": "out"
+          },
+          {
+            "name": "Ishandika Sandaruwan",
+            "runs": 0,
+            "balls": 2,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 0.0,
+            "status": "out"
+          },
+          {
+            "name": "Pavindu Sandeepa",
+            "runs": 11,
+            "balls": 17,
+            "fours": 1,
+            "sixes": 0,
+            "sr": 64.71,
+            "status": "out"
+          },
+          {
+            "name": "Harindu Lakshan",
+            "runs": 7,
+            "balls": 29,
+            "fours": 1,
+            "sixes": 0,
+            "sr": 24.14,
+            "status": "out"
+          },
+          {
+            "name": "Samal Nisitha",
+            "runs": 13,
+            "balls": 51,
+            "fours": 1,
+            "sixes": 0,
+            "sr": 25.49,
+            "status": "out"
+          },
+          {
+            "name": "Hashan Weerakoon",
+            "runs": 0,
+            "balls": 7,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 0.0,
+            "status": "out"
+          },
+          {
+            "name": "Hachitha Hemapriya",
+            "runs": 7,
+            "balls": 25,
+            "fours": 1,
+            "sixes": 0,
+            "sr": 28.0,
+            "status": "out"
+          },
+          {
+            "name": "Kaveen Senanayaka",
+            "runs": 6,
+            "balls": 18,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 33.33,
+            "status": "out"
+          },
+          {
+            "name": "Shashen Madhumalka",
+            "runs": 2,
+            "balls": 7,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 28.57,
+            "status": "out"
+          },
+          {
+            "name": "Sakuna Waduwadeniya",
+            "runs": 3,
+            "balls": 7,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 42.86,
+            "status": "not out"
+          },
+          {
+            "name": "Arithassegaran Kinthusan",
+            "runs": 0,
+            "balls": 2,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 0.0,
+            "status": "out"
+          }
+        ],
+        "bowling": [
+          {
+            "name": "Dilshan Wijemanna",
+            "overs": 6.0,
+            "maidens": 1,
+            "runs": 20,
+            "wickets": 1,
+            "eco": 3.33
+          },
+          {
+            "name": "Thilanka Sandeepa",
+            "overs": 4.0,
+            "maidens": 0,
+            "runs": 11,
+            "wickets": 2,
+            "eco": 2.75
+          },
+          {
+            "name": "Methsara Perera",
+            "overs": 6.0,
+            "maidens": 0,
+            "runs": 7,
+            "wickets": 1,
+            "eco": 1.17
+          },
+          {
+            "name": "Prabhashana Silva",
+            "overs": 5.4,
+            "maidens": 2,
+            "runs": 8,
+            "wickets": 3,
+            "eco": 1.41
+          },
+          {
+            "name": "Aloka Mihiranga",
+            "overs": 3.0,
+            "maidens": 1,
+            "runs": 7,
+            "wickets": 1,
+            "eco": 2.33
+          },
+          {
+            "name": "Selvakumar Dilukshan",
+            "overs": 4.0,
+            "maidens": 1,
+            "runs": 8,
+            "wickets": 2,
+            "eco": 2.0
+          }
+        ]
+      },
+      "team_b_innings": {
+        "team": "Wayamba",
+        "total_runs": 63,
+        "wickets": 6,
+        "overs": 19.4,
+        "batting": [
+          {
+            "name": "Dilshan Wijemanna",
+            "runs": 0,
+            "balls": 4,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 0.0,
+            "status": "out"
+          },
+          {
+            "name": "Tharindu peiris",
+            "runs": 8,
+            "balls": 16,
+            "fours": 1,
+            "sixes": 0,
+            "sr": 50.0,
+            "status": "out"
+          },
+          {
+            "name": "Krishan Fernandopulle",
+            "runs": 0,
+            "balls": 1,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 0.0,
+            "status": "out"
+          },
+          {
+            "name": "Prabhashana Silva",
+            "runs": 26,
+            "balls": 61,
+            "fours": 2,
+            "sixes": 0,
+            "sr": 42.62,
+            "status": "not out"
+          },
+          {
+            "name": "Sajan Wijerathna",
+            "runs": 1,
+            "balls": 11,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 9.09,
+            "status": "out"
+          },
+          {
+            "name": "Sadinsha Herath",
+            "runs": 3,
+            "balls": 10,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 30.0,
+            "status": "out"
+          },
+          {
+            "name": "Praneeth Sandaru",
+            "runs": 2,
+            "balls": 5,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 40.0,
+            "status": "out"
+          },
+          {
+            "name": "Methsara Perera",
+            "runs": 6,
+            "balls": 10,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 60.0,
+            "status": "not out"
+          }
+        ],
+        "bowling": [
+          {
+            "name": "Arithassegaran Kinthusan",
+            "overs": 10.0,
+            "maidens": 1,
+            "runs": 25,
+            "wickets": 5,
+            "eco": 2.5
+          },
+          {
+            "name": "Kaveen Senanayaka",
+            "overs": 2.0,
+            "maidens": 0,
+            "runs": 9,
+            "wickets": 0,
+            "eco": 4.5
+          },
+          {
+            "name": "Hachitha Hemapriya",
+            "overs": 4.4,
+            "maidens": 0,
+            "runs": 19,
+            "wickets": 0,
+            "eco": 4.07
+          },
+          {
+            "name": "Harindu Lakshan",
+            "overs": 3.0,
+            "maidens": 0,
+            "runs": 9,
+            "wickets": 1,
+            "eco": 3.0
+          }
+        ]
+      }
+    }
+  },
+  "players": [
+    {
+      "name": "Menusha Premalal",
+      "team": "RAJ",
+      "runs": 4,
+      "wickets": 0,
+      "catches": 0,
+      "fours": 0,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 0.0,
+      "bb": "0/0"
+    },
+    {
+      "name": "Ishandika Sandaruwan",
+      "team": "RAJ",
+      "runs": 0,
+      "wickets": 0,
+      "catches": 0,
+      "fours": 0,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 0.0,
+      "bb": "0/0"
+    },
+    {
+      "name": "Pavindu Sandeepa",
+      "team": "RAJ",
+      "runs": 11,
+      "wickets": 0,
+      "catches": 0,
+      "fours": 1,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 0.0,
+      "bb": "0/0"
+    },
+    {
+      "name": "Harindu Lakshan",
+      "team": "RAJ",
+      "runs": 7,
+      "wickets": 1,
+      "catches": 0,
+      "fours": 1,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 3.0,
+      "bb": "1/9"
+    },
+    {
+      "name": "Samal Nisitha",
+      "team": "RAJ",
+      "runs": 13,
+      "wickets": 0,
+      "catches": 0,
+      "fours": 1,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 0.0,
+      "bb": "0/0"
+    },
+    {
+      "name": "Hashan Weerakoon",
+      "team": "RAJ",
+      "runs": 0,
+      "wickets": 0,
+      "catches": 0,
+      "fours": 0,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 0.0,
+      "bb": "0/0"
+    },
+    {
+      "name": "Hachitha Hemapriya",
+      "team": "RAJ",
+      "runs": 7,
+      "wickets": 0,
+      "catches": 0,
+      "fours": 1,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 4.4,
+      "bb": "0/0"
+    },
+    {
+      "name": "Kaveen Senanayaka",
+      "team": "RAJ",
+      "runs": 6,
+      "wickets": 0,
+      "catches": 0,
+      "fours": 0,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 2.0,
+      "bb": "0/0"
+    },
+    {
+      "name": "Shashen Madhumalka",
+      "team": "RAJ",
+      "runs": 2,
+      "wickets": 0,
+      "catches": 0,
+      "fours": 0,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 0.0,
+      "bb": "0/0"
+    },
+    {
+      "name": "Sakuna Waduwadeniya",
+      "team": "RAJ",
+      "runs": 3,
+      "wickets": 0,
+      "catches": 0,
+      "fours": 0,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 0.0,
+      "bb": "0/0"
+    },
+    {
+      "name": "Arithassegaran Kinthusan",
+      "team": "RAJ",
+      "runs": 0,
+      "wickets": 5,
+      "catches": 0,
+      "fours": 0,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 10.0,
+      "bb": "5/25"
+    },
+    {
+      "name": "Dilshan Wijemanna",
+      "team": "WAY",
+      "runs": 0,
+      "wickets": 1,
+      "catches": 0,
+      "fours": 0,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 6.0,
+      "bb": "1/20"
+    },
+    {
+      "name": "Thilanka Sandeepa",
+      "team": "WAY",
+      "runs": 0,
+      "wickets": 2,
+      "catches": 0,
+      "fours": 0,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 4.0,
+      "bb": "2/11"
+    },
+    {
+      "name": "Methsara Perera",
+      "team": "WAY",
+      "runs": 6,
+      "wickets": 1,
+      "catches": 0,
+      "fours": 0,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 6.0,
+      "bb": "1/7"
+    },
+    {
+      "name": "Prabhashana Silva",
+      "team": "WAY",
+      "runs": 26,
+      "wickets": 3,
+      "catches": 0,
+      "fours": 2,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 5.4,
+      "bb": "3/8"
+    },
+    {
+      "name": "Aloka Mihiranga",
+      "team": "WAY",
+      "runs": 0,
+      "wickets": 1,
+      "catches": 0,
+      "fours": 0,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 3.0,
+      "bb": "1/7"
+    },
+    {
+      "name": "Selvakumar Dilukshan",
+      "team": "WAY",
+      "runs": 0,
+      "wickets": 2,
+      "catches": 0,
+      "fours": 0,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 4.0,
+      "bb": "2/8"
+    },
+    {
+      "name": "Tharindu peiris",
+      "team": "WAY",
+      "runs": 8,
+      "wickets": 0,
+      "catches": 0,
+      "fours": 1,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 0.0,
+      "bb": "0/0"
+    },
+    {
+      "name": "Krishan Fernandopulle",
+      "team": "WAY",
+      "runs": 0,
+      "wickets": 0,
+      "catches": 0,
+      "fours": 0,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 0.0,
+      "bb": "0/0"
+    },
+    {
+      "name": "Sajan Wijerathna",
+      "team": "WAY",
+      "runs": 1,
+      "wickets": 0,
+      "catches": 0,
+      "fours": 0,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 0.0,
+      "bb": "0/0"
+    },
+    {
+      "name": "Sadinsha Herath",
+      "team": "WAY",
+      "runs": 3,
+      "wickets": 0,
+      "catches": 0,
+      "fours": 0,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 0.0,
+      "bb": "0/0"
+    },
+    {
+      "name": "Praneeth Sandaru",
+      "team": "WAY",
+      "runs": 2,
+      "wickets": 0,
+      "catches": 0,
+      "fours": 0,
+      "sixes": 0,
+      "sr": 0.0,
+      "econ": 0.0,
+      "overs": 0.0,
+      "bb": "0/0"
+    }
+  ],
   "venues": [
     {
       "id": "uom_ground",

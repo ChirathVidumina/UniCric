@@ -1,0 +1,63 @@
+{
+  "match_id": 4,
+  "team_a": "Gampaha Wickramarachchi",
+  "team_b": "Kelaniya",
+  "winner": "Kelaniya",
+  "ground": "University Ground Kelaniya, Kelaniya",
+  "date": "2026-08-01",
+  "toss": "Gampaha Wickramarachchi University opt to bat",
+  "result": "Kelaniya University won by 10 wickets",
+  "team_a_innings": {
+    "team": "Gampaha Wickramarachchi",
+    "total_runs": 83,
+    "wickets": 10,
+    "overs": 22.0,
+    "extras": 15,
+    "batting": [
+      {"name": "Thimira Wanninayake", "runs": 2, "balls": 23, "fours": 0, "sixes": 0, "sr": 8.70, "status": "out"},
+      {"name": "Santhiratheva Elankeethan", "runs": 0, "balls": 1, "fours": 0, "sixes": 0, "sr": 0.00, "status": "out"},
+      {"name": "Keshan Maduranga", "runs": 0, "balls": 8, "fours": 0, "sixes": 0, "sr": 0.00, "status": "out"},
+      {"name": "Isuka Karasnagoda", "runs": 2, "balls": 3, "fours": 0, "sixes": 0, "sr": 66.67, "status": "out"},
+      {"name": "Ravindu De Silva", "runs": 1, "balls": 4, "fours": 0, "sixes": 0, "sr": 25.00, "status": "out"},
+      {"name": "Thisan Weerasinghe", "runs": 11, "balls": 14, "fours": 2, "sixes": 0, "sr": 78.57, "status": "out"},
+      {"name": "Hashan Ranasinghe", "runs": 26, "balls": 25, "fours": 3, "sixes": 2, "sr": 104.00, "status": "out"},
+      {"name": "Nibras Shafi", "runs": 8, "balls": 30, "fours": 2, "sixes": 0, "sr": 26.67, "status": "out"},
+      {"name": "Pathmanathan Kirushanthan", "runs": 13, "balls": 10, "fours": 1, "sixes": 1, "sr": 130.00, "status": "out"},
+      {"name": "Selvaraj Nithuseltan", "runs": 3, "balls": 7, "fours": 0, "sixes": 0, "sr": 42.86, "status": "out"},
+      {"name": "Udayanga Gayashan", "runs": 2, "balls": 7, "fours": 0, "sixes": 0, "sr": 28.57, "status": "not out"}
+    ],
+    "bowling": [
+      {"name": "Nikil Weerasekara", "overs": 8.0, "maidens": 1, "runs": 21, "wickets": 5, "eco": 2.62},
+      {"name": "Duvindu Ranathunga", "overs": 6.0, "maidens": 2, "runs": 10, "wickets": 2, "eco": 1.67},
+      {"name": "Chamath Chathurya", "overs": 2.0, "maidens": 0, "runs": 16, "wickets": 0, "eco": 8.00},
+      {"name": "Mishen Fernando", "overs": 3.0, "maidens": 0, "runs": 21, "wickets": 0, "eco": 7.00},
+      {"name": "Shaveen Anuka", "overs": 3.0, "maidens": 1, "runs": 14, "wickets": 1, "eco": 4.67}
+    ]
+  },
+  "team_b_innings": {
+    "team": "Kelaniya",
+    "total_runs": 86,
+    "wickets": 0,
+    "overs": 5.0,
+    "extras": 4,
+    "batting": [
+      {"name": "Randul Samarahewa", "runs": 26, "balls": 13, "fours": 4, "sixes": 1, "sr": 200.00, "status": "not out"},
+      {"name": "Eranga Jayakodyge", "runs": 56, "balls": 17, "fours": 6, "sixes": 5, "sr": 329.41, "status": "not out"},
+      {"name": "Binaru Ranasinghe", "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "sr": 0.00, "status": "did not bat"},
+      {"name": "Chamath Chathurya", "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "sr": 0.00, "status": "did not bat"},
+      {"name": "Charaka De Silva", "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "sr": 0.00, "status": "did not bat"},
+      {"name": "Deneth Nimsara", "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "sr": 0.00, "status": "did not bat"},
+      {"name": "Dulara Fonseka", "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "sr": 0.00, "status": "did not bat"},
+      {"name": "Duvindu Ranathunga", "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "sr": 0.00, "status": "did not bat"},
+      {"name": "Mishen Fernando", "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "sr": 0.00, "status": "did not bat"},
+      {"name": "Nikil Weerasekara", "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "sr": 0.00, "status": "did not bat"},
+      {"name": "Shaveen Anuka", "runs": 0, "balls": 0, "fours": 0, "sixes": 0, "sr": 0.00, "status": "did not bat"}
+    ],
+    "bowling": [
+      {"name": "Ravindu De Silva", "overs": 1.0, "maidens": 0, "runs": 18, "wickets": 0, "eco": 18.00},
+      {"name": "Keshan Maduranga", "overs": 2.0, "maidens": 0, "runs": 34, "wickets": 0, "eco": 17.00},
+      {"name": "Udayanga Gayashan", "overs": 1.0, "maidens": 0, "runs": 13, "wickets": 0, "eco": 13.00},
+      {"name": "Nibras Shafi", "overs": 1.0, "maidens": 0, "runs": 19, "wickets": 0, "eco": 19.00}
+    ]
+  }
+}

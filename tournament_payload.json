@@ -1,0 +1,1038 @@
+{
+  "tournament_metadata": {
+    "name": "Inter University Cricket Championship - 2026",
+    "total_matches": 32,
+    "total_groups": 4,
+    "groups": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ]
+  },
+  "teams": [
+    {
+      "team_id": "JAF",
+      "name": "Jaffna",
+      "group": "A",
+      "matches": 1,
+      "won": 1,
+      "lost": 0,
+      "pts": 2,
+      "nrr": "+1.500",
+      "for_str": "271/50.0",
+      "against_str": "91/22.3",
+      "last_5": [
+        "W"
+      ],
+      "captain": "Antony Desvin"
+    },
+    {
+      "team_id": "UOM",
+      "name": "Moratuwa",
+      "group": "C",
+      "matches": 1,
+      "won": 1,
+      "lost": 0,
+      "pts": 2,
+      "nrr": "+2.414",
+      "for_str": "115/24.3",
+      "against_str": "114/50.0",
+      "last_5": [
+        "W"
+      ],
+      "captain": "Behan Wickramasinghe"
+    },
+    {
+      "team_id": "PER",
+      "name": "Peradeniya",
+      "group": "C",
+      "matches": 1,
+      "won": 0,
+      "lost": 1,
+      "pts": 0,
+      "nrr": "-2.414",
+      "for_str": "114/50.0",
+      "against_str": "115/24.3",
+      "last_5": [
+        "L"
+      ],
+      "captain": "Nadeeshan Bandara"
+    },
+    {
+      "team_id": "VAV",
+      "name": "Vavuniya",
+      "group": "B",
+      "matches": 1,
+      "won": 0,
+      "lost": 1,
+      "pts": 0,
+      "nrr": "-1.500",
+      "for_str": "91/22.3",
+      "against_str": "271/50.0",
+      "last_5": [
+        "L"
+      ],
+      "captain": "Sahan Siriwardana"
+    },
+    {
+      "team_id": "WAY",
+      "name": "Wayamba",
+      "group": "D",
+      "matches": 1,
+      "won": 1,
+      "lost": 0,
+      "pts": 2,
+      "nrr": "+1.040",
+      "for_str": "63/19.4",
+      "against_str": "62/28.4",
+      "last_5": [
+        "W"
+      ],
+      "captain": "Sadinsha Herath"
+    },
+    {
+      "team_id": "RAJ",
+      "name": "Rajarata",
+      "group": "D",
+      "matches": 1,
+      "won": 0,
+      "lost": 1,
+      "pts": 0,
+      "nrr": "-1.040",
+      "for_str": "62/28.4",
+      "against_str": "63/19.4",
+      "last_5": [
+        "L"
+      ],
+      "captain": "Pavindu Sandeepa"
+    }
+  ],
+  "captains": {
+    "Jaffna": "Antony Desvin",
+    "Moratuwa": "Behan Wickramasinghe",
+    "Peradeniya": "Nadeeshan Bandara",
+    "Vavuniya": "Sahan Siriwardana",
+    "Wayamba": "Sadinsha Herath",
+    "Rajarata": "Pavindu Sandeepa"
+  },
+  "matches_ingested": [
+    {
+      "match_id": 1,
+      "team_a": "Jaffna",
+      "team_b": "Vavuniya",
+      "winner": "Jaffna",
+      "ground": "University of Jaffna, Jaffna",
+      "date": "2026-08-01",
+      "toss": "Jaffna University opt to bat",
+      "result": "Jaffna University won by 180 runs",
+      "team_a_innings": {
+        "team": "Jaffna",
+        "total_runs": 271,
+        "wickets": 10,
+        "overs": 50.0,
+        "batting": [
+          {
+            "name": "Sivakaran Venujan",
+            "runs": 11,
+            "balls": 47,
+            "fours": 1,
+            "sixes": 0,
+            "sr": 23.4,
+            "status": "out"
+          },
+          {
+            "name": "Shanmuganathan Silaxan",
+            "runs": 26,
+            "balls": 28,
+            "fours": 4,
+            "sixes": 1,
+            "sr": 92.86,
+            "status": "out"
+          },
+          {
+            "name": "Ashmika Iddamalgoda",
+            "runs": 79,
+            "balls": 81,
+            "fours": 13,
+            "sixes": 1,
+            "sr": 97.53,
+            "status": "out"
+          },
+          {
+            "name": "Sivaruban Sivanujan",
+            "runs": 33,
+            "balls": 42,
+            "fours": 3,
+            "sixes": 2,
+            "sr": 78.57,
+            "status": "out"
+          },
+          {
+            "name": "Patkunam Mathushan",
+            "runs": 10,
+            "balls": 17,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 58.82,
+            "status": "out"
+          },
+          {
+            "name": "Antony Desvin",
+            "runs": 23,
+            "balls": 31,
+            "fours": 1,
+            "sixes": 2,
+            "sr": 74.19,
+            "status": "out"
+          },
+          {
+            "name": "K Siyanujan",
+            "runs": 14,
+            "balls": 11,
+            "fours": 2,
+            "sixes": 1,
+            "sr": 127.27,
+            "status": "out"
+          },
+          {
+            "name": "Selvanathan Niroshan",
+            "runs": 13,
+            "balls": 6,
+            "fours": 0,
+            "sixes": 2,
+            "sr": 216.67,
+            "status": "out"
+          },
+          {
+            "name": "V Priyankan",
+            "runs": 20,
+            "balls": 15,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 133.33,
+            "status": "not out"
+          },
+          {
+            "name": "Chalithya Millangoda",
+            "runs": 2,
+            "balls": 5,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 40.0,
+            "status": "out"
+          },
+          {
+            "name": "Ebenezer Johanan",
+            "runs": 16,
+            "balls": 17,
+            "fours": 0,
+            "sixes": 1,
+            "sr": 94.12,
+            "status": "out"
+          }
+        ],
+        "bowling": [
+          {
+            "name": "Sithamparalingam Nharthanan",
+            "overs": 6.0,
+            "maidens": 0,
+            "runs": 32,
+            "wickets": 1,
+            "eco": 5.33
+          },
+          {
+            "name": "Mohammed Riwaqi",
+            "overs": 8.0,
+            "maidens": 1,
+            "runs": 38,
+            "wickets": 2,
+            "eco": 4.75
+          },
+          {
+            "name": "Ravichandran Ragulan",
+            "overs": 5.0,
+            "maidens": 0,
+            "runs": 16,
+            "wickets": 1,
+            "eco": 3.2
+          },
+          {
+            "name": "Pahan Bimsara",
+            "overs": 4.0,
+            "maidens": 0,
+            "runs": 39,
+            "wickets": 0,
+            "eco": 9.75
+          },
+          {
+            "name": "Janith Dilshan",
+            "overs": 10.0,
+            "maidens": 0,
+            "runs": 54,
+            "wickets": 1,
+            "eco": 5.4
+          },
+          {
+            "name": "Sahan Siriwardana",
+            "overs": 10.0,
+            "maidens": 0,
+            "runs": 56,
+            "wickets": 1,
+            "eco": 5.6
+          },
+          {
+            "name": "KKirubagaran",
+            "overs": 7.0,
+            "maidens": 1,
+            "runs": 33,
+            "wickets": 1,
+            "eco": 4.71
+          }
+        ]
+      },
+      "team_b_innings": {
+        "team": "Vavuniya",
+        "total_runs": 91,
+        "wickets": 10,
+        "overs": 22.3,
+        "batting": [
+          {
+            "name": "Janith Dilshan",
+            "runs": 1,
+            "balls": 10,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 10.0,
+            "status": "out"
+          },
+          {
+            "name": "EKJfernando",
+            "runs": 3,
+            "balls": 15,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 20.0,
+            "status": "out"
+          },
+          {
+            "name": "Lahiru Welagedara",
+            "runs": 35,
+            "balls": 31,
+            "fours": 4,
+            "sixes": 2,
+            "sr": 112.9,
+            "status": "out"
+          },
+          {
+            "name": "RMID Ranaweera",
+            "runs": 1,
+            "balls": 6,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 16.67,
+            "status": "out"
+          },
+          {
+            "name": "Rashan Wijerathna",
+            "runs": 23,
+            "balls": 28,
+            "fours": 3,
+            "sixes": 1,
+            "sr": 82.14,
+            "status": "out"
+          },
+          {
+            "name": "Sahan Siriwardana",
+            "runs": 3,
+            "balls": 13,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 23.08,
+            "status": "out"
+          },
+          {
+            "name": "Pahan Bimsara",
+            "runs": 0,
+            "balls": 2,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 0.0,
+            "status": "out"
+          },
+          {
+            "name": "Mohammed Riwaqi",
+            "runs": 11,
+            "balls": 9,
+            "fours": 2,
+            "sixes": 0,
+            "sr": 122.22,
+            "status": "out"
+          },
+          {
+            "name": "Sithamparalingam Nharthanan",
+            "runs": 6,
+            "balls": 8,
+            "fours": 1,
+            "sixes": 0,
+            "sr": 75.0,
+            "status": "out"
+          },
+          {
+            "name": "KKirubagaran",
+            "runs": 1,
+            "balls": 14,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 7.14,
+            "status": "out"
+          },
+          {
+            "name": "Ravichandran Ragulan",
+            "runs": 0,
+            "balls": 1,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 0.0,
+            "status": "not out"
+          }
+        ],
+        "bowling": [
+          {
+            "name": "Antony Desvin",
+            "overs": 6.0,
+            "maidens": 3,
+            "runs": 8,
+            "wickets": 3,
+            "eco": 1.33
+          },
+          {
+            "name": "Chalithya Millangoda",
+            "overs": 3.0,
+            "maidens": 0,
+            "runs": 20,
+            "wickets": 1,
+            "eco": 6.67
+          },
+          {
+            "name": "K Siyanujan",
+            "overs": 2.0,
+            "maidens": 0,
+            "runs": 20,
+            "wickets": 0,
+            "eco": 10.0
+          },
+          {
+            "name": "Selvanathan Niroshan",
+            "overs": 5.3,
+            "maidens": 1,
+            "runs": 16,
+            "wickets": 4,
+            "eco": 2.91
+          },
+          {
+            "name": "Sivaruban Sivanujan",
+            "overs": 1.0,
+            "maidens": 0,
+            "runs": 9,
+            "wickets": 0,
+            "eco": 9.0
+          },
+          {
+            "name": "Patkunam Mathushan",
+            "overs": 3.0,
+            "maidens": 1,
+            "runs": 11,
+            "wickets": 1,
+            "eco": 3.67
+          },
+          {
+            "name": "Ashmika Iddamalgoda",
+            "overs": 2.0,
+            "maidens": 0,
+            "runs": 7,
+            "wickets": 1,
+            "eco": 3.5
+          }
+        ]
+      }
+    },
+    {
+      "match_id": 2,
+      "team_a": "Peradeniya",
+      "team_b": "Moratuwa",
+      "winner": "Moratuwa",
+      "ground": "University Of Moratuwa Ground, Moratuwa",
+      "date": "2026-08-01",
+      "toss": "Peradeniya University opt to bat",
+      "result": "Moratuwa University won by 5 wickets",
+      "team_a_innings": {
+        "team": "Peradeniya",
+        "total_runs": 114,
+        "wickets": 10,
+        "overs": 46.0,
+        "batting": [
+          {
+            "name": "Nadeeshan Bandara",
+            "runs": 28,
+            "balls": 49,
+            "fours": 2,
+            "sixes": 0,
+            "sr": 57.14,
+            "status": "out"
+          },
+          {
+            "name": "Sahan Arumasinghe",
+            "runs": 0,
+            "balls": 3,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 0.0,
+            "status": "out"
+          },
+          {
+            "name": "Maneesha Nilanduwa",
+            "runs": 2,
+            "balls": 14,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 14.29,
+            "status": "out"
+          },
+          {
+            "name": "Pulitha Sarathchandra",
+            "runs": 26,
+            "balls": 70,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 37.14,
+            "status": "out"
+          },
+          {
+            "name": "G P Rashmika",
+            "runs": 12,
+            "balls": 46,
+            "fours": 1,
+            "sixes": 0,
+            "sr": 26.09,
+            "status": "out"
+          },
+          {
+            "name": "Janeesha Hansaka",
+            "runs": 2,
+            "balls": 4,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 50.0,
+            "status": "out"
+          },
+          {
+            "name": "Nahularaja Kathurshan",
+            "runs": 19,
+            "balls": 46,
+            "fours": 3,
+            "sixes": 0,
+            "sr": 41.3,
+            "status": "out"
+          },
+          {
+            "name": "Vijayan Yashwinshan",
+            "runs": 10,
+            "balls": 23,
+            "fours": 1,
+            "sixes": 0,
+            "sr": 43.48,
+            "status": "out"
+          },
+          {
+            "name": "Isuru Kuruneru",
+            "runs": 5,
+            "balls": 10,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 50.0,
+            "status": "not out"
+          },
+          {
+            "name": "Deshan Ekanayake",
+            "runs": 2,
+            "balls": 6,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 33.33,
+            "status": "out"
+          },
+          {
+            "name": "Kavindu Bandara",
+            "runs": 0,
+            "balls": 6,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 0.0,
+            "status": "out"
+          }
+        ],
+        "bowling": [
+          {
+            "name": "Muftee Mysan",
+            "overs": 6.0,
+            "maidens": 1,
+            "runs": 20,
+            "wickets": 0,
+            "eco": 3.33
+          },
+          {
+            "name": "Kelum Hirudika",
+            "overs": 4.0,
+            "maidens": 0,
+            "runs": 10,
+            "wickets": 1,
+            "eco": 2.5
+          },
+          {
+            "name": "Behan Wickramasinghe",
+            "overs": 4.0,
+            "maidens": 0,
+            "runs": 7,
+            "wickets": 2,
+            "eco": 1.75
+          },
+          {
+            "name": "Sanithu Wijerathne",
+            "overs": 8.0,
+            "maidens": 3,
+            "runs": 15,
+            "wickets": 1,
+            "eco": 1.88
+          },
+          {
+            "name": "Kevindu Perera",
+            "overs": 6.0,
+            "maidens": 1,
+            "runs": 16,
+            "wickets": 3,
+            "eco": 2.67
+          },
+          {
+            "name": "Yasiru Ruwantha",
+            "overs": 10.0,
+            "maidens": 0,
+            "runs": 25,
+            "wickets": 1,
+            "eco": 2.5
+          },
+          {
+            "name": "Lahiru Amarasekara",
+            "overs": 8.0,
+            "maidens": 1,
+            "runs": 20,
+            "wickets": 1,
+            "eco": 2.5
+          }
+        ]
+      },
+      "team_b_innings": {
+        "team": "Moratuwa",
+        "total_runs": 115,
+        "wickets": 5,
+        "overs": 24.3,
+        "batting": [
+          {
+            "name": "Sathira Vikasitha",
+            "runs": 48,
+            "balls": 63,
+            "fours": 6,
+            "sixes": 0,
+            "sr": 76.19,
+            "status": "out"
+          },
+          {
+            "name": "Devdun Nethusahan",
+            "runs": 9,
+            "balls": 25,
+            "fours": 1,
+            "sixes": 0,
+            "sr": 36.0,
+            "status": "out"
+          },
+          {
+            "name": "Muftee Mysan",
+            "runs": 33,
+            "balls": 28,
+            "fours": 4,
+            "sixes": 1,
+            "sr": 117.86,
+            "status": "out"
+          },
+          {
+            "name": "Lahiru Amarasekara",
+            "runs": 0,
+            "balls": 4,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 0.0,
+            "status": "out"
+          },
+          {
+            "name": "Behan Wickramasinghe",
+            "runs": 10,
+            "balls": 16,
+            "fours": 2,
+            "sixes": 0,
+            "sr": 62.5,
+            "status": "not out"
+          },
+          {
+            "name": "Kevindu Perera",
+            "runs": 8,
+            "balls": 9,
+            "fours": 0,
+            "sixes": 1,
+            "sr": 88.89,
+            "status": "out"
+          },
+          {
+            "name": "Sasith Rambukwella",
+            "runs": 1,
+            "balls": 2,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 50.0,
+            "status": "not out"
+          }
+        ],
+        "bowling": [
+          {
+            "name": "Isuru Kuruneru",
+            "overs": 6.0,
+            "maidens": 1,
+            "runs": 24,
+            "wickets": 0,
+            "eco": 4.0
+          },
+          {
+            "name": "Nadeeshan Bandara",
+            "overs": 2.0,
+            "maidens": 0,
+            "runs": 20,
+            "wickets": 0,
+            "eco": 10.0
+          },
+          {
+            "name": "Vijayan Yashwinshan",
+            "overs": 2.0,
+            "maidens": 0,
+            "runs": 14,
+            "wickets": 0,
+            "eco": 7.0
+          },
+          {
+            "name": "Janeesha Hansaka",
+            "overs": 1.0,
+            "maidens": 0,
+            "runs": 9,
+            "wickets": 0,
+            "eco": 9.0
+          },
+          {
+            "name": "Deshan Ekanayake",
+            "overs": 7.0,
+            "maidens": 1,
+            "runs": 20,
+            "wickets": 2,
+            "eco": 2.86
+          },
+          {
+            "name": "Kavindu Bandara",
+            "overs": 6.3,
+            "maidens": 1,
+            "runs": 28,
+            "wickets": 3,
+            "eco": 4.31
+          }
+        ]
+      }
+    },
+    {
+      "match_id": 3,
+      "team_a": "Rajarata",
+      "team_b": "Wayamba",
+      "winner": "Wayamba",
+      "ground": "Wayamba University Grounds, Kuliyapitiya",
+      "date": "2026-08-01",
+      "toss": "Rajarata University opt to bat",
+      "result": "Wayamba University won by 4 wickets",
+      "team_a_innings": {
+        "team": "Rajarata",
+        "total_runs": 62,
+        "wickets": 10,
+        "overs": 28.4,
+        "batting": [
+          {
+            "name": "Menusha Premalal",
+            "runs": 4,
+            "balls": 7,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 57.14,
+            "status": "out"
+          },
+          {
+            "name": "Ishandika Sandaruwan",
+            "runs": 0,
+            "balls": 2,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 0.0,
+            "status": "out"
+          },
+          {
+            "name": "Pavindu Sandeepa",
+            "runs": 11,
+            "balls": 17,
+            "fours": 1,
+            "sixes": 0,
+            "sr": 64.71,
+            "status": "out"
+          },
+          {
+            "name": "Harindu Lakshan",
+            "runs": 7,
+            "balls": 29,
+            "fours": 1,
+            "sixes": 0,
+            "sr": 24.14,
+            "status": "out"
+          },
+          {
+            "name": "Samal Nisitha",
+            "runs": 13,
+            "balls": 51,
+            "fours": 1,
+            "sixes": 0,
+            "sr": 25.49,
+            "status": "out"
+          },
+          {
+            "name": "Hashan Weerakoon",
+            "runs": 0,
+            "balls": 7,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 0.0,
+            "status": "out"
+          },
+          {
+            "name": "Hachitha Hemapriya",
+            "runs": 7,
+            "balls": 25,
+            "fours": 1,
+            "sixes": 0,
+            "sr": 28.0,
+            "status": "out"
+          },
+          {
+            "name": "Kaveen Senanayaka",
+            "runs": 6,
+            "balls": 18,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 33.33,
+            "status": "out"
+          },
+          {
+            "name": "Shashen Madhumalka",
+            "runs": 2,
+            "balls": 7,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 28.57,
+            "status": "out"
+          },
+          {
+            "name": "Sakuna Waduwadeniya",
+            "runs": 3,
+            "balls": 7,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 42.86,
+            "status": "not out"
+          },
+          {
+            "name": "Arithassegaran Kinthusan",
+            "runs": 0,
+            "balls": 2,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 0.0,
+            "status": "out"
+          }
+        ],
+        "bowling": [
+          {
+            "name": "Dilshan Wijemanna",
+            "overs": 6.0,
+            "maidens": 1,
+            "runs": 20,
+            "wickets": 1,
+            "eco": 3.33
+          },
+          {
+            "name": "Thilanka Sandeepa",
+            "overs": 4.0,
+            "maidens": 0,
+            "runs": 11,
+            "wickets": 2,
+            "eco": 2.75
+          },
+          {
+            "name": "Methsara Perera",
+            "overs": 6.0,
+            "maidens": 0,
+            "runs": 7,
+            "wickets": 1,
+            "eco": 1.17
+          },
+          {
+            "name": "Prabhashana Silva",
+            "overs": 5.4,
+            "maidens": 2,
+            "runs": 8,
+            "wickets": 3,
+            "eco": 1.41
+          },
+          {
+            "name": "Aloka Mihiranga",
+            "overs": 3.0,
+            "maidens": 1,
+            "runs": 7,
+            "wickets": 1,
+            "eco": 2.33
+          },
+          {
+            "name": "Selvakumar Dilukshan",
+            "overs": 4.0,
+            "maidens": 1,
+            "runs": 8,
+            "wickets": 2,
+            "eco": 2.0
+          }
+        ]
+      },
+      "team_b_innings": {
+        "team": "Wayamba",
+        "total_runs": 63,
+        "wickets": 6,
+        "overs": 19.4,
+        "batting": [
+          {
+            "name": "Dilshan Wijemanna",
+            "runs": 0,
+            "balls": 4,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 0.0,
+            "status": "out"
+          },
+          {
+            "name": "Tharindu peiris",
+            "runs": 8,
+            "balls": 16,
+            "fours": 1,
+            "sixes": 0,
+            "sr": 50.0,
+            "status": "out"
+          },
+          {
+            "name": "Krishan Fernandopulle",
+            "runs": 0,
+            "balls": 1,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 0.0,
+            "status": "out"
+          },
+          {
+            "name": "Prabhashana Silva",
+            "runs": 26,
+            "balls": 61,
+            "fours": 2,
+            "sixes": 0,
+            "sr": 42.62,
+            "status": "not out"
+          },
+          {
+            "name": "Sajan Wijerathna",
+            "runs": 1,
+            "balls": 11,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 9.09,
+            "status": "out"
+          },
+          {
+            "name": "Sadinsha Herath",
+            "runs": 3,
+            "balls": 10,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 30.0,
+            "status": "out"
+          },
+          {
+            "name": "Praneeth Sandaru",
+            "runs": 2,
+            "balls": 5,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 40.0,
+            "status": "out"
+          },
+          {
+            "name": "Methsara Perera",
+            "runs": 6,
+            "balls": 10,
+            "fours": 0,
+            "sixes": 0,
+            "sr": 60.0,
+            "status": "not out"
+          }
+        ],
+        "bowling": [
+          {
+            "name": "Arithassegaran Kinthusan",
+            "overs": 10.0,
+            "maidens": 1,
+            "runs": 25,
+            "wickets": 5,
+            "eco": 2.5
+          },
+          {
+            "name": "Kaveen Senanayaka",
+            "overs": 2.0,
+            "maidens": 0,
+            "runs": 9,
+            "wickets": 0,
+            "eco": 4.5
+          },
+          {
+            "name": "Hachitha Hemapriya",
+            "overs": 4.4,
+            "maidens": 0,
+            "runs": 19,
+            "wickets": 0,
+            "eco": 4.07
+          },
+          {
+            "name": "Harindu Lakshan",
+            "overs": 3.0,
+            "maidens": 0,
+            "runs": 9,
+            "wickets": 1,
+            "eco": 3.0
+          }
+        ]
+      }
+    }
+  ]
+}

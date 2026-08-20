@@ -28,7 +28,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://unicric-backend.onrender.com';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 export default function UOMOppositionScout() {
   const navigate = useNavigate();
@@ -96,7 +96,12 @@ export default function UOMOppositionScout() {
 
         if (schedRes && schedRes.ok) {
           const schedData = await schedRes.json();
-          setScheduleTimeline(schedData.schedule || []);
+          const allSchedule = schedData.schedule || [];
+          const uomSchedule = allSchedule.filter(m => {
+            const title = String(m.opponentName || m.title || '').toLowerCase();
+            return title.includes('moratuwa') || title.includes('uom');
+          });
+          setScheduleTimeline(uomSchedule);
         } else {
           setScheduleTimeline([]);
         }
@@ -204,6 +209,16 @@ export default function UOMOppositionScout() {
         if (res.ok) {
           const data = await res.json();
           const plist = data.players || [];
+
+          // Sort players so batters appear before bowlers
+          plist.sort((a, b) => {
+            const aIsBowler = (a.role || '').toLowerCase().includes('bowler');
+            const bIsBowler = (b.role || '').toLowerCase().includes('bowler');
+            if (aIsBowler && !bIsBowler) return 1;
+            if (!aIsBowler && bIsBowler) return -1;
+            return 0;
+          });
+
           setOpponentPlayers(plist);
           if (plist.length > 0) {
             setSelectedPlayerId(plist[0].id);
@@ -266,11 +281,11 @@ export default function UOMOppositionScout() {
           let weakness = data.primaryWeakness;
           if (!weakness || weakness === "N/A") {
               if (data.player?.name === "Ashmika Iddamalgoda") {
-                  weakness = "Vulnerable to left-arm spin & wide yorkers outside off";
+                  weakness = "Vulnerable to left-arm spin & wide yorkers outside off. Aggressive boundary hitter (13 Fours, 1 Six); bowl tight lengths. Scored 79 runs @ 97.53 SR in the previous game.";
               } else if (data.player?.name === "Lahiru Welagedara") {
                   weakness = "Struggles with short-pitched deliveries directed at the body.";
               } else if (data.player?.name === "Sivaruban Sivanujan") {
-                  weakness = "Prone to edging away-swinging deliveries early in the innings.";
+                  weakness = "Prone to edging away-swinging deliveries early in the innings. Dangerous when set (3 Fours, 2 Sixes); restrict width. Scored 33 runs @ 78.57 SR.";
               } else if (data.player?.name === "Shanmuganathan Silaxan") {
                   weakness = "Low strike rotation against disciplined off-spin.";
               } else if (data.player?.name === "Rashan Wijerathna") {
@@ -347,57 +362,137 @@ export default function UOMOppositionScout() {
       return;
     }
 
+    
+  const FALLBACK_SCORECARDS = {
+    "m1": {
+      title: "Jaffna vs Vavuniya",
+      date: "2026-07-28",
+      venue: "University Of Jaffna Ground, Jaffna",
+      result: "Jaffna University won by 180 runs",
+      innings1: {
+        team: "JAFFNA UNIVERSITY",
+        score: "271/10",
+        overs: "50.0 OVERS",
+        batting: [
+          { player: 'Ashmika Iddamalgoda', r: 79, b: '81', fours: 13, sixes: 1, sr: '97.53', dismissal: 'c L Welagedara b R Ragulan' },
+          { player: 'N Sivaruban', r: 33, b: '42', fours: 3, sixes: 2, sr: '78.57', dismissal: 'lbw b K Kirubagaran' },
+          { player: 'K Shanmuganathan', r: 26, b: '28', fours: 4, sixes: 1, sr: '92.86', dismissal: 'b M Riwaqi' }
+        ],
+        bowling: [
+          { bowler: 'M Riwaqi', o: '8.0', m: '0', r: '38', w: '2', econ: '4.75' },
+          { bowler: 'S Nharthanan', o: '6.0', m: '0', r: '32', w: '1', econ: '5.33' },
+          { bowler: 'R Ragulan', o: '5.0', m: '0', r: '16', w: '1', econ: '3.20' }
+        ]
+      },
+      innings2: {
+        team: "VAVUNIYA UNIVERSITY",
+        score: "91/10",
+        overs: "22.3 OVERS",
+        batting: [
+          { player: 'Lahiru Welagedara', r: 35, b: '31', fours: 4, sixes: 2, sr: '112.9', dismissal: 'c P Mathushan b C Millangoda' },
+          { player: 'Rashan Wijerathna', r: 23, b: '28', fours: 3, sixes: 1, sr: '82.14', dismissal: 'b S Niroshan' },
+          { player: 'M Riwaqi', r: 11, b: '9', fours: 2, sixes: 0, sr: '122.2', dismissal: 'c K Siyanujan b S Niroshan' }
+        ],
+        bowling: [
+          { bowler: 'S Niroshan', o: '5.3', m: '0', r: '16', w: '4', econ: '2.91' },
+          { bowler: 'A Desvin', o: '6.0', m: '0', r: '8', w: '3', econ: '1.33' },
+          { bowler: 'P Mathushan', o: '3.0', m: '0', r: '11', w: '1', econ: '3.67' }
+        ]
+      }
+    },
+    "m2": {
+      title: "Peradeniya vs Moratuwa",
+      date: "2026-08-01",
+      venue: "University Of Moratuwa Ground, Moratuwa",
+      result: "MORATUWA UNIVERSITY WON BY 5 WICKETS",
+      innings1: {
+        team: "PERADENIYA UNIVERSITY",
+        score: "114/10",
+        overs: "46.0 OVERS",
+        batting: [
+          { player: 'Nadeeshan Bandara', r: 28, b: '49', fours: 2, sixes: 0, sr: '57.14', dismissal: 'c S Wijerathne b K Perera' },
+          { player: 'Pulitha Sarathchandra', r: 26, b: '70', fours: 0, sixes: 0, sr: '37.14', dismissal: 'c K Perera b S Wijerathne' },
+          { player: 'Nahularaja Kathurshan', r: 19, b: '46', fours: 3, sixes: 0, sr: '41.30', dismissal: 'b K Bandara' }
+        ],
+        bowling: [
+          { bowler: 'Kevindu Perera', o: '6.0', m: '1', r: '16', w: '3', econ: '2.67' },
+          { bowler: 'Behan Wickramasinghe', o: '4.0', m: '0', r: '7', w: '2', econ: '1.75' },
+          { bowler: 'Kelum Hirudika', o: '4.0', m: '1', r: '10', w: '1', econ: '2.50' }
+        ]
+      },
+      innings2: {
+        team: "MORATUWA UNIVERSITY",
+        score: "115/5",
+        overs: "24.3 OVERS",
+        batting: [
+          { player: 'Sathira Vikasitha', r: 48, b: '63', fours: 6, sixes: 0, sr: '76.19', dismissal: 'lbw b K Bandara' },
+          { player: 'Muftee Mysan', r: 33, b: '28', fours: 4, sixes: 1, sr: '117.86', dismissal: 'c G Rashmika b D Ekanayake' },
+          { player: 'Behan Wickramasinghe', r: 10, b: '16', fours: 2, sixes: 0, sr: '62.50', dismissal: 'not out' }
+        ],
+        bowling: [
+          { bowler: 'Kavindu Bandara', o: '6.3', m: '0', r: '28', w: '3', econ: '4.31' },
+          { bowler: 'Deshan Ekanayake', o: '7.0', m: '0', r: '20', w: '2', econ: '2.86' }
+        ]
+      }
+    },
+    "m3": {
+      title: "Rajarata vs Wayamba",
+      date: "2026-08-01",
+      venue: "Wayamba University Grounds, Kuliyapitiya",
+      result: "WAYAMBA UNIVERSITY WON BY 4 WICKETS",
+      innings1: {
+        team: "RAJARATA UNIVERSITY",
+        score: "62/10",
+        overs: "28.4 OVERS",
+        batting: [
+          { player: 'Samal Nisitha', r: 13, b: '51', fours: 0, sixes: 0, sr: '25.49', dismissal: 'b S Dilukshan' },
+          { player: 'Pavindu Sandeepa', r: 11, b: '17', fours: 1, sixes: 0, sr: '64.70', dismissal: 'lbw b P Silva' },
+          { player: 'Harindu Lakshan', r: 7, b: '29', fours: 0, sixes: 0, sr: '24.13', dismissal: 'c T Peiris b T Sandeepa' }
+        ],
+        bowling: [
+          { bowler: 'Prabhashana Silva', o: '5.4', m: '1', r: '8', w: '3', econ: '1.41' },
+          { bowler: 'Selvakumar Dilukshan', o: '4.0', m: '1', r: '8', w: '2', econ: '2.00' },
+          { bowler: 'Thilanka Sandeepa', o: '4.0', m: '0', r: '11', w: '2', econ: '2.75' }
+        ]
+      },
+      innings2: {
+        team: "WAYAMBA UNIVERSITY",
+        score: "63/6",
+        overs: "19.4 OVERS",
+        batting: [
+          { player: 'Prabhashana Silva', r: 26, b: '61', fours: 2, sixes: 0, sr: '42.62', dismissal: 'c P Sandeepa b A Kinthusan' },
+          { player: 'Tharindu peiris', r: 8, b: '16', fours: 1, sixes: 0, sr: '50.00', dismissal: 'lbw b A Kinthusan' },
+          { player: 'Methsara Perera', r: 6, b: '10', fours: 1, sixes: 0, sr: '60.00', dismissal: 'not out' }
+        ],
+        bowling: [
+          { bowler: 'Arithassegaran Kinthusan', o: '10.0', m: '2', r: '25', w: '5', econ: '2.50' },
+          { bowler: 'Harindu Lakshan', o: '3.0', m: '0', r: '9', w: '1', econ: '3.00' },
+          { bowler: 'Hachitha Hemapriya', o: '4.4', m: '0', r: '19', w: '0', econ: '4.09' }
+        ]
+      }
+    }
+  };
+
+    
     const fetchScorecard = async () => {
       setLoadingScorecard(true);
       try {
+        if (FALLBACK_SCORECARDS[selectedCompletedMatchId]) {
+           setCompletedScorecard(FALLBACK_SCORECARDS[selectedCompletedMatchId]);
+           setLoadingScorecard(false);
+           return;
+        }
+        
         const res = await fetch(`${API_URL}/api/scorecards/${selectedCompletedMatchId}`);
         if (res.ok) {
           const data = await res.json();
           let scorecardData = data.scorecard;
           
-          // Inject mock data for demonstration if backend returns incomplete structure
-          if (scorecardData && !scorecardData.innings2) {
-            scorecardData = {
-              title: data.scorecard.title || "UoJ vs UoV - League Match",
-              date: data.scorecard.date || "14 Aug 2026",
-              venue: data.scorecard.venue || "Unknown Venue",
-              result: "JAFFNA UNIVERSITY WON BY 180 RUNS",
-              innings1: {
-                team: "JAFFNA UNIVERSITY",
-                score: "271/10",
-                overs: "50.0",
-                batting: [
-                  { batter: "Ashmika Iddamalgoda", r: 79, b: 81, fours: 8, sixes: 2, sr: "97.53", dismissal: "c Fielder b Bowler" },
-                  { batter: "N Sivaruban", r: 33, b: 42, fours: 3, sixes: 0, sr: "78.57", dismissal: "lbw b Bowler" },
-                  { batter: "K Shanmuganathan", r: 26, b: 28, fours: 2, sixes: 0, sr: "92.85", dismissal: "b Bowler" }
-                ],
-                bowling: [
-                  { bowler: "Riwaqi", o: "8.0", m: 0, r: 38, w: 2, econ: "4.75" },
-                  { bowler: "Nharthanan", o: "6.0", m: 0, r: 32, w: 1, econ: "5.33" },
-                  { bowler: "Ragulan", o: "5.0", m: 0, r: 16, w: 1, econ: "3.20" }
-                ]
-              },
-              innings2: {
-                team: "VAVUNIYA UNIVERSITY",
-                score: "91/10",
-                overs: "22.3",
-                batting: [
-                  { batter: "Lahiru Welagedara", r: 35, b: 31, fours: 4, sixes: 1, sr: "112.90", dismissal: "c Fielder b Bowler" },
-                  { batter: "Rashan Wijerathna", r: 23, b: 28, fours: 2, sixes: 0, sr: "82.14", dismissal: "b Bowler" },
-                  { batter: "Riwaqi", r: 11, b: 9, fours: 1, sixes: 0, sr: "122.22", dismissal: "run out" }
-                ],
-                bowling: [
-                  { bowler: "R Niroshan", o: "5.3", m: 1, r: 16, w: 4, econ: "2.90" },
-                  { bowler: "C Desvin", o: "6.0", m: 0, r: 8, w: 3, econ: "1.33" },
-                  { bowler: "P Mathushan", o: "3.0", m: 0, r: 11, w: 1, econ: "3.66" }
-                ]
-              }
-            };
+          if (scorecardData) {
+            setCompletedScorecard(scorecardData);
+          } else {
+            setCompletedScorecard(null);
           }
-          
-          setCompletedScorecard(scorecardData || null);
-        } else {
-          setCompletedScorecard(null);
         }
       } catch (err) {
         console.error(`Error fetching scorecard ${selectedCompletedMatchId}:`, err);
@@ -476,74 +571,142 @@ export default function UOMOppositionScout() {
             </div>
           ) : scheduleTimeline.length > 0 ? (
             <div className="mobile-col-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem' }}>
-              {scheduleTimeline.map((item) => (
-                <div 
-                  key={item.id}
-                  style={{
-                    background: item.status === 'NEXT_TARGET' ? 'rgba(220, 38, 38, 0.15)' : 'rgba(15, 23, 42, 0.6)',
-                    border: item.status === 'NEXT_TARGET' ? '2px solid #dc2626' : '1px solid var(--cric-border)',
-                    borderRadius: '10px',
-                    padding: '1.2rem',
-                    position: 'relative',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                      <span style={{ fontSize: '0.75rem', fontWeight: '800', color: item.status === 'COMPLETED' ? 'var(--cric-green)' : item.status === 'NEXT_TARGET' ? '#dc2626' : 'var(--cric-blue)' }}>
-                        {item.status === 'COMPLETED' ? '✓ COMPLETED MATCH' : item.status === 'NEXT_TARGET' ? '🔥 NEXT TARGET MATCH' : '⏳ UPCOMING'}
-                      </span>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--cric-text-sub)', fontWeight: '700' }}>{item.dateLabel}</span>
-                    </div>
-
-                    <h3 style={{ fontSize: '1.15rem', fontWeight: '800', marginBottom: '0.35rem' }}>
-                      {item.opponentName}
-                    </h3>
-
-                    <div style={{ fontSize: '0.85rem', color: 'var(--cric-text-sub)', display: 'flex', flexDirection: 'column', gap: '0.35rem', marginBottom: '1rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                        <MapPin size={14} color={item.isHome ? 'var(--cric-green)' : '#dc2626'} />
-                        <span>{item.venue} ({item.isHome ? 'Home' : 'Away'})</span>
-                      </div>
-                      <div style={{ fontWeight: '700', color: item.status === 'COMPLETED' ? 'var(--cric-green)' : 'var(--cric-text-main)' }}>
-                        {item.scoreSummary || item.result}
-                      </div>
-                    </div>
-                  </div>
-
-                  {item.status === 'COMPLETED' ? (
-                    <button 
-                      onClick={() => {
-                        setShowFullScorecardView(false);
-                        setSelectedCompletedMatchId(item.id);
-                      }}
-                      style={{
-                        width: '100%',
-                        padding: '0.6rem 1rem',
-                        background: 'rgba(16, 185, 129, 0.15)',
-                        border: '1px solid var(--cric-green)',
-                        borderRadius: '6px',
-                        color: 'var(--cric-green)',
-                        fontWeight: '800',
-                        fontSize: '0.8rem',
-                        cursor: 'pointer',
+              {scheduleTimeline.map((item) => {
+                if (item.status === 'COMPLETED') {
+                  return (
+                    <div 
+                      key={item.id}
+                      style={{ 
+                        background: 'rgba(16, 185, 129, 0.08)', 
+                        border: '1px solid rgba(16, 185, 129, 0.3)', 
+                        borderRadius: '10px', 
+                        padding: '1.1rem',
                         display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.4rem'
+                        flexDirection: 'column',
+                        justifyContent: 'space-between'
                       }}
                     >
-                      <FileText size={15} /> View Scorecard Summary
-                    </button>
-                  ) : (
-                    <div style={{ fontSize: '0.75rem', color: 'var(--cric-text-sub)', textAlign: 'center', fontStyle: 'italic', background: 'rgba(255,255,255,0.03)', padding: '0.4rem', borderRadius: '4px' }}>
-                      Scouting Telemetry Ready
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                          <span style={{ fontSize: '0.75rem', fontWeight: '900', color: '#10b981', background: 'rgba(16, 185, 129, 0.2)', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
+                            ✓ COMPLETED MATCH
+                          </span>
+                          <span style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: '700' }}>{item.dateLabel}</span>
+                        </div>
+                        <h3 style={{ fontSize: '1.05rem', fontWeight: '800', marginBottom: '0.3rem', color: 'white' }}>
+                          {item.opponentName}
+                        </h3>
+                        <div style={{ fontSize: '0.85rem', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.2rem' }}>
+                          <MapPin size={14} color="#10b981" /> {item.venue} ({item.isHome ? 'Home' : 'Away'})
+                        </div>
+                        <div style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.2rem', marginBottom: '1rem' }}>
+                          {item.scoreSummary || item.result}
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => {
+                          setShowFullScorecardView(false);
+                          setSelectedCompletedMatchId(item.id);
+                        }}
+                        style={{
+                          width: '100%',
+                          padding: '0.6rem 1rem',
+                          background: 'rgba(16, 185, 129, 0.15)',
+                          border: '1px solid var(--cric-green)',
+                          borderRadius: '6px',
+                          color: 'var(--cric-green)',
+                          fontWeight: '800',
+                          fontSize: '0.8rem',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.4rem'
+                        }}
+                      >
+                        <FileText size={15} /> View Scorecard Summary
+                      </button>
                     </div>
-                  )}
-                </div>
-              ))}
+                  );
+                } else if (item.status === 'NEXT_TARGET') {
+                  return (
+                    <div 
+                      key={item.id}
+                      style={{ 
+                        background: 'linear-gradient(135deg, rgba(220, 38, 38, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%)', 
+                        border: '2px solid #dc2626', 
+                        borderRadius: '10px', 
+                        padding: '1.1rem',
+                        boxShadow: '0 4px 15px rgba(220, 38, 38, 0.2)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between'
+                      }}
+                    >
+                      <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                          <span style={{ fontSize: '0.75rem', fontWeight: '900', color: '#dc2626', background: 'rgba(220, 38, 38, 0.3)', padding: '0.15rem 0.5rem', borderRadius: '4px', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                            <Flame size={12} /> TARGET MATCH
+                          </span>
+                          <span style={{ fontSize: '0.8rem', color: '#fbbf24', fontWeight: '800' }}>{item.dateLabel}</span>
+                        </div>
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: '900', marginBottom: '0.3rem', color: 'white' }}>
+                          {item.opponentName}
+                        </h3>
+                        <div style={{ fontSize: '0.85rem', color: '#e2e8f0', display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.75rem' }}>
+                          <MapPin size={14} color="#ef4444" /> {item.venue} ({item.isHome ? 'Home' : 'Away'})
+                        </div>
+                      </div>
+                      <div
+                        onClick={() => navigate('/analytics')}
+                        style={{
+                          display: 'inline-flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          gap: '0.4rem',
+                          background: '#dc2626',
+                          color: 'white',
+                          padding: '0.6rem 1rem',
+                          borderRadius: '6px',
+                          fontSize: '0.8rem',
+                          fontWeight: '800',
+                          cursor: 'pointer',
+                          width: '100%'
+                        }}
+                      >
+                        <Target size={14} /> Analyze Opponent Data <ArrowRight size={14} />
+                      </div>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div 
+                      key={item.id}
+                      style={{ 
+                        background: 'rgba(59, 130, 246, 0.08)', 
+                        border: '1px solid rgba(59, 130, 246, 0.3)', 
+                        borderRadius: '10px', 
+                        padding: '1.1rem',
+                        display: 'flex',
+                        flexDirection: 'column'
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                        <span style={{ fontSize: '0.75rem', fontWeight: '900', color: '#60a5fa', background: 'rgba(59, 130, 246, 0.2)', padding: '0.15rem 0.5rem', borderRadius: '4px' }}>
+                          ⏳ UPCOMING MATCH
+                        </span>
+                        <span style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: '700' }}>{item.dateLabel}</span>
+                      </div>
+                      <h3 style={{ fontSize: '1.05rem', fontWeight: '800', marginBottom: '0.3rem', color: 'white' }}>
+                        {item.opponentName}
+                      </h3>
+                      <div style={{ fontSize: '0.85rem', color: '#94a3b8', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <MapPin size={14} color="#10b981" /> {item.venue} ({item.isHome ? 'Home' : 'Away'})
+                      </div>
+                    </div>
+                  );
+                }
+              })}
             </div>
           ) : (
             <div style={{ padding: '1.5rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid var(--cric-border)', color: 'var(--cric-text-sub)', fontSize: '0.875rem' }}>
@@ -693,7 +856,8 @@ export default function UOMOppositionScout() {
               <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                 {opponentPlayers.map(p => {
                   const roleString = p.role?.toLowerCase() || '';
-                  const displayRole = roleString.includes('bowler') ? 'Bowler' : 'Batter';
+                  
+                  const icon = roleString.includes('bowler') ? '🎯' : roleString.includes('all-rounder') ? '⚔️' : roleString.includes('keeper') ? '🧤' : '🏏';
                   
                   return (
                   <button
@@ -713,7 +877,7 @@ export default function UOMOppositionScout() {
                       gap: '0.4rem'
                     }}
                   >
-                    <span>{displayRole === 'Bowler' ? '🎯' : (p.icon || '🏏')}</span> {p.name} ({displayRole})
+                    <span>{icon}</span> {p.name} ({p.role})
                   </button>
                 )})}
               </div>
@@ -798,50 +962,81 @@ export default function UOMOppositionScout() {
                   }
 
                   let dotBallSubtext = "Estimated from Economy Rate";
+                  let dotBallBadge = null;
                   let dotBallContent = `${estimatedDotPct}%`;
                   if (playerWindowStats.player?.name === "Antony Desvin") {
-                    dotBallSubtext = "30 dots / 36 balls";
+                    dotBallSubtext = "";
+                    dotBallBadge = (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.5rem' }}>
+                        <span style={{ fontSize: '1.1rem', fontWeight: '800', color: 'white' }}>30</span>
+                        <span style={{ fontSize: '0.65rem', fontWeight: '800', background: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6', padding: '0.2rem 0.6rem', borderRadius: '12px', textTransform: 'uppercase', border: '1px solid rgba(59, 130, 246, 0.2)' }}>Dots</span>
+                        <span style={{ fontSize: '1rem', color: 'var(--cric-text-sub)', margin: '0 0.2rem' }}>/</span>
+                        <span style={{ fontSize: '1.1rem', fontWeight: '800', color: 'white' }}>36</span>
+                        <span style={{ fontSize: '0.65rem', fontWeight: '800', background: 'rgba(156, 163, 175, 0.15)', color: '#9ca3af', padding: '0.2rem 0.6rem', borderRadius: '12px', textTransform: 'uppercase', border: '1px solid rgba(156, 163, 175, 0.2)' }}>Balls</span>
+                      </div>
+                    );
                     dotBallContent = "83.3%";
                   } else if (playerWindowStats.player?.name === "Selvanathan Niroshan") {
-                    dotBallSubtext = "26 dots / 33 balls";
+                    dotBallSubtext = "";
+                    dotBallBadge = (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.5rem' }}>
+                        <span style={{ fontSize: '1.1rem', fontWeight: '800', color: 'white' }}>26</span>
+                        <span style={{ fontSize: '0.65rem', fontWeight: '800', background: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6', padding: '0.2rem 0.6rem', borderRadius: '12px', textTransform: 'uppercase', border: '1px solid rgba(59, 130, 246, 0.2)' }}>Dots</span>
+                        <span style={{ fontSize: '1rem', color: 'var(--cric-text-sub)', margin: '0 0.2rem' }}>/</span>
+                        <span style={{ fontSize: '1.1rem', fontWeight: '800', color: 'white' }}>33</span>
+                        <span style={{ fontSize: '0.65rem', fontWeight: '800', background: 'rgba(156, 163, 175, 0.15)', color: '#9ca3af', padding: '0.2rem 0.6rem', borderRadius: '12px', textTransform: 'uppercase', border: '1px solid rgba(156, 163, 175, 0.2)' }}>Balls</span>
+                      </div>
+                    );
                     dotBallContent = "78.8%";
                   }
 
                   return (
-                    <div className="mobile-col-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
-                      <div style={{ background: 'var(--cric-card-hover)', padding: '1.25rem', borderRadius: '8px', border: '1px solid var(--cric-border)' }}>
-                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--cric-text-sub)' }}>ECONOMY RATE (LAST {playerWindowStats.matchesInWindow || 0} M)</span>
-                        <div style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--cric-gold)', marginTop: '0.25rem' }}>{econ}</div>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--cric-text-sub)' }}>{econSubtext}</span>
-                      </div>
+                    <>
+                      <div className="mobile-col-1" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.25rem', marginBottom: '1.5rem' }}>
+                        <div style={{ background: 'var(--cric-card-hover)', padding: '1.25rem', borderRadius: '8px', border: '1px solid var(--cric-border)' }}>
+                          <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--cric-text-sub)' }}>ECONOMY RATE (LAST {playerWindowStats.matchesInWindow || 0} M)</span>
+                          <div style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--cric-gold)', marginTop: '0.25rem' }}>{econ}</div>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--cric-text-sub)' }}>{econSubtext}</span>
+                        </div>
 
-                      <div style={{ background: 'var(--cric-card-hover)', padding: '1.25rem', borderRadius: '8px', border: '1px solid var(--cric-border)' }}>
-                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--cric-text-sub)' }}>BOWLING STRIKE RATE</span>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.25rem' }}>
-                          <div style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--cric-green)' }}>{strikeRate}</div>
-                          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.3)', padding: '0.35rem 0.75rem', borderRadius: '20px', color: '#10b981', fontSize: '0.85rem', fontWeight: '800', boxShadow: '0 0 10px rgba(16, 185, 129, 0.1)' }}>
-                            🎯 {wickets} Wickets
+                        <div style={{ background: 'var(--cric-card-hover)', padding: '1.25rem', borderRadius: '8px', border: '1px solid var(--cric-border)' }}>
+                          <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--cric-text-sub)' }}>BOWLING STRIKE RATE</span>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.25rem' }}>
+                            <div style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--cric-green)' }}>{strikeRate}</div>
                           </div>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--cric-text-sub)', display: 'block', marginTop: '0.25rem' }}>Balls per wicket</span>
                         </div>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--cric-text-sub)', display: 'block', marginTop: '0.25rem' }}>Balls per wicket</span>
+
+                        <div style={{ background: 'var(--cric-card-hover)', padding: '1.25rem', borderRadius: '8px', border: '1px solid var(--cric-border)' }}>
+                          <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--cric-text-sub)' }}>DOT BALL %</span>
+                          <div style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--cric-blue)', marginTop: '0.25rem', textTransform: 'uppercase' }}>
+                            {dotBallContent}
+                          </div>
+                          {dotBallBadge ? dotBallBadge : (
+                            <span style={{ fontSize: '0.75rem', color: 'var(--cric-text-sub)' }}>{dotBallSubtext}</span>
+                          )}
+                        </div>
+
+                        <div style={{ background: 'var(--cric-card-hover)', padding: '1.25rem', borderRadius: '8px', border: '1px solid var(--cric-border)' }}>
+                          <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--cric-text-sub)' }}>TOTAL WICKETS</span>
+                          <div style={{ fontSize: '2rem', fontWeight: '800', color: '#c084fc', marginTop: '0.25rem' }}>{wickets}</div>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--cric-text-sub)' }}>Wickets Taken</span>
+                        </div>
                       </div>
 
-                      <div style={{ background: 'var(--cric-card-hover)', padding: '1.25rem', borderRadius: '8px', border: '1px solid var(--cric-border)' }}>
-                        <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--cric-text-sub)' }}>DOT BALL %</span>
-                        <div style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--cric-blue)', marginTop: '0.25rem', textTransform: 'uppercase' }}>
-                          {dotBallContent}
-                        </div>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--cric-text-sub)' }}>{dotBallSubtext}</span>
-                      </div>
-
-                      <div style={{ background: 'var(--cric-card-hover)', padding: '1.25rem', borderRadius: '8px', border: '1px solid #10b981' }}>
+                      <div style={{ background: 'var(--cric-card-hover)', padding: '1.5rem', borderRadius: '8px', border: '1px solid #10b981', marginBottom: '1.5rem', width: '100%' }}>
                         <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#10b981' }}>TARGET TACTIC / STRENGTH</span>
-                        <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#10b981', marginTop: '0.5rem' }}>
-                          {bowlerTactic}
-                        </div>
+                        <ul className="flex flex-col gap-2 mt-3 mb-3">
+                          {bowlerTactic.split(/(?:;\s*|\.\s*|-\s*)+/).filter(point => point.trim().length > 0).map((point, index) => (
+                            <li key={index} className="flex items-start gap-2 text-sm text-slate-300 py-1">
+                              <span className="mt-[2px] text-[#10b981] font-bold">•</span>
+                              <span className="leading-snug font-bold">{point.trim()}</span>
+                            </li>
+                          ))}
+                        </ul>
                         <span style={{ fontSize: '0.75rem', color: 'var(--cric-text-sub)' }}>UOM Batting Strategy</span>
                       </div>
-                    </div>
+                    </>
                   );
                 }
 
@@ -886,7 +1081,6 @@ export default function UOMOppositionScout() {
                     <div style={{ background: 'var(--cric-card-hover)', padding: '1.25rem', borderRadius: '8px', border: '1px solid var(--cric-border)' }}>
                       <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--cric-text-sub)' }}>BALLS PER BOUNDARY (BPB)</span>
                       <div style={{ fontSize: '2rem', fontWeight: '800', color: '#c084fc', marginTop: '0.25rem' }}>{bpb}</div>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--cric-text-sub)' }}>Elite T20 Benchmark: ~5.5</span>
                     </div>
 
                     <div style={{ background: 'var(--cric-card-hover)', padding: '1.25rem', borderRadius: '8px', border: '1px solid var(--cric-border)' }}>
@@ -897,7 +1091,14 @@ export default function UOMOppositionScout() {
 
                     <div style={{ background: 'var(--cric-card-hover)', padding: '1.25rem', borderRadius: '8px', border: '1px solid #dc2626', gridColumn: '1 / -1' }}>
                       <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#dc2626' }}>PRIMARY WEAKNESS</span>
-                      <div style={{ fontSize: '1.1rem', fontWeight: '800', color: '#dc2626', marginTop: '0.5rem' }}>{playerWindowStats.primaryWeakness || 'N/A'}</div>
+                      <ul className="flex flex-col gap-2 mt-3 mb-3">
+                        {(playerWindowStats.primaryWeakness || 'N/A').split(/(?:;\s*|\.\s*|-\s*)+/).filter(point => point.trim().length > 0).map((point, index) => (
+                          <li key={index} className="flex items-start gap-2 text-sm text-slate-300 py-1">
+                            <span className="mt-[2px] text-[#dc2626] font-bold">•</span>
+                            <span className="leading-snug font-bold">{point.trim()}</span>
+                          </li>
+                        ))}
+                      </ul>
                       <span style={{ fontSize: '0.75rem', color: 'var(--cric-text-sub)' }}>Target bowling tactic for UOM</span>
                     </div>
                   </div>
@@ -910,28 +1111,26 @@ export default function UOMOppositionScout() {
                     Match Logs in Selected Window ({playerWindowStats.matchesInWindow} Recent Matches)
                   </h4>
                   <div style={{ overflowX: 'auto' }}>
-                    <table className="matchup-table">
-                      <thead>
+                    <table className="w-full text-left border-collapse mt-2">
+                      <thead className="bg-[#0f172a] text-slate-300 text-[0.8rem] uppercase tracking-wider border-b border-slate-700">
                         <tr>
-                          <th>Match Date</th>
-                          <th>Vs Opponent</th>
-                          <th>Runs (Balls)</th>
-                          <th>4s / 6s</th>
-                          <th>Dot Balls</th>
-                          <th>Dismissal Mode / Tactical Note</th>
+                          <th className="px-4 py-3 font-bold border-b border-slate-700">Match (Date / ID)</th>
+                          <th className="px-4 py-3 font-bold border-b border-slate-700">Vs Opponent</th>
+                          <th className="px-4 py-3 font-bold border-b border-slate-700">Runs (Balls) / Bowling Figures</th>
+                          <th className="px-4 py-3 font-bold border-b border-slate-700">4s / 6s</th>
+                          <th className="px-4 py-3 font-bold border-b border-slate-700">Dot Balls</th>
+                          <th className="px-4 py-3 font-bold border-b border-slate-700">Dismissal Mode / Tactical Note</th>
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody className="text-sm">
                         {playerWindowStats.logsWindow.map((log, idx) => (
-                          <tr key={idx}>
-                            <td style={{ fontWeight: '700' }}>{log.matchDate}</td>
-                            <td style={{ color: 'var(--cric-gold)', fontWeight: '700' }}>vs {log.vs}</td>
-                            <td style={{ fontWeight: '800' }}>{log.runs} ({log.balls})</td>
-                            <td>{log.fours || 0}4s / {log.sixes || 0}6s</td>
-                            <td>{log.dots || 0} dots</td>
-                            <td style={{ color: log.isOut ? '#dc2626' : 'var(--cric-green)', fontWeight: '700' }}>
-                              {log.dismissalMode}
-                            </td>
+                          <tr key={idx} className="border-b border-slate-800 hover:bg-slate-800/50 transition-colors">
+                            <td className="px-4 py-2">{log.matchDate}</td>
+                            <td className="px-4 py-2">vs {log.vs}</td>
+                            <td className="px-4 py-2">{log.runs} ({log.balls})</td>
+                            <td className="px-4 py-2">{log.fours || 0} 4s / {log.sixes || 0} 6s</td>
+                            <td className="px-4 py-2">{log.dots || 0} dots</td>
+                            <td className={`px-4 py-2 ${log.isOut ? 'text-red-400' : 'text-emerald-400'}`}>{log.isOut ? 'Out' : 'Not Out'}</td>
                           </tr>
                         ))}
                       </tbody>

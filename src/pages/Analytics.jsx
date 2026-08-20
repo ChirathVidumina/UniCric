@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Activity, Flame, Target, TrendingUp, Zap, Shield, RefreshCw, AlertCircle } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://unicric-backend.onrender.com';
+const API_URL = 'http://localhost:8000';
 
 export default function Analytics() {
   const [kpiData, setKpiData] = useState(null);

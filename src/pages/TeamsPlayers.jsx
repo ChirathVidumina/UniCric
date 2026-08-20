@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Search, ExternalLink, Shield, Zap, Target, Star, Trophy, RefreshCw, AlertCircle } from 'lucide-react';
+import { Users, Search, Shield, Zap, Target, Trophy, RefreshCw, AlertCircle } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://unicric-backend.onrender.com';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 export default function TeamsPlayers() {
   const [teams, setTeams] = useState([]);
@@ -13,7 +13,7 @@ export default function TeamsPlayers() {
   const [activeRole, setActiveRole] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Fetch teams and players from FastAPI backend
+  // Fetch teams and players dynamically from FastAPI backend
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -31,50 +31,12 @@ export default function TeamsPlayers() {
           setTeams([]);
         }
 
-        let apiPlayers = [];
         if (playersRes && playersRes.ok) {
           const playersData = await playersRes.json();
-          apiPlayers = playersData.players || [];
+          setPlayersList(playersData.players || []);
+        } else {
+          setPlayersList([]);
         }
-
-        // Hardcoded 22 players from PDF to ensure they always show up
-        const staticPlayers = [
-          { id: 'p1', name: "Sivakaran Venujan", team: "JAF", role: "Wicket Keeper", battingStyle: "Right-Hand Batter", matches: 1, runs: 11, balls: 47, fours: 1, sixes: 0, sr: 23.4, wickets: 0, econ: 0.00, boundaryPct: 2, bowlDotPct: 0 },
-          { id: 'p2', name: "Shanmuganathan Silaxan", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 26, balls: 28, fours: 4, sixes: 1, sr: 92.86, wickets: 0, econ: 0.00, boundaryPct: 18, bowlDotPct: 0 },
-          { id: 'p3', name: "Ashmika Iddamalgoda", team: "JAF", role: "All-Rounder", battingStyle: "Right-Hand Batter", matches: 1, runs: 79, balls: 81, fours: 13, sixes: 1, sr: 97.53, wickets: 1, econ: 3.50, boundaryPct: 17, bowlDotPct: 75 },
-          { id: 'p4', name: "Sivaruban Sivanujan", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 33, balls: 42, fours: 3, sixes: 2, sr: 78.57, wickets: 0, econ: 9.00, boundaryPct: 12, bowlDotPct: 33 },
-          { id: 'p5', name: "Patkunam Mathushan", team: "JAF", role: "All-Rounder", battingStyle: "Right-Hand Batter", matches: 1, runs: 10, balls: 17, fours: 0, sixes: 0, sr: 58.82, wickets: 1, econ: 3.67, boundaryPct: 0, bowlDotPct: 72 },
-          { id: 'p6', name: "Antony Desvin", team: "JAF", role: "Captain (All-Rounder)", battingStyle: "Right-Hand Batter", matches: 1, runs: 23, balls: 31, fours: 1, sixes: 2, sr: 74.19, wickets: 3, econ: 1.33, boundaryPct: 10, bowlDotPct: 83 },
-          { id: 'p7', name: "K Siyanujan", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 14, balls: 11, fours: 2, sixes: 1, sr: 127.27, wickets: 0, econ: 10.00, boundaryPct: 27, bowlDotPct: 50 },
-          { id: 'p8', name: "Selvanathan Niroshan", team: "JAF", role: "Bowler", battingStyle: "Right-Hand Batter", matches: 1, runs: 13, balls: 6, fours: 0, sixes: 2, sr: 216.67, wickets: 4, econ: 2.91, boundaryPct: 33, bowlDotPct: 79 },
-          { id: 'p9', name: "V Priyankan", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 20, balls: 15, fours: 0, sixes: 0, sr: 133.33, wickets: 0, econ: 0.00, boundaryPct: 0, bowlDotPct: 0 },
-          { id: 'p10', name: "Chalithya Millangoda", team: "JAF", role: "All-Rounder", battingStyle: "Right-Hand Batter", matches: 1, runs: 2, balls: 5, fours: 0, sixes: 0, sr: 40.0, wickets: 1, econ: 6.67, boundaryPct: 0, bowlDotPct: 67 },
-          { id: 'p11', name: "Ebenezer Johanan", team: "JAF", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 16, balls: 17, fours: 0, sixes: 1, sr: 94.12, wickets: 0, econ: 0.00, boundaryPct: 6, bowlDotPct: 0 },
-          { id: 'p12', name: "Janith Dilshan", team: "VAV", role: "Bowler", battingStyle: "Left-Hand Batter", matches: 1, runs: 1, balls: 10, fours: 0, sixes: 0, sr: 10.0, wickets: 1, econ: 5.40, boundaryPct: 0, bowlDotPct: 60 },
-          { id: 'p13', name: "Ekjfernando", team: "VAV", role: "Batter", battingStyle: "Right-Hand Batter", matches: 1, runs: 3, balls: 15, fours: 0, sixes: 0, sr: 20.0, wickets: 0, econ: 0.00, boundaryPct: 0, bowlDotPct: 0 },
-          { id: 'p14', name: "Lahiru Welagedara", team: "VAV", role: "Wicket Keeper", battingStyle: "Left-Hand Batter", matches: 1, runs: 35, balls: 31, fours: 4, sixes: 2, sr: 112.9, wickets: 0, econ: 0.00, boundaryPct: 19, bowlDotPct: 0 },
-          { id: 'p15', name: "Rmid Ranaweera", team: "VAV", role: "Batter", battingStyle: "Left-Hand Batter", matches: 1, runs: 1, balls: 6, fours: 0, sixes: 0, sr: 16.67, wickets: 0, econ: 0.00, boundaryPct: 0, bowlDotPct: 0 },
-          { id: 'p16', name: "Rashan Wijerathna", team: "VAV", role: "Batter", battingStyle: "Left-Hand Batter", matches: 1, runs: 23, balls: 28, fours: 3, sixes: 1, sr: 82.14, wickets: 0, econ: 0.00, boundaryPct: 14, bowlDotPct: 0 },
-          { id: 'p17', name: "Sahan Siriwardana", team: "VAV", role: "Captain (All-Rounder)", battingStyle: "Left-Hand Batter", matches: 1, runs: 3, balls: 13, fours: 0, sixes: 0, sr: 23.08, wickets: 1, econ: 5.60, boundaryPct: 0, bowlDotPct: 67 },
-          { id: 'p18', name: "Pahan Bimsara", team: "VAV", role: "Bowler", battingStyle: "Right-Hand Batter", matches: 1, runs: 0, balls: 2, fours: 0, sixes: 0, sr: 0.0, wickets: 0, econ: 9.75, boundaryPct: 0, bowlDotPct: 46 },
-          { id: 'p19', name: "Mohammed Riwaqi", team: "VAV", role: "Bowler", battingStyle: "Right-Hand Batter", matches: 1, runs: 11, balls: 9, fours: 2, sixes: 0, sr: 122.22, wickets: 2, econ: 4.75, boundaryPct: 22, bowlDotPct: 67 },
-          { id: 'p20', name: "Sithamparalingam Nharthanan", team: "VAV", role: "All-Rounder", battingStyle: "Left-Hand Batter", matches: 1, runs: 6, balls: 8, fours: 1, sixes: 0, sr: 75.0, wickets: 1, econ: 5.33, boundaryPct: 12, bowlDotPct: 81 },
-          { id: 'p21', name: "Kkirubagaran", team: "VAV", role: "Bowler", battingStyle: "Right-Hand Batter", matches: 1, runs: 1, balls: 14, fours: 0, sixes: 0, sr: 7.14, wickets: 1, econ: 4.71, boundaryPct: 0, bowlDotPct: 55 },
-          { id: 'p22', name: "Ravichandran Ragulan", team: "VAV", role: "Bowler", battingStyle: "Right-Hand Batter", matches: 1, runs: 0, balls: 1, fours: 0, sixes: 0, sr: 0.0, wickets: 1, econ: 3.20, boundaryPct: 0, bowlDotPct: 73 },
-        ];
-
-        // Merge static players into API players (overwriting inaccurate/missing backend stats)
-        const mergedPlayers = [...apiPlayers];
-        staticPlayers.forEach(sp => {
-          const existingIdx = mergedPlayers.findIndex(ap => ap.name === sp.name);
-          if (existingIdx >= 0) {
-            mergedPlayers[existingIdx] = { ...mergedPlayers[existingIdx], ...sp };
-          } else {
-            mergedPlayers.push(sp);
-          }
-        });
-        
-        setPlayersList(mergedPlayers);
       } catch (err) {
         console.error("Error fetching teams/players from API:", err);
         setError("Failed to connect to FastAPI backend.");
@@ -99,14 +61,14 @@ export default function TeamsPlayers() {
     : null;
 
   const purpleCapLeader = playersList && playersList.length > 0
-    ? [...playersList].filter(p => p.wickets).sort((a, b) => (b.wickets || 0) - (a.wickets || 0))[0]
+    ? [...playersList].filter(p => p.wickets > 0).sort((a, b) => (b.wickets || 0) - (a.wickets || 0))[0]
     : null;
 
   const getPlayerIcon = (role) => {
     if (!role) return '🏏';
     if (role.includes('All-Rounder')) return '⚔️';
     if (role.includes('Bowler')) return '⚾';
-    if (role.includes('Wicket Keeper')) return '🧤';
+    if (role.includes('Wicket Keeper') || role.includes('WK')) return '🧤';
     return '🏏'; // Batter or Captain
   };
 
@@ -118,7 +80,7 @@ export default function TeamsPlayers() {
             <Trophy size={14} /> Sri Lanka University Cricket Championship 2026
           </div>
           <h1 className="page-title">University Teams & Player Telemetry</h1>
-          <p className="page-subtitle">
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', maxWidth: '600px' }}>
             Official Sri Lanka University Championship Telemetry Database • {playersList.length} Verified Player Profiles
           </p>
         </div>
@@ -146,7 +108,7 @@ export default function TeamsPlayers() {
               </div>
               <div className="stat-value" style={{ color: '#dc2626' }}>{playersList.length} Players</div>
               <div className="stat-change positive">
-                {playersList.length > 0 ? 'Sourced From Database API' : '0 Players in Database'}
+                {playersList.length > 0 ? 'Sourced Dynamically From Database API' : '0 Players in Database'}
               </div>
             </div>
 
@@ -157,7 +119,7 @@ export default function TeamsPlayers() {
               </div>
               <div className="stat-value">{teams.length} Universities</div>
               <div className="stat-change positive">
-                4 League Groups (A, B, C, D)
+                Active League Groups
               </div>
             </div>
 
@@ -193,7 +155,7 @@ export default function TeamsPlayers() {
             <>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                 <h2 style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--text-primary)' }}>
-                  Participating University Squads ({teams.length})
+                  🛡️ Participating University Squads ({teams.length})
                 </h2>
                 <select 
                   value={selectedTeam} 
@@ -211,39 +173,47 @@ export default function TeamsPlayers() {
                 >
                   <option value="ALL">All Squads</option>
                   {teams.map(t => (
-                    <option key={t.code} value={t.code}>{t.name} ({t.shortName || t.name})</option>
+                    <option key={t.code} value={t.code}>{t.name} ({t.shortName || t.code})</option>
                   ))}
                 </select>
               </div>
 
               <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', marginBottom: '2.5rem' }}>
-                {teams.map(t => (
-                  <div 
-                    key={t.code} 
-                    className="stat-card" 
-                    onClick={() => setSelectedTeam(selectedTeam === t.code ? 'ALL' : t.code)}
-                    style={{ 
-                      borderLeft: `4px solid ${t.color || '#dc2626'}`,
-                      cursor: 'pointer',
-                      borderColor: selectedTeam === t.code ? (t.color || '#dc2626') : undefined,
-                      boxShadow: selectedTeam === t.code ? `0 0 15px ${t.color || '#dc2626'}40` : undefined,
-                      background: selectedTeam === t.code ? 'var(--bg-card-hover)' : 'var(--bg-card)'
-                    }}
-                  >
-                    <div className="stat-header">
-                      <span style={{ fontWeight: '800', fontSize: '1.1rem', color: 'var(--text-primary)' }}>{t.code} - {t.shortName || t.name}</span>
-                      <span style={{ fontSize: '0.75rem', padding: '0.2rem 0.5rem', background: 'rgba(255,255,255,0.08)', borderRadius: '4px', color: t.color || '#dc2626', fontWeight: '700' }}>{t.played > 0 ? t.ranking : (t.group || 'Group C')}</span>
+                {teams.map(t => {
+                  const isUOM = t.code === 'UOM' || t.code === 'MOR';
+                  const teamPlayers = playersList.filter(p => p.team === t.code);
+                  const captain = teamPlayers.find(p => p.role?.toLowerCase().includes('captain')) || teamPlayers[0];
+
+                  return (
+                    <div 
+                      key={t.code} 
+                      className="stat-card" 
+                      onClick={() => setSelectedTeam(selectedTeam === t.code ? 'ALL' : t.code)}
+                      style={{ 
+                        borderLeft: isUOM ? '4px solid #dc2626' : '4px solid var(--accent-blue)',
+                        cursor: 'pointer',
+                        borderColor: selectedTeam === t.code ? '#dc2626' : undefined,
+                        boxShadow: selectedTeam === t.code ? '0 0 15px rgba(220, 38, 38, 0.4)' : undefined,
+                        background: selectedTeam === t.code ? 'var(--bg-card-hover)' : 'var(--bg-card)'
+                      }}
+                    >
+                      <div className="stat-header">
+                        <span style={{ fontWeight: '800', fontSize: '1.1rem', color: isUOM ? '#dc2626' : 'var(--text-primary)' }}>
+                          {t.code} - {t.shortName || t.name}
+                        </span>
+                        <span style={{ fontSize: '0.75rem', padding: '0.2rem 0.5rem', background: 'rgba(255,255,255,0.08)', borderRadius: '4px', color: isUOM ? '#dc2626' : 'var(--text-muted)', fontWeight: '700' }}>
+                          {t.group || 'League'}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
+                        Squad Size: <strong>{teamPlayers.length} Players</strong>
+                      </div>
+                      <div style={{ fontSize: '0.8rem', marginTop: '0.5rem', color: 'var(--text-muted)' }}>
+                        Matches: {t.played || 0} | <span style={{ color: 'var(--accent-green)', fontWeight: '700' }}>{t.won || 0} Wins</span> | <span style={{ color: 'var(--accent-gold)', fontWeight: '700' }}>{t.points || 0} pts</span>
+                      </div>
                     </div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
-                      Captain: <strong>{playersList.find(p => p.team === t.code && p.role?.includes('Captain'))?.name || 'N/A'}</strong>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', marginTop: '0.5rem', color: 'var(--text-muted)' }}>
-                      <span>Matches: {t.played || 0}</span>
-                      <span style={{ color: 'var(--accent-green)', fontWeight: '700' }}>{t.won || 0} Wins</span>
-                      <span style={{ color: 'var(--accent-gold)', fontWeight: '700' }}>{t.points || 0} pts</span>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </>
           )}
@@ -279,7 +249,7 @@ export default function TeamsPlayers() {
                 <Search size={16} color="var(--text-muted)" style={{ position: 'absolute', left: '0.8rem', top: '50%', transform: 'translateY(-50%)' }} />
                 <input 
                   type="text"
-                  placeholder="Search player..."
+                  placeholder="Search player or team..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   style={{
@@ -305,67 +275,70 @@ export default function TeamsPlayers() {
 
           {filteredPlayers.length > 0 ? (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.25rem' }}>
-              {filteredPlayers.map(p => (
-                <div 
-                  key={p.id} 
-                  className="content-card" 
-                  style={{ 
-                    padding: '1.25rem',
-                    borderLeft: p.team === 'UOM' ? '4px solid #dc2626' : '1px solid var(--border-color)',
-                    position: 'relative'
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                    <div>
-                      <span style={{ fontSize: '1.2rem', marginRight: '0.4rem' }}>{p.icon || getPlayerIcon(p.role)}</span>
-                      <h4 style={{ display: 'inline', fontSize: '1.15rem', fontWeight: '800', color: p.team === 'UOM' ? '#dc2626' : 'var(--text-primary)' }}>
-                        {p.name}
-                      </h4>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
-                        {p.team} • {p.role} {p.battingStyle ? `• ${p.battingStyle.includes('Right') ? 'RHB' : p.battingStyle.includes('Left') ? 'LHB' : p.battingStyle}` : ''}
+              {filteredPlayers.map(p => {
+                const isUOM = p.team === 'UOM' || p.team === 'MOR';
+                return (
+                  <div 
+                    key={p.id || p.name} 
+                    className="content-card" 
+                    style={{ 
+                      padding: '1.25rem',
+                      borderLeft: isUOM ? '4px solid #dc2626' : '1px solid var(--border-color)',
+                      position: 'relative'
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
+                      <div>
+                        <span style={{ fontSize: '1.2rem', marginRight: '0.4rem' }}>{p.icon || getPlayerIcon(p.role)}</span>
+                        <h4 style={{ display: 'inline', fontSize: '1.15rem', fontWeight: '800', color: isUOM ? '#dc2626' : 'var(--text-primary)' }}>
+                          {p.name}
+                        </h4>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
+                          {p.team} • {p.role} {p.battingStyle ? `• ${p.battingStyle.includes('Right') ? 'RHB' : p.battingStyle.includes('Left') ? 'LHB' : p.battingStyle}` : ''}
+                        </div>
+                      </div>
+                      <span className="badge" style={{ background: isUOM ? 'rgba(220, 38, 38, 0.15)' : 'rgba(255,255,255,0.08)', color: isUOM ? '#dc2626' : 'var(--text-muted)' }}>
+                        {p.team}
+                      </span>
+                    </div>
+
+                    {/* Metrics Breakdown (Batting | Bowling) */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1px 1fr', gap: '0.75rem', background: 'var(--bg-primary)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', marginBottom: '0.5rem', fontSize: '0.8rem' }}>
+                      
+                      {/* Batting Column */}
+                      <div>
+                        <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginBottom: '0.15rem' }}>RUNS</span>
+                        <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-gold)' }}>{p.runs ?? 0}</strong>
+                        
+                        <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: '0.5rem', marginBottom: '0.15rem' }}>STRIKE RATE</span>
+                        <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-green)' }}>{p.sr ?? 0}</strong>
+
+                        <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: '0.5rem', marginBottom: '0.15rem' }}>BOUNDARY %</span>
+                        <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-gold)' }}>
+                          {p.boundaryPct !== undefined ? p.boundaryPct : (p.runs > 0 ? Math.round((((p.fours || 0) * 4 + (p.sixes || 0) * 6) / p.runs) * 100) : 0)}%
+                        </strong>
+                      </div>
+
+                      {/* Divider */}
+                      <div style={{ background: 'var(--border-color)', width: '1px', height: '100%' }}></div>
+
+                      {/* Bowling Column */}
+                      <div>
+                        <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginBottom: '0.15rem' }}>WICKETS</span>
+                        <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-blue)' }}>{p.wickets ?? 0}</strong>
+                        
+                        <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: '0.5rem', marginBottom: '0.15rem' }}>ECON</span>
+                        <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-blue)' }}>{p.econ !== undefined && p.econ !== null ? p.econ : '-'}</strong>
+                        
+                        <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: '0.5rem', marginBottom: '0.15rem' }}>DOT BALLS%</span>
+                        <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--text-primary)' }}>
+                          {p.bowlDotPct !== undefined ? p.bowlDotPct : (p.econ !== undefined && p.econ !== null && p.econ > 0 ? Math.max(0, Math.round(100 - (p.econ * 7.5))) : 0)}%
+                        </strong>
                       </div>
                     </div>
-                    <span className="badge" style={{ background: p.team === 'UOM' ? 'rgba(220, 38, 38, 0.15)' : 'rgba(255,255,255,0.08)', color: p.team === 'UOM' ? '#dc2626' : 'var(--text-muted)' }}>
-                      {p.team}
-                    </span>
                   </div>
-
-                  {/* Metrics Breakdown (Batting | Bowling) */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1px 1fr', gap: '0.75rem', background: 'var(--bg-primary)', padding: '0.75rem', borderRadius: 'var(--radius-sm)', marginBottom: '0.5rem', fontSize: '0.8rem' }}>
-                    
-                    {/* Batting Column */}
-                    <div>
-                      <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginBottom: '0.15rem' }}>RUNS (AVG)</span>
-                      <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-gold)' }}>{p.runs ?? 0} ({p.avg ?? '-'})</strong>
-                      
-                      <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: '0.5rem', marginBottom: '0.15rem' }}>STRIKE RATE</span>
-                      <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-green)' }}>{p.sr ?? 0}</strong>
-
-                      <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: '0.5rem', marginBottom: '0.15rem' }}>BOUNDARY %</span>
-                      <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-gold)' }}>
-                        {p.boundaryPct !== undefined ? p.boundaryPct : (p.runs > 0 ? Math.round((((p.fours || 0) * 4 + (p.sixes || 0) * 6) / p.runs) * 100) : 0)}%
-                      </strong>
-                    </div>
-
-                    {/* Divider */}
-                    <div style={{ background: 'var(--border-color)', width: '1px', height: '100%' }}></div>
-
-                    {/* Bowling Column */}
-                    <div>
-                      <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginBottom: '0.15rem' }}>WICKETS</span>
-                      <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-blue)' }}>{p.wickets ?? 0}</strong>
-                      
-                      <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: '0.5rem', marginBottom: '0.15rem' }}>ECON</span>
-                      <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--accent-blue)' }}>{p.econ !== undefined && p.econ !== null ? p.econ : '-'}</strong>
-                      
-                      <span style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', marginTop: '0.5rem', marginBottom: '0.15rem' }}>DOT BALLS%</span>
-                      <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--text-primary)' }}>
-                        {p.bowlDotPct !== undefined ? p.bowlDotPct : (p.econ !== undefined && p.econ !== null && p.econ > 0 ? Math.max(0, Math.round(100 - (p.econ * 7.5))) : 0)}%
-                      </strong>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div style={{ padding: '2rem', textAlign: 'center', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid var(--border-color)', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
